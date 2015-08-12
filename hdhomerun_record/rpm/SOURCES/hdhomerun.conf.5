@@ -1,0 +1,48 @@
+.TH "hdhomerun.conf" "5" "2015/07/20" "SiliconDust HDHomeRun DVR" "hdhomerun_record configuration file"
+.ad l
+.SH "NAME"
+.LP 
+\fBhdhomerun.conf\fR \- Configuration file for \fBhdhomerun_record(8)\fR.
+.SH "DESCRIPTION"
+.LP
+The SiliconDust HDHomeRun DVR (hdhomerun_record) defaults to using a configuration
+file located at \fB/etc/hdhomerun.conf\fR.  The configuration file location
+can be specifed at \fBhdhomerun_record(8)\fR startup time with the --conf
+parameter.
+.LP
+The basic file format of the hdhomerun.conf is a newline-separated list
+of environment-like shell-compatible variable assignments.
+It is possible to source the configuration from shell scripts, however,
+beyond mere variable assignments no shell features are supported,
+allowing applications to read the file without implementing a shell
+compatible execution engine.
+.SH "OPTIONS"
+The \fBhdhomerun.conf\fR configuration file supports the following specifications:
+.LP
+RecordPath=</Full/Path/To/Recording/Directory> - \fBREQUIRED\fR
+.RS 4
+Specifies where the recordings and log files will be stored.  The
+RecordPath is required.  The directory must be writeable by the
+user running the recording engine (typically hdhomerun).
+.RE
+.LP
+Port=<port> - \fBOptional\fR
+.RS 4
+Specifies the port number that the recording engine will use to accept
+client connections.  This is primarily needed for firewall
+rules.
+.RE
+.SH "FILES"
+.LP
+/etc/hdhomerun.conf
+
+.SH "SEE ALSO"
+.LP 
+\fBhdhomerun_record(8)\fR
+
+\fIhttp://www.silicondust.com/\fR
+
+.SH "AUTHOR"
+.LP
+SiliconDust USA Inc.  <support@silicondust.com>
+

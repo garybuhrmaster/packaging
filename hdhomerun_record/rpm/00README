@@ -1,0 +1,56 @@
+
+Notes:
+  * Tested on Fedora, CentOS (RHEL work-alike) systems for x86
+    and Fedora for arm.  Untested on SUSE.
+  * Fedora and CentOS 7 (and SUSE) build for modern (systemd)
+    init systems with service definitions.  CentOS 6 builds for
+    the legacy sysv init scripts
+  * Patches welcome.
+
+
+
+
+To build an RPM
+
+First, choose build process.  MOCK, or RPMBUILD
+
+If you are not sure what you want, you likely want RPMBUILD.
+
+
+-----
+
+MOCK build:
+
+Requirements:
+
+* Fedora or RHEL/CentOS system for x86_64, and a Fedora arm system
+  (RHEL does not currently support arm).
+
+* Install mock, rpm-build, and enable your build user to run mock.
+
+
+To use:
+
+* cd to this directory
+
+* Copy the current (distribution) hdhomerun_record_linux_<version> binary to SOURCES/
+
+* Run 'BUILD_RPMS <version>' on a Fedora system x86_64 system, and
+  seperately on a armv7hl system
+
+* Copy binary rpms in RPMS/ to distribution point(s)
+
+-----
+
+RPMBUILD build:
+
+* cd to this directory
+
+* Copy the current (distribution) hdhomerun_record_linux_<version> binary to SOURCES/
+
+* Choose the architecture (for <arch> below).  i686 or armv7hl.
+
+* Run 'rpmbuild --define "_topdir ${PWD}" --define "HDHRDVR_VERSION <version>" --target=<arch> -bb SPECS/hdhomerun_record.spec'
+
+* RPMS/<arch> will contain your rpms
+
