@@ -4,7 +4,7 @@
 
 %define		debug_package %{nil}
 
-Name:		hdhomerun_record
+Name:		hdhomerun-record
 Version:	0.0.%{HDHRDVR_VERSION}
 Release:	1%{?dist}
 Group:		Applications/Internet

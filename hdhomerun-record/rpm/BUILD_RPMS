@@ -18,7 +18,7 @@ ARCH=`arch`
 
 if [ "$ARCH" == "x86_64" ]; then
 
-  /usr/bin/mock -r epel-7-x86_64     --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --yum --buildsrpm --spec=SPECS/hdhomerun_record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache
+  /usr/bin/mock -r epel-7-x86_64     --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --yum --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache
 
   /usr/bin/mock -r epel-6-x86_64     --define "HDHRDVR_VERSION $VERSION" --define "dist .el6.centos" --yum --target=i686 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS --disable-plugin=ccache
 
@@ -28,7 +28,7 @@ fi
 
 if [ "$ARCH" == "armv7l" ]; then
 
-  /usr/bin/mock -r fedora-22-armhfp  --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --yum --buildsrpm --spec=SPECS/hdhomerun_record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache
+  /usr/bin/mock -r fedora-22-armhfp  --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --yum --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache
 
   /usr/bin/mock -r fedora-22-armhfp  --define "HDHRDVR_VERSION $VERSION" --define "dist .fedora" --yum --target=armv7hl --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS --disable-plugin=ccache
 
