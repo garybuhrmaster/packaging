@@ -88,8 +88,6 @@ install -m 0644 %{SOURCE61} %{buildroot}%{_mandir}/man5/
 
 mkdir -p %{buildroot}%{_datadir}/doc/hdhomerun_record
 install -m 0644 %{SOURCE70} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
-
-mkdir -p %{buildroot}%{_datadir}/doc/hdhomerun
 install -m 0644 %{SOURCE71} %{buildroot}%{_datadir}/doc/hdhomerun_record/LICENSE
 
 mkdir -p %{buildroot}%{_bindir}
@@ -108,7 +106,7 @@ install -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
 %defattr(755,root,root,-)
 %{_bindir}/hdhomerun_record
 
-%defattr(644,root,root,-)
+%defattr(644,root,root,755)
 %config(noreplace) %{_sysconfdir}/hdhomerun.conf
 %if 0%{?rhel} == 6
 # No automated tmpfiles
