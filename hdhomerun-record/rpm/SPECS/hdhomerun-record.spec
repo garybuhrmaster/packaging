@@ -7,6 +7,8 @@
 Name:		hdhomerun-record
 Version:	0.0.%{HDHRDVR_VERSION}
 Release:	1%{?dist}
+Provides:	hdhomerun_record = 0.0.20150901atest1-2
+Obsoletes:	hdhomerun_record <= 0.0.20150901atest1-2
 Group:		Applications/Internet
 Summary:	SiliconDust HDHomeRun DVR server
 Vendor:		SiliconDust USA Inc.
