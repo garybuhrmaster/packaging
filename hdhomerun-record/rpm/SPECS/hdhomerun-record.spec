@@ -125,7 +125,7 @@ install -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
 %config(noreplace) %{_libdir}/systemd/system/*
 %endif
 
-%defattr(755,hdhomerun,hdhomerun,-)
+%defattr(755,hdhomerun,hdhomerun,755)
 %dir %{_localstatedir}/run/hdhomerun/
 
 
