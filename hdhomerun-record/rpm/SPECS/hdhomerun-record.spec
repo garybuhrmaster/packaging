@@ -81,7 +81,7 @@ install -m 0644 %{SOURCE54} %{buildroot}%{_sysconfdir}/
 mkdir -p %{buildroot}%{_localstatedir}/run/hdhomerun
 
 mkdir -p %{buildroot}%{_mandir}/man8
-install -m 0644 %{SOURCE61} %{buildroot}%{_mandir}/man8/
+install -m 0644 %{SOURCE60} %{buildroot}%{_mandir}/man8/
 
 mkdir -p %{buildroot}%{_mandir}/man5
 install -m 0644 %{SOURCE61} %{buildroot}%{_mandir}/man5/
