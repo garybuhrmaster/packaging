@@ -71,8 +71,8 @@ install -m 0644 %{SOURCE51} %{buildroot}%{_usr}/lib/tmpfiles.d/hdhomerun_record.
 mkdir -p %{buildroot}%{_sysconfdir}/rc.d/init.d
 install -m 0644 %{SOURCE53} %{buildroot}%{_sysconfdir}/rc.d/init.d/hdhomerun_record
 %else
-mkdir -p %{buildroot}%{_libdir}/systemd/system
-install -m 0644 %{SOURCE52} %{buildroot}%{_libdir}/systemd/system/
+mkdir -p %{buildroot}%{_unitdir}
+install -m 0644 %{SOURCE52} %{buildroot}%{_unitdir}/
 %endif
 
 mkdir -p %{buildroot}%{_sysconfdir}/
@@ -122,7 +122,7 @@ install -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
 %config(noreplace) %{_sysconfdir}/rc.d/init.d/hdhomerun_record
 %else
 %defattr(644,root,root,-)
-%config(noreplace) %{_libdir}/systemd/system/*
+%config(noreplace) %{_unitdir}/*
 %endif
 
 %defattr(755,hdhomerun,hdhomerun,755)
