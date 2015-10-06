@@ -16,21 +16,46 @@ TMPDIR=`mktemp -d`
 
 ARCH=`arch`
 
+EL=(`ls /etc/mock | grep 'epel-[[:digit:]]\\+-x86_64.cfg' | grep -v 'epel-5' |  sed -n 's/epel-\([0-9]\+\)-x86_64.cfg/\1/p'`)
+ELBASE=${EL[0]}
+FC=(`ls /etc/mock | grep 'fedora-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/fedora-\([0-9]\+\)-x86_64.cfg/\1/p'`)
+FCBASE=${FC[0]}
+
+for el in ${EL[@]}
+do
+    mkdir -p RPMS/el/$el/i386 RPMS/el/$el/x86_64
+done
+for fc in ${FC[@]}
+do
+    mkdir -p RPMS/fedora/$fc/i386 RPMS/fedora/$fc/x86_64 RPMS/fedora/$fc/armhfp
+done
+
 if [ "$ARCH" == "x86_64" ]; then
 
-  /usr/bin/mock -r epel-7-x86_64     --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --yum --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache
+  /usr/bin/mock -r epel-$ELBASE-x86_64     --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --yum --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache
 
-  /usr/bin/mock -r epel-6-x86_64     --define "HDHRDVR_VERSION $VERSION" --define "dist .el6" --yum --target=i686 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS --disable-plugin=ccache
+  for el in ${EL[@]}
+  do
+    /usr/bin/mock -r epel-$el-x86_64     --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --yum --target=i686 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/i386 --disable-plugin=ccache
+    /usr/bin/mock -r epel-$el-x86_64     --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --yum --target=x86_64 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/x86_64 --disable-plugin=ccache
+  done
 
-  /usr/bin/mock -r epel-7-x86_64     --define "HDHRDVR_VERSION $VERSION" --define "dist .el7" --yum --target=i686 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS --disable-plugin=ccache
+  for fc in ${FC[@]}
+  do
+    /usr/bin/mock -r fedora-$fc-x86_64 --define "HDHRDVR_VERSION $VERSION" --define "dist .fc$fc" --yum --target=i686 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/fedora/$fc/i386 --disable-plugin=ccache
+    /usr/bin/mock -r fedora-$fc-x86_64 --define "HDHRDVR_VERSION $VERSION" --define "dist .fc$fc" --yum --target=x86_64 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/fedora/$fc/x86_64 --disable-plugin=ccache
+  done
 
 fi
 
 if [ "$ARCH" == "armv7l" ]; then
 
-  /usr/bin/mock -r fedora-22-armhfp  --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --yum --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache
+  /usr/bin/mock -r fedora-$FCBASE-armhfp --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --yum --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache
 
-  /usr/bin/mock -r fedora-22-armhfp  --define "HDHRDVR_VERSION $VERSION" --define "dist .fedora" --yum --target=armv7hl --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS --disable-plugin=ccache
+  for fc in ${FC[@]}
+  do
+    /usr/bin/mock -r fedora-$fc-armhfp --define "HDHRDVR_VERSION $VERSION" --define "dist .fc$fc" --yum --target=armv7hl --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/fedora/$fc/armhfp --disable-plugin=ccache
+  done
 
 fi
 
