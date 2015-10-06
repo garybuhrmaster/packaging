@@ -96,12 +96,25 @@ install -m 0644 %{SOURCE70} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
 install -m 0644 %{SOURCE71} %{buildroot}%{_datadir}/doc/hdhomerun_record/LICENSE
 
 mkdir -p %{buildroot}%{_bindir}
-%ifarch %{ix86} x86_64
+
+%ifarch %{ix86}
 install -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
+%endif
+
+%ifarch x86_64
+if [ -e "hdhomerun_record_x86_64" ]; then
+install -m 0755 hdhomerun_record_x86_64 %{buildroot}%{_bindir}/hdhomerun_record
+else
+install -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
+fi
 %endif
 
 %ifarch armv7hl
 install -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
+%endif
+
+%ifarch ppc %{power64}
+install -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 %endif
 
 %__spec_install_post
