@@ -24,6 +24,7 @@ Source60:	hdhomerun_record.8
 Source61:	hdhomerun.conf.5
 Source70:	hdhomerun_record-doc.README
 Source71:	hdhomerun_record-doc.LICENSE
+Source72:	hdhomerun_record-doc.README.init
 
 Requires(pre):	shadow-utils
 %if 0%{?rhel} == 6
@@ -87,7 +88,11 @@ mkdir -p %{buildroot}%{_mandir}/man5
 install -m 0644 %{SOURCE61} %{buildroot}%{_mandir}/man5/
 
 mkdir -p %{buildroot}%{_datadir}/doc/hdhomerun_record
+%if 0%{?rhel} == 6
+install -m 0644 %{SOURCE72} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
+%else
 install -m 0644 %{SOURCE70} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
+%endif
 install -m 0644 %{SOURCE71} %{buildroot}%{_datadir}/doc/hdhomerun_record/LICENSE
 
 mkdir -p %{buildroot}%{_bindir}

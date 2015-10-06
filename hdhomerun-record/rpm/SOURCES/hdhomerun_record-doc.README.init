@@ -1,0 +1,21 @@
+
+NOTE: The HDHomeRun DVR software requires configuration
+before first use.
+
+Installation provides an init script (hdhomerun_record)
+and a system user/group hdhomerun to run the recorder
+without privledges.
+
+The file /etc/hdhomerun.conf must be configured to specify
+the RecordPath, a directory where the logs and the recorded
+content will be stored.  This directory must be created
+in such a way as the hdhomerun user can write to it
+(either owned by the hdhomerun user, or appropriate acls).
+
+To start the recorder: service hdhomerun_record start
+To stop the recorder: service hdhomerun_record stop
+To automate startup: chkconfig hdhomerun_record on
+
+Also note that installing an upgraded rpm will restart
+the service, so choose an idle time for the upgrade.
+
