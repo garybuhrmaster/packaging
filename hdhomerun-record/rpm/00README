@@ -48,9 +48,7 @@ RPMBUILD build:
 
 * Copy the current (distribution) hdhomerun_record_linux_<version> binary to SOURCES/
 
-* Choose the architecture (for <arch> below).  i686 or armv7hl.
-
-* Run 'rpmbuild --define "_topdir ${PWD}" --define "HDHRDVR_VERSION <version>" --target=<arch> -bb SPECS/hdhomerun_record.spec'
+* Run 'rpmbuild --define "_topdir ${PWD}" --define "HDHRDVR_VERSION <version>" -bb SPECS/hdhomerun-record.spec'
 
 * RPMS/<arch> will contain your rpms
 
