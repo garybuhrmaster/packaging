@@ -12,6 +12,17 @@ content will be stored.  This directory must be created
 in such a way as the hdhomerun user can write to it
 (either owned by the hdhomerun user, or appropriate acls).
 
+The recorder needs to be able to communicate with the
+tuners on your network, and to be discoverable by your
+clients.  If you are have a network firewall configured,
+you will likely need to allow incoming traffic to the
+port specified in /etc/hdhomerun.conf (defaults to
+port 65001) and to allow the responses from the broadcast
+packets used for tuner discovery.  If your logs show that
+no tuners are discovered, or your clients find no recorders,
+your firewall configuration is one of the first things to
+review.
+
 To start the recorder: service hdhomerun_record start
 To stop the recorder: service hdhomerun_record stop
 To automate startup: chkconfig hdhomerun_record on
