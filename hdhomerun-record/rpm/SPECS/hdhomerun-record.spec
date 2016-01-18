@@ -102,8 +102,8 @@ install -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
 %endif
 
 %ifarch x86_64
-if [ -e "hdhomerun_record_x86_64" ]; then
-install -m 0755 hdhomerun_record_x86_64 %{buildroot}%{_bindir}/hdhomerun_record
+if [ -e "hdhomerun_record_x64" ]; then
+install -m 0755 hdhomerun_record_x64 %{buildroot}%{_bindir}/hdhomerun_record
 else
 install -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
 fi
