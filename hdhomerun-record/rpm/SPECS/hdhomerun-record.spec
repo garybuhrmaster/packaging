@@ -109,7 +109,7 @@ install -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
 fi
 %endif
 
-%ifarch armv7hl
+%ifarch armv7hl aarch64
 install -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
 %endif
 
