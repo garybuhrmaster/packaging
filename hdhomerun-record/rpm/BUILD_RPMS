@@ -27,7 +27,7 @@ do
 done
 for fc in ${FC[@]}
 do
-    mkdir -p RPMS/fedora/$fc/i386 RPMS/fedora/$fc/x86_64 RPMS/fedora/$fc/armhfp
+    mkdir -p RPMS/fedora/$fc/i386 RPMS/fedora/$fc/x86_64 RPMS/fedora/$fc/armhfp RPMS/fedora/$fc/aarch64
 done
 
 if [ "$ARCH" == "x86_64" ]; then
@@ -55,6 +55,17 @@ if [ "$ARCH" == "armv7l" ]; then
   for fc in ${FC[@]}
   do
     /usr/bin/mock -r fedora-$fc-armhfp --define "HDHRDVR_VERSION $VERSION" --define "dist .fc$fc" --target=armv7hl --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/fedora/$fc/armhfp --disable-plugin=ccache
+  done
+
+fi
+
+if [ "$ARCH" == "aarch64" ]; then
+
+  /usr/bin/mock -r fedora-$FCBASE-aarch64 --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache
+
+  for fc in ${FC[@]}
+  do
+    /usr/bin/mock -r fedora-$fc-aarch64 --define "HDHRDVR_VERSION $VERSION" --define "dist .fc$fc" --target=aarch64 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/fedora/$fc/aarch64 --disable-plugin=ccache
   done
 
 fi
