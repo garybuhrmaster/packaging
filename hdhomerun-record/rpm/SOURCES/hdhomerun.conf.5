@@ -19,11 +19,13 @@ compatible execution engine.
 .SH "OPTIONS"
 The \fBhdhomerun.conf\fR configuration file supports the following specifications:
 .LP
-RecordPath=</Full/Path/To/Recording/Directory> - \fBREQUIRED\fR
+RecordPath=/Recording/Path[;/Alt1/Path[;/Alt2/Path]...] - \fBREQUIRED\fR
 .RS 4
-Specifies where the recordings and log files will be stored.  The
-RecordPath is required.  The directory must be writeable by the
-user running the recording engine (typically hdhomerun).
+Specifies the full path for the directory where the recordings and log files
+will be written.  The RecordPath is required.  The directory must be writeable
+by the user running the recording engine (typically hdhomerun).  Optionally,
+additional alternative paths may be specified where recordings will
+be searched for.
 .RE
 .LP
 Port=<port> - \fBOptional\fR
