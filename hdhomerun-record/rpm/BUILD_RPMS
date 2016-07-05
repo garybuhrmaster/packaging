@@ -21,9 +21,9 @@ TMPDIR=`mktemp -d`
 
 ARCH=`arch`
 
-EL=(`ls build_cfgs/ | grep 'centos-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/centos-\([0-9]\+\)-x86_64.cfg/\1/p'`)
+EL=(`ls build_cfgs/ | grep 'centos-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/centos-\([0-9]\+\)-x86_64.cfg/\1/p' | sort -n`)
 ELBASE=${EL[0]}
-FC=(`ls /etc/mock/ | grep 'fedora-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/fedora-\([0-9]\+\)-x86_64.cfg/\1/p'`)
+FC=(`ls /etc/mock/ | grep 'fedora-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/fedora-\([0-9]\+\)-x86_64.cfg/\1/p' | sort -n | tail -3`)
 FCBASE=${FC[0]}
 
 for el in ${EL[@]}
