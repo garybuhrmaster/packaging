@@ -21,9 +21,9 @@ TMPDIR=`mktemp -d`
 
 ARCH=`arch`
 
-EL=(`ls /etc/mock | grep 'epel-[[:digit:]]\\+-x86_64.cfg' | grep -v 'epel-5' |  sed -n 's/epel-\([0-9]\+\)-x86_64.cfg/\1/p'`)
+EL=(`ls build_cfgs/ | grep 'centos-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/centos-\([0-9]\+\)-x86_64.cfg/\1/p'`)
 ELBASE=${EL[0]}
-FC=(`ls /etc/mock | grep 'fedora-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/fedora-\([0-9]\+\)-x86_64.cfg/\1/p'`)
+FC=(`ls /etc/mock/ | grep 'fedora-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/fedora-\([0-9]\+\)-x86_64.cfg/\1/p'`)
 FCBASE=${FC[0]}
 
 for el in ${EL[@]}
@@ -41,12 +41,12 @@ done
 
 if [ "$ARCH" == "x86_64" ]; then
 
-  /usr/bin/mock -r epel-$ELBASE-x86_64 --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache $PKGMGR
+  /usr/bin/mock -r build_cfgs/centos-$ELBASE-x86_64.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache $PKGMGR
 
   for el in ${EL[@]}
   do
-    /usr/bin/mock -r epel-$el-x86_64 --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=i686 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/i386 --disable-plugin=ccache $PKGMGR
-    /usr/bin/mock -r epel-$el-x86_64 --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=x86_64 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/x86_64 --disable-plugin=ccache $PKGMGR
+    /usr/bin/mock -r build_cfgs/centos-$el-x86_64.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=i686 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/i386 --disable-plugin=ccache $PKGMGR
+    /usr/bin/mock -r build_cfgs/centos-$el-x86_64.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=x86_64 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/x86_64 --disable-plugin=ccache $PKGMGR
   done
 
   for fc in ${FC[@]}
@@ -69,7 +69,7 @@ if [ "$ARCH" == "armv7l" ]; then
   for el in ${EL[@]}
   do
     if [ $el -ne 6 ]; then
-      /usr/bin/mock -r centos-$el-armhfp.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=armv7hl --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/armhfp --disable-plugin=ccache $PKGMGR
+      /usr/bin/mock -r build_cfgs/centos-$el-armhfp.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=armv7hl --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/armhfp --disable-plugin=ccache $PKGMGR
     fi
   done
 
@@ -87,7 +87,7 @@ if [ "$ARCH" == "aarch64" ]; then
   for el in ${EL[@]}
   do
     if [ $el -ne 6 ]; then
-      /usr/bin/mock -r centos-$el-aarch64.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=aarch64 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/aarch64 --disable-plugin=ccache $PKGMGR
+      /usr/bin/mock -r build_cfgs/centos-$el-aarch64.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=aarch64 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/aarch64 --disable-plugin=ccache $PKGMGR
     fi
   done
 
