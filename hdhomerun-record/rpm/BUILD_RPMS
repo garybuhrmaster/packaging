@@ -21,9 +21,14 @@ TMPDIR=`mktemp -d`
 
 ARCH=`arch`
 
-EL=(`ls build_cfgs/ | grep 'centos-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/centos-\([0-9]\+\)-x86_64.cfg/\1/p' | sort -n`)
+CFGARCH=$ARCH
+if [ "$CFGARCH" == "armv7l" ]; then
+   CFGARCH='armhfp'
+fi
+
+EL=(`ls build_cfgs/ | grep "centos-[[:digit:]]\\+-$CFGARCH.cfg" | sed -n "s/centos-\([0-9]\+\)-$CFGARCH.cfg/\1/p" | sort -n`)
 ELBASE=${EL[0]}
-FC=(`ls /etc/mock/ | grep 'fedora-[[:digit:]]\\+-x86_64.cfg' | sed -n 's/fedora-\([0-9]\+\)-x86_64.cfg/\1/p' | sort -n | tail -3`)
+FC=(`ls /etc/mock/ | grep "fedora-[[:digit:]]\\+-$CFGARCH.cfg" | sed -n "s/fedora-\([0-9]\+\)-$CFGARCH.cfg/\1/p" | sort -n | tail -3`)
 FCBASE=${FC[0]}
 
 for el in ${EL[@]}
@@ -68,9 +73,7 @@ if [ "$ARCH" == "armv7l" ]; then
 
   for el in ${EL[@]}
   do
-    if [ $el -ne 6 ]; then
-      /usr/bin/mock -r build_cfgs/centos-$el-armhfp.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=armv7hl --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/armhfp --disable-plugin=ccache $PKGMGR
-    fi
+    /usr/bin/mock -r build_cfgs/centos-$el-armhfp.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=armv7hl --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/armhfp --disable-plugin=ccache $PKGMGR
   done
 
 fi
@@ -86,9 +89,7 @@ if [ "$ARCH" == "aarch64" ]; then
 
   for el in ${EL[@]}
   do
-    if [ $el -ne 6 ]; then
-      /usr/bin/mock -r build_cfgs/centos-$el-aarch64.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=aarch64 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/aarch64 --disable-plugin=ccache $PKGMGR
-    fi
+    /usr/bin/mock -r build_cfgs/centos-$el-aarch64.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist .el$el" --target=aarch64 --rebuild $(find $TMPDIR -type f -name "*$VERSION*.src.rpm")  --resultdir=RPMS/el/$el/aarch64 --disable-plugin=ccache $PKGMGR
   done
 
 fi
