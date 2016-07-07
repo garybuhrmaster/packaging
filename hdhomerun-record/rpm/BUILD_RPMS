@@ -3,18 +3,18 @@
 VERSION=$1
 
 if [ "$VERSION" == "" ]; then
-   echo "HDHRDVR VERSION must be provided as argument."
-   exit 1
+    echo "HDHRDVR VERSION must be provided as argument."
+    exit 1
 fi
 
 if [ ! -f "SOURCES/hdhomerun_record_linux_$VERSION" ]; then
-   echo "SOURCES/hdhomerun_record_linux_$VERSION binary not found."
-   exit 1
+    echo "SOURCES/hdhomerun_record_linux_$VERSION binary not found."
+    exit 1
 fi
 
 PKGMGR=''
 if [ ! -x "/usr/bin/dnf" ]; then
-   PKGMGR='--yum'
+    PKGMGR='--yum'
 fi
 
 TMPDIR=`mktemp -d`
@@ -23,7 +23,7 @@ ARCH=`arch`
 
 CFGARCH=$ARCH
 if [ "$CFGARCH" == "armv7l" ]; then
-   CFGARCH='armhfp'
+    CFGARCH='armhfp'
 fi
 
 EL=(`ls build_cfgs/ | grep "centos-[[:digit:]]\\+-$CFGARCH.cfg" | sed -n "s/centos-\([0-9]\+\)-$CFGARCH.cfg/\1/p" | sort -n`)
@@ -36,7 +36,7 @@ for el in ${EL[@]}
 do
     mkdir -p RPMS/el/$el/i386 RPMS/el/$el/x86_64
     if [ $el -ne 6 ]; then
-       mkdir -p RPMS/el/$el/armhfp RPMS/el/$el/aarch64
+        mkdir -p RPMS/el/$el/armhfp RPMS/el/$el/aarch64
     fi
 done
 for fc in ${FC[@]}
