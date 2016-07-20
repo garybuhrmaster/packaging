@@ -34,6 +34,16 @@ Specifies the port number that the recording engine will use to accept
 client connections.  This is primarily needed for firewall
 rules.
 .RE
+.LP
+StorageID=<uuid> - \fBOptional\fR but \fBRecommended\fR
+.RS 4
+Specifies the StorageID that is provided to the my.hdhomerun.com
+browser discovery/access service.  Without a StorageID being
+specified the recorder will not show on the my.hdhomerun.com
+service.  The value should be unique and generated with a tool
+such as uuidgen.  While optional, this value is usually
+recommended to be set for ease of use.
+.RE
 .SH "FILES"
 .LP
 /etc/hdhomerun.conf
