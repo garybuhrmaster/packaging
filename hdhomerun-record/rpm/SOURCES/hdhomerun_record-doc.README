@@ -12,6 +12,12 @@ content will be stored.  This directory must be created
 in such a way as the hdhomerun user can write to it
 (either owned by the hdhomerun user, or appropriate acls).
 
+Optionally, but recommended, you may want to set the
+StorageID in /etc/hdhomerun.conf so that the you will
+be able to use the http://my.hdhomerun.com site to
+discover and access the recorder.  The StorageID must
+be a random uuid, usually generated via uuidgen.
+
 The recorder needs to be able to communicate with the
 tuners on your network, and to be discoverable by your
 clients.  If you are have a network firewall configured,
