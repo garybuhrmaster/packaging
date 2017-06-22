@@ -64,8 +64,8 @@ echo "Nothing to build"
 %if 0%{?rhel} == 6
 # No automated tmpfiles - in init script
 %else
-mkdir -p %{buildroot}%{_usr}/lib/tmpfiles.d
-install -m 0644 %{SOURCE51} %{buildroot}%{_usr}/lib/tmpfiles.d/hdhomerun_record.conf
+mkdir -p %{buildroot}%{_prefix}/lib/tmpfiles.d
+install -m 0644 %{SOURCE51} %{buildroot}%{_prefix}/lib/tmpfiles.d/hdhomerun_record.conf
 %endif
 
 %if 0%{?rhel} == 6
@@ -129,7 +129,7 @@ install -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 %if 0%{?rhel} == 6
 # No automated tmpfiles
 %else
-%{_usr}/lib/tmpfiles.d/*
+%{_prefix}/lib/tmpfiles.d/*
 %endif
 %{_mandir}/man8/*
 %{_mandir}/man5/*
@@ -200,6 +200,9 @@ fi
 
 
 %changelog
+
+* Thu Jun 22 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com
+- Change _usr to _prefix macro usage
 
 * Wed Jul 08 2015 Gary Buhrmaster <gary.buhrmaster@gmail.com> 
 - Initial package.
