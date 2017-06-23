@@ -201,7 +201,7 @@ fi
 
 %changelog
 
-* Thu Jun 22 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com
+* Thu Jun 22 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Change _usr to _prefix macro usage
 
 * Wed Jul 08 2015 Gary Buhrmaster <gary.buhrmaster@gmail.com> 
