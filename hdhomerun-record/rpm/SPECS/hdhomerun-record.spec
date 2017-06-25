@@ -145,7 +145,7 @@ install -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 %config(noreplace) %{_sysconfdir}/rc.d/init.d/hdhomerun_record
 %else
 %defattr(644,root,root,-)
-%config(noreplace) %{_unitdir}/*
+%{_unitdir}/*
 %endif
 
 %defattr(755,hdhomerun,hdhomerun,755)
@@ -208,6 +208,9 @@ exit 0
 
 
 %changelog
+
+* Sun Jun 25 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- service configuration file is not config type
 
 * Sat Jun 24 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Insure scriptlets exit with 0
