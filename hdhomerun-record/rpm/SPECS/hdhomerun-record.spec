@@ -173,6 +173,7 @@ exit 0
 %systemd_post hdhomerun_record.service
 %endif
 %endif
+exit 0
 
 
 %preun
@@ -188,11 +189,12 @@ fi
 %systemd_preun hdhomerun_record.service
 %endif
 %endif
+exit 0
 
 
 %postun
 %if 0%{?rhel} == 6
-if [ $1 == 1 ]; then
+if [ $1 == 1 ] ; then
   /sbin/service hdhomerun_record condrestart >/dev/null 2>&1
 fi
 %else
@@ -202,9 +204,13 @@ fi
 %systemd_postun_with_restart hdhomerun_record.service
 %endif
 %endif
+exit 0
 
 
 %changelog
+
+* Sat Jun 25 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- Insure scriptlets exit with 0
 
 * Sat Jun 25 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Update requires
