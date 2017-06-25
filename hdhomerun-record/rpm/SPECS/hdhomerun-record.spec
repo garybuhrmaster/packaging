@@ -26,15 +26,20 @@ Source70:	hdhomerun_record-doc.README
 Source71:	hdhomerun_record-doc.LICENSE
 Source72:	hdhomerun_record-doc.README.init
 
-Requires(pre):	shadow-utils
 %if 0%{?rhel} == 6
 Requires(pre):	initscripts
+Requires(pre):	shadow-utils
+Requires(pre):	glibc-common
 %else
 %if 0%{?suse_version}
+Requires(pre):	shadow
+Requires(pre):	glibc
 BuildRequires:	systemd-rpm-macros
 %{?systemd_requires}
 %else
 BuildRequires:	systemd
+Requires(pre):	shadow-utils
+Requires(pre):	glibc-common
 Requires(pre):	systemd
 Requires(post):	systemd
 Requires(preun):	systemd
@@ -200,6 +205,9 @@ fi
 
 
 %changelog
+
+* Sat Jun 25 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- Update requires
 
 * Thu Jun 22 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Change _usr to _prefix macro usage
