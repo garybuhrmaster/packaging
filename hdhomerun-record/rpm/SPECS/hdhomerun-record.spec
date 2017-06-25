@@ -209,10 +209,10 @@ exit 0
 
 %changelog
 
-* Sat Jun 25 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+* Sat Jun 24 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Insure scriptlets exit with 0
 
-* Sat Jun 25 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+* Sat Jun 24 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Update requires
 
 * Thu Jun 22 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
