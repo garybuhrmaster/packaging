@@ -7,6 +7,11 @@ if [ "$VERSION" == "" ]; then
     exit 1
 fi
 
+# Use spectool to get sources if needed and available
+if [ ! -f "SOURCES/hdhomerun_record_linux_$VERSION" -a -x /usr/bin/spectool ]; then
+  /usr/bin/spectool -d "HDHRDVR_VERSION $VERSION" -g -s 0 -C SOURCES SPECS/hdhomerun-record.spec
+fi
+
 if [ ! -f "SOURCES/hdhomerun_record_linux_$VERSION" ]; then
     echo "SOURCES/hdhomerun_record_linux_$VERSION binary not found."
     exit 1
