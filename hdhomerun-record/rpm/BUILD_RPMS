@@ -69,7 +69,7 @@ do
 done
 
 # Clean up after ourselves
-for f in "$TMPDIR/root.log" "$TMPDIR/state.log" "$TMPDIR/build.log" "$SRCRPM"
+for f in "$TMPDIR/root.log" "$TMPDIR/state.log" "$TMPDIR/build.log" "$TMPDIR/hw_info.log" "$SRCRPM"
 do
     if [ -f "$f" ]; then
         rm "$f"
