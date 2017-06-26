@@ -20,6 +20,7 @@ Source51:	hdhomerun_record-tmpfiles.conf
 Source52:	hdhomerun_record.service
 Source53:	hdhomerun_record.init
 Source54:	hdhomerun.conf
+Source55:	hdhomerun_record.xml
 Source60:	hdhomerun_record.8
 Source61:	hdhomerun.conf.5
 Source70:	hdhomerun_record-doc.README
@@ -35,6 +36,7 @@ Requires(pre):	glibc-common
 Requires(pre):	shadow
 Requires(pre):	glibc
 BuildRequires:	systemd-rpm-macros
+Requires(post):	firewalld
 %{?systemd_requires}
 %else
 BuildRequires:	systemd
@@ -44,6 +46,7 @@ Requires(pre):	systemd
 Requires(post):	systemd
 Requires(preun):	systemd
 Requires(postun):	systemd
+Requires(post):	firewalld-filesystem
 %endif
 %endif
 
@@ -83,6 +86,13 @@ install -m 0644 %{SOURCE52} %{buildroot}%{_unitdir}/
 
 mkdir -p %{buildroot}%{_sysconfdir}/
 install -m 0644 %{SOURCE54} %{buildroot}%{_sysconfdir}/
+
+%if 0%{?rhel} == 6
+# No firewalld in rhel6
+%else
+mkdir -p %{buildroot}%{_prefix}/lib/firewalld/services
+install -m 0644 %{SOURCE55} %{buildroot}%{_prefix}/lib/firewalld/services/hdhomerun_record.xml
+%endif
 
 mkdir -p %{buildroot}%{_localstatedir}/run/hdhomerun
 
@@ -148,6 +158,13 @@ install -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 %{_unitdir}/*
 %endif
 
+%if 0%{?rhel} == 6
+# No firewalld in rhel 6
+%else
+%defattr(644,root,root,-)
+%{_prefix}/lib/firewalld/services/hdhomerun_record.xml
+%endif
+
 %defattr(755,hdhomerun,hdhomerun,755)
 %dir %{_localstatedir}/run/hdhomerun/
 
@@ -171,6 +188,7 @@ exit 0
 %service_add_post hdhomerun_record.service
 %else
 %systemd_post hdhomerun_record.service
+%firewalld_reload
 %endif
 %endif
 exit 0
@@ -202,12 +220,16 @@ fi
 %service_del_postun hdhomerun_record.service
 %else
 %systemd_postun_with_restart hdhomerun_record.service
+%firewalld_reload
 %endif
 %endif
 exit 0
 
 
 %changelog
+
+* Mon Jun 26 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- add firewalld service definition
 
 * Sun Jun 25 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - service configuration file is not config type

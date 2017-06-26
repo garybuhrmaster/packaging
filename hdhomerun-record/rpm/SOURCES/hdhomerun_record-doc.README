@@ -28,8 +28,14 @@ packets used for tuner discovery.  If your logs show that
 no tuners are discovered, or your clients find no recorders,
 your firewall configuration is one of the first things to
 review.  You may also need to open port 1900 (SSDP aka
-uPnP) to receive and process multicast broadcasts to
-239.255.255.250.
+UPnP) to receive and process multicast broadcasts to
+239.255.255.250.  A firewalld service definition
+(hdhomerun_record) can be enabled for those using firewalld
+(if you change the port in the /etc/hdhomerun.conf file,
+and you are using firewalld, you should copy the service
+definition in (typically) /usr/lib/firewalld/services to
+/etc/firewalld/services/ and update the port numbers).
+
 
 To start the recorder: systemctl start hdhomerun_record.service
 To stop the recorder: systemctl stop hdhomerun_record.service
