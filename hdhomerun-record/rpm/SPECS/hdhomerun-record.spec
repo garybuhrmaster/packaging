@@ -68,6 +68,8 @@ Requires(postun):	systemd
 Requires(postun):	firewalld-filesystem
 %endif
 %endif
+Requires(post):	util-linux
+Requires(post):	coreutils
 
 
 %description
@@ -210,6 +212,13 @@ exit 0
 %firewalld_reload
 %endif
 %endif
+if [ $1 == 1 ] ; then
+  if [ -f /etc/hdhomerun.conf -a -r /etc/hdhomerun.conf -a -w /etc/hdhomerun.conf -a ! -f /etc/hdhomerun.conf.rpmnew ] ; then
+    grep -q "^[[:space:]]*StorageID[[:space:]]*=[[:space:]]*" /etc/hdhomerun.conf >/dev/null || \
+      echo -e "\n\n# StorageID automatically added by package installation\nStorageID="`uuidgen`"\n" >>/etc/hdhomerun.conf
+  fi
+fi
+
 exit 0
 
 
@@ -246,6 +255,9 @@ exit 0
 
 
 %changelog
+
+* Mon Jun 26 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- auto create storageid for new installs
 
 * Mon Jun 26 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Correct requires
