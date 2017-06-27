@@ -28,25 +28,44 @@ Source71:	hdhomerun_record-doc.LICENSE
 Source72:	hdhomerun_record-doc.README.init
 
 %if 0%{?rhel} == 6
+BuildRequires:	coreutils
+BuildRequires:	tar
 Requires(pre):	initscripts
+Requires(pre):	chkconfig
 Requires(pre):	shadow-utils
 Requires(pre):	glibc-common
+Requires(post):	initscripts
+Requires(post):	chkconfig
+Requires(preun):	initscripts
+Requires(preun):	chkconfig
+Requires(postun):	initscripts
 %else
 %if 0%{?suse_version}
+BuildRequires:	coreutils
+BuildRequires:	tar
+BuildRequires:	firewalld
+BuildRequires:	systemd-rpm-macros
+Requires:	firewalld
 Requires(pre):	shadow
 Requires(pre):	glibc
-BuildRequires:	systemd-rpm-macros
+Requires(pre):	firewalld
 Requires(post):	firewalld
 %{?systemd_requires}
 %else
+BuildRequires:	coreutils
+BuildRequires:	tar
 BuildRequires:	systemd
+BuildRequires:	firewalld-filesystem
+Requires:	systemd
+Requires:	firewalld-filesystem
 Requires(pre):	shadow-utils
 Requires(pre):	glibc-common
 Requires(pre):	systemd
+Requires(pre):	firewalld-filesystem
 Requires(post):	systemd
 Requires(preun):	systemd
 Requires(postun):	systemd
-Requires(post):	firewalld-filesystem
+Requires(postun):	firewalld-filesystem
 %endif
 %endif
 
@@ -227,6 +246,9 @@ exit 0
 
 
 %changelog
+
+* Mon Jun 26 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- Correct requires
 
 * Mon Jun 26 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - add firewalld service definition
