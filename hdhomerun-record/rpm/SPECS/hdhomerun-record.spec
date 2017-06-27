@@ -13,9 +13,9 @@ Group:		Applications/Internet
 Summary:	SiliconDust HDHomeRun DVR server
 Vendor:		SiliconDust USA Inc.
 License:	Proprietary
-URL:		http://www.silicondust.com/
+URL:		https://www.silicondust.com/
 
-Source0:	http://download.silicondust.com/hdhomerun/hdhomerun_record_linux_%{HDHRDVR_VERSION}
+Source0:	https://download.silicondust.com/hdhomerun/hdhomerun_record_linux_%{HDHRDVR_VERSION}
 Source51:	hdhomerun_record-tmpfiles.conf
 Source52:	hdhomerun_record.service
 Source53:	hdhomerun_record.init
