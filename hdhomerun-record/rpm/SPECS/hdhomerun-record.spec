@@ -43,13 +43,9 @@ Requires(postun):	initscripts
 %if 0%{?suse_version}
 BuildRequires:	coreutils
 BuildRequires:	tar
-BuildRequires:	firewalld
 BuildRequires:	systemd-rpm-macros
-Requires:	firewalld
 Requires(pre):	shadow
 Requires(pre):	glibc
-Requires(pre):	firewalld
-Requires(post):	firewalld
 %{?systemd_requires}
 %else
 BuildRequires:	coreutils
@@ -207,6 +203,7 @@ exit 0
 %else
 %if 0%{?suse_version}
 %service_add_post hdhomerun_record.service
+test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --reload --quiet || true
 %else
 %systemd_post hdhomerun_record.service
 %firewalld_reload
@@ -246,6 +243,7 @@ fi
 %else
 %if 0%{?suse_version}
 %service_del_postun hdhomerun_record.service
+test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --reload --quiet || true
 %else
 %systemd_postun_with_restart hdhomerun_record.service
 %firewalld_reload
@@ -255,6 +253,9 @@ exit 0
 
 
 %changelog
+
+* Wed Jun 28 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- do not require firewalld install for suse
 
 * Mon Jun 26 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - auto create storageid for new installs
