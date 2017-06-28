@@ -2,7 +2,7 @@
 
 [Unit]
 Description=SiliconDust HDHomeRun DVR service
-After=network.target time-sync.target network-online.target NetworkManager-wait-online.service
+After=network.target time-sync.target network-online.target NetworkManager-wait-online.service firewalld.service
 
 [Service]
 Type=simple
@@ -12,7 +12,9 @@ Nice=-5
 OOMScoreAdjust=-100
 WorkingDirectory=/var/run/hdhomerun
 ExecStart=/usr/bin/hdhomerun_record foreground
+ExecStartPre=-+/bin/sh -c 'test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --quiet --add-service hdhomerun_record || true'
 ExecStop=/usr/bin/hdhomerun_record stop
+ExecStopPost=-+/bin/sh -c 'test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --quiet --remove-service hdhomerun_record || true'
 
 # Whether systemd will continue over-watch and restart on any halt
 Restart=always
