@@ -89,19 +89,19 @@ echo "Nothing to build"
 %if 0%{?rhel} == 6
 # No automated tmpfiles - in init script
 %else
-mkdir -p %{buildroot}%{_prefix}/lib/tmpfiles.d
-install -m 0644 %{SOURCE51} %{buildroot}%{_prefix}/lib/tmpfiles.d/hdhomerun_record.conf
+mkdir -p %{buildroot}%{_tmpfilesdir}
+install -m 0644 %{SOURCE51} %{buildroot}%{_tmpfilesdir}/hdhomerun_record.conf
 %endif
 
 %if 0%{?rhel} == 6
-mkdir -p %{buildroot}%{_sysconfdir}/rc.d/init.d
-install -m 0644 %{SOURCE53} %{buildroot}%{_sysconfdir}/rc.d/init.d/hdhomerun_record
+mkdir -p %{buildroot}%{_initddir}
+install -m 0644 %{SOURCE53} %{buildroot}%{_initddir}/hdhomerun_record
 %else
 mkdir -p %{buildroot}%{_unitdir}
 install -m 0644 %{SOURCE52} %{buildroot}%{_unitdir}/
 %endif
 
-mkdir -p %{buildroot}%{_sysconfdir}/
+mkdir -p %{buildroot}%{_sysconfdir}
 install -m 0644 %{SOURCE54} %{buildroot}%{_sysconfdir}/
 
 %if 0%{?rhel} == 6
@@ -161,7 +161,7 @@ install -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 %if 0%{?rhel} == 6
 # No automated tmpfiles
 %else
-%{_prefix}/lib/tmpfiles.d/*
+%{_tmpfilesdir}/*
 %endif
 %{_mandir}/man8/*
 %{_mandir}/man5/*
@@ -169,7 +169,7 @@ install -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 
 %if 0%{?rhel} == 6
 %defattr(755,root,root,-)
-%config(noreplace) %{_sysconfdir}/rc.d/init.d/hdhomerun_record
+%config(noreplace) %{_initddir}/*
 %else
 %defattr(644,root,root,-)
 %{_unitdir}/*
@@ -253,6 +253,9 @@ exit 0
 
 
 %changelog
+
+* Wed Jun 28 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- use macro definitions for _initddir and _tmpfilesdir
 
 * Wed Jun 28 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - do not require firewalld install for suse
