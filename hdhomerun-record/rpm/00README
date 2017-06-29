@@ -1,42 +1,45 @@
 
 Notes:
   * Tested on Fedora, CentOS (RHEL work-alike) systems for x86
-    and Fedora for arm.  Untested on SUSE.
+    and Fedora for arm.  Untested on SUSE.  Untested on ppc arch.
   * Fedora and CentOS 7 (and SUSE) build for modern (systemd)
     init systems with service definitions.  CentOS 6 builds for
-    the legacy sysv init scripts
+    the legacy sysv init scripts.
+  * Building supports (and for distributor builds utilizes) cross
+    building.  Technically, both EL nor Fedora requires native
+    builds.  However, (a) these are not official EL/Fedora
+    packages, and (b) we do not build the binary, just extract
+    the binary from the distribution point.
   * Patches welcome.
 
 
 
 
-To build an RPM
+Quick reference to build an RPM
 
 First, choose build process.  MOCK, or RPMBUILD
 
-If you are not sure what you want, you likely want RPMBUILD.
+If you are building only for one (your) system, RPMBUILD is easier.
 
 
 -----
 
-MOCK build:
+MOCK all architecture build for distributors:
 
 Requirements:
 
-* Fedora or RHEL/CentOS system for x86_64, and a Fedora arm system
-  (RHEL does not currently support arm).
+* (Usually) a current Fedora or CentOS system running x86_64
 
 * Install mock, rpm-build, and enable your build user to run mock.
-
 
 To use:
 
 * cd to this directory
 
-* Copy the current (distribution) hdhomerun_record_linux_<version> binary to SOURCES/
+* (Optional) copy the current (distribution) hdhomerun_record_linux_<version> binary to SOURCES/
+  (BUILD_RPMS will attempt to download the source directly from SiliconDust)
 
-* Run 'BUILD_RPMS <version>' on a Fedora system x86_64 system, and
-  seperately on a armv7hl system
+* Run 'BUILD_RPMS <version>' on a Fedora x86_64 system
 
 * Copy binary rpms in RPMS/ to distribution point(s)
 
@@ -44,11 +47,20 @@ To use:
 
 RPMBUILD build:
 
+Requirements:
+
+* A number of packages are required to build the rpm. Use
+    rpmspec -q --buildrequires [--target=<arch>] SPECS/hdhomerun-record.spec
+  to determine the build requirements (--target=<arch> for cross building)
+
+To use:
+
 * cd to this directory
 
 * Copy the current (distribution) hdhomerun_record_linux_<version> binary to SOURCES/
 
-* Run 'rpmbuild --define "_topdir ${PWD}" --define "HDHRDVR_VERSION <version>" -bb SPECS/hdhomerun-record.spec'
+* Run 'rpmbuild --define "_topdir ${PWD}" --define "HDHRDVR_VERSION <version>" [--target=<arch>] -bb SPECS/hdhomerun-record.spec'
+  (include --target=<arch> if you are going a cross build to the non-native architecture)
 
 * RPMS/<arch> will contain your rpms
 
