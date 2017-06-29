@@ -89,64 +89,54 @@ echo "Nothing to build"
 %if 0%{?rhel} == 6
 # No automated tmpfiles - in init script
 %else
-mkdir -p %{buildroot}%{_tmpfilesdir}
-install -m 0644 %{SOURCE51} %{buildroot}%{_tmpfilesdir}/hdhomerun_record.conf
+install -D -m 0644 %{SOURCE51} %{buildroot}%{_tmpfilesdir}/hdhomerun_record.conf
 %endif
 
 %if 0%{?rhel} == 6
-mkdir -p %{buildroot}%{_initddir}
-install -m 0644 %{SOURCE53} %{buildroot}%{_initddir}/hdhomerun_record
+install -D -m 0644 %{SOURCE53} %{buildroot}%{_initddir}/hdhomerun_record
 %else
-mkdir -p %{buildroot}%{_unitdir}
-install -m 0644 %{SOURCE52} %{buildroot}%{_unitdir}/
+install -D -m 0644 %{SOURCE52} %{buildroot}%{_unitdir}/hdhomerun_record.service
 %endif
 
-mkdir -p %{buildroot}%{_sysconfdir}
-install -m 0644 %{SOURCE54} %{buildroot}%{_sysconfdir}/
+install -D -m 0644 %{SOURCE54} %{buildroot}%{_sysconfdir}/hdhomerun.conf
 
 %if 0%{?rhel} == 6
 # No firewalld in rhel6
 %else
-mkdir -p %{buildroot}%{_prefix}/lib/firewalld/services
-install -m 0644 %{SOURCE55} %{buildroot}%{_prefix}/lib/firewalld/services/hdhomerun_record.xml
+install -D -m 0644 %{SOURCE55} %{buildroot}%{_prefix}/lib/firewalld/services/hdhomerun_record.xml
 %endif
 
 mkdir -p %{buildroot}%{_localstatedir}/run/hdhomerun
 
-mkdir -p %{buildroot}%{_mandir}/man8
-install -m 0644 %{SOURCE60} %{buildroot}%{_mandir}/man8/
+install -D -m 0644 %{SOURCE60} %{buildroot}%{_mandir}/man8/hdhomerun_record.8
 
-mkdir -p %{buildroot}%{_mandir}/man5
-install -m 0644 %{SOURCE61} %{buildroot}%{_mandir}/man5/
+install -D -m 0644 %{SOURCE61} %{buildroot}%{_mandir}/man5/hdhomerun.conf.5
 
-mkdir -p %{buildroot}%{_datadir}/doc/hdhomerun_record
 %if 0%{?rhel} == 6
-install -m 0644 %{SOURCE72} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
+install -D -m 0644 %{SOURCE72} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
 %else
-install -m 0644 %{SOURCE70} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
+install -D -m 0644 %{SOURCE70} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
 %endif
-install -m 0644 %{SOURCE71} %{buildroot}%{_datadir}/doc/hdhomerun_record/LICENSE
-
-mkdir -p %{buildroot}%{_bindir}
+install -D -m 0644 %{SOURCE71} %{buildroot}%{_datadir}/doc/hdhomerun_record/LICENSE
 
 %ifarch %{ix86}
-install -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
+install -D -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
 %endif
 
 %ifarch x86_64
 if [ -e "hdhomerun_record_x64" ]; then
-install -m 0755 hdhomerun_record_x64 %{buildroot}%{_bindir}/hdhomerun_record
+install -D -m 0755 hdhomerun_record_x64 %{buildroot}%{_bindir}/hdhomerun_record
 else
-install -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
+install -D -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
 fi
 %endif
 
 %ifarch armv7hl aarch64
-install -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
+install -D -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
 %endif
 
 %ifarch ppc %{power64}
-install -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
+install -D -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 %endif
 
 %__spec_install_post
@@ -253,6 +243,9 @@ exit 0
 
 
 %changelog
+
+* Wed Jun 28 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- use install to create target directories
 
 * Wed Jun 28 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - use macro definitions for _initddir and _tmpfilesdir
