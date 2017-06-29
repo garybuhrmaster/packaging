@@ -1,0 +1,10 @@
+# Defaults for hdhomerun_record initscript
+# sourced by /etc/init.d/rc.d/hdhomerun_record
+# installed at /etc/sysconfig/hdhomerun_record by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# Additional options that are passed to the Daemon.
+OPTIONS=""

@@ -21,6 +21,7 @@ Source52:	hdhomerun_record.service
 Source53:	hdhomerun_record.init
 Source54:	hdhomerun.conf
 Source55:	hdhomerun_record.xml
+Source56:	hdhomerun_record.sysconfig
 Source60:	hdhomerun_record.8
 Source61:	hdhomerun.conf.5
 Source70:	hdhomerun_record-doc.README
@@ -94,6 +95,7 @@ install -D -m 0644 %{SOURCE51} %{buildroot}%{_tmpfilesdir}/hdhomerun_record.conf
 
 %if 0%{?rhel} == 6
 install -D -m 0644 %{SOURCE53} %{buildroot}%{_initddir}/hdhomerun_record
+install -D -m 0644 %{SOURCE56} %{buildroot}%{_sysconfdir}/sysconfig/hdhomerun_record
 %else
 install -D -m 0644 %{SOURCE52} %{buildroot}%{_unitdir}/hdhomerun_record.service
 %endif
@@ -160,6 +162,7 @@ install -D -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 %if 0%{?rhel} == 6
 %defattr(755,root,root,-)
 %config(noreplace) %{_initddir}/*
+%config(noreplace) %{_sysconfdir}/sysconfig/*
 %else
 %defattr(644,root,root,-)
 %{_unitdir}/*
@@ -243,6 +246,9 @@ exit 0
 
 
 %changelog
+
+* Wed Jun 28 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- install sysconfig file for rhel6
 
 * Wed Jun 28 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - use install to create target directories
