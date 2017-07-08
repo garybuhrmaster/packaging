@@ -1,1 +1,11 @@
-TBD
+
+Notes:
+  * Tested only on a (recent) Fedora system for building
+  * Builds only for (recent) debian systems with systemd
+  * Patches welcome.
+
+Quick reference to build debs
+
+* Install the various debian build support (dpkg, dpkg-dev)
+
+* Run 'BUILD_DEBS <version>'

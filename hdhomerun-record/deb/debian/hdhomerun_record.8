@@ -1,0 +1,46 @@
+.TH "hdhomerun_record" "8" "2015/07/20" "SiliconDust HDHomeRun DVR" "hdhomerun_record"
+.ad l
+.SH "NAME"
+.LP 
+\fBhdhomerun_record\fR \- Recording engine for the SiliconDust HDHomeRun DVR.
+.SH "SYNOPSIS"
+\fBhdhomerun_record\fR [\fIOPTION\&...\fR] \fICOMMAND\fR
+.SH "DESCRIPTION"
+.LP
+The SiliconDust HDHomeRun DVR (hdhomerun_record) is the daemon
+that records the TV content using the SiliconDust HDHR tuners.
+.SH "COMMANDS"
+hdhomerun_record supports (and requires one of) the following commands:
+.RS 4
+.LP
+start - Starts the recorder in daemon mode
+.LP
+foreground - Starts the recording in foreground mode
+.LP
+stop - Stops the recorder
+.LP
+status - Reports the status of the recorder
+.LP
+version - Reports the version of the recorder
+.RE
+.SH "OPTIONS"
+hdhomerun_record supports the following options:
+.RS 4
+.LP
+--conf=<configuration file> - Specifies the configuration file to use
+(defaults to the current working directory hdhomerun.conf or /etc/hdhomerun.conf)
+.RE
+.SH "FILES"
+.LP
+/usr/bin/hdhomerun_record
+
+.SH "SEE ALSO"
+.LP 
+\fBhdhomerun.conf(5)\fR
+
+\fIhttps://www.silicondust.com/\fR
+
+.SH "AUTHOR"
+.LP
+SiliconDust USA Inc.  <support@silicondust.com>
+

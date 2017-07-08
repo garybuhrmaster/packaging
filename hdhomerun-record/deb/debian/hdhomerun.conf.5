@@ -1,0 +1,60 @@
+.TH "hdhomerun.conf" "5" "2015/07/20" "SiliconDust HDHomeRun DVR" "hdhomerun_record configuration file"
+.ad l
+.SH "NAME"
+.LP 
+\fBhdhomerun.conf\fR \- Configuration file for \fBhdhomerun_record(8)\fR.
+.SH "DESCRIPTION"
+.LP
+The SiliconDust HDHomeRun DVR (hdhomerun_record) defaults to using a configuration
+file located at \fB/etc/hdhomerun.conf\fR.  The configuration file location
+can be specifed at \fBhdhomerun_record(8)\fR startup time with the --conf
+parameter.
+.LP
+The basic file format of the hdhomerun.conf is a newline-separated list
+of environment-like shell-compatible variable assignments.
+It is possible to source the configuration from shell scripts, however,
+beyond mere variable assignments no shell features are supported,
+allowing applications to read the file without implementing a shell
+compatible execution engine.
+.SH "OPTIONS"
+The \fBhdhomerun.conf\fR configuration file supports the following specifications:
+.LP
+RecordPath=/Recording/Path[;/Alt1/Path[;/Alt2/Path]...] - \fBREQUIRED\fR
+.RS 4
+Specifies the full path for the directory where the recordings and log files
+will be written.  The RecordPath is required.  The directory must be writeable
+by the user running the recording engine (typically hdhomerun).  Optionally,
+additional alternative paths may be specified where recordings will
+be searched for.
+.RE
+.LP
+Port=<port> - \fBOptional\fR
+.RS 4
+Specifies the port number that the recording engine will use to accept
+client connections.  This is primarily needed for firewall
+rules.
+.RE
+.LP
+StorageID=<uuid> - \fBOptional\fR but \fBRecommended\fR
+.RS 4
+Specifies the StorageID that is provided to the my.hdhomerun.com
+browser discovery/access service.  Without a StorageID being
+specified the recorder will not show on the my.hdhomerun.com
+service.  The value should be unique and generated with a tool
+such as uuidgen.  While optional, this value is usually
+recommended to be set for ease of use.
+.RE
+.SH "FILES"
+.LP
+/etc/hdhomerun.conf
+
+.SH "SEE ALSO"
+.LP 
+\fBhdhomerun_record(8)\fR
+
+\fIhttps://www.silicondust.com/\fR
+
+.SH "AUTHOR"
+.LP
+SiliconDust USA Inc.  <support@silicondust.com>
+

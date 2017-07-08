@@ -1,0 +1,33 @@
+#!/bin/bash -x
+
+HDHRDVR_VERSION=$1
+
+if [ "$HDHRDVR_VERSION" == "" ]; then
+    echo "HDHRDVR VERSION must be provided as argument."
+    exit 1
+fi
+
+export HDHRDVR_VERSION
+
+ARCH=`arch`
+
+CFGARCH=$ARCH
+if [ "$CFGARCH" == "armv7l" ]; then
+    CFGARCH='armhf'
+fi
+
+BUILDDIR=`mktemp -d`
+
+echo $BUILDDIR
+
+mkdir -p $BUILDDIR/hdhomerun-record
+
+cp -R debian $BUILDDIR/hdhomerun-record
+
+for TARGET_ARCH in "i386" "amd64" "armhf" "arm64"
+do
+  echo "Target arch is " $TARGET_ARCH
+  ( cd $BUILDDIR/hdhomerun-record ; dpkg-buildpackage -b -d -us -uc --host-arch=$TARGET_ARCH )
+done
+
+cp $BUILDDIR/*.deb DEBS/

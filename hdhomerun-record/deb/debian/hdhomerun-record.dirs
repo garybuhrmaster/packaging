@@ -1,0 +1,7 @@
+/etc
+/etc/default
+/usr/lib/firewalld/services
+/usr/bin
+/usr/share/doc/hdhomerun_record
+/lib/systemd/system
+/usr/lib/tmpfiles.d

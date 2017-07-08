@@ -1,0 +1,7 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: hdhomerun-record
+Source: <url://example.com>
+
+Files: *
+Copyright: 2015 SiliconDust USA Inc.
+License: Proprietary - All rights reserved

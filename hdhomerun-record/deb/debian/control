@@ -1,0 +1,13 @@
+Source: hdhomerun-record
+Maintainer: Gary Buhrmaster <gary.buhrmaster@gmail.com>
+Section: net
+Priority: optional
+Build-Depends: debhelper (>= 9), wget, ca-certificates, dh-systemd (>= 1.5)
+Standards-Version: 3.9.5
+Homepage: https://www.silicondust.com
+
+Package: hdhomerun-record
+Architecture: any
+Depends: ${misc:Depends}, systemd, adduser, coreutils, grep, uuid-runtime, bash
+Description: SiliconDust HDHomeRun DVR recorder
+ SiliconDust HDHomeRun DVR recorder
