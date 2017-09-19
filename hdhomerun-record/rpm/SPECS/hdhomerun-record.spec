@@ -324,7 +324,7 @@ exit 0
 
 %changelog
 
-* Fri Jun 30 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com?
+* Fri Jun 30 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - bump dist
 
 * Thu Jun 29 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
