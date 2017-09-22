@@ -22,8 +22,6 @@ if [ ! -x "/usr/bin/dnf" ]; then
     PKGMGR='--yum'
 fi
 
-TMPDIR=`mktemp -d`
-
 HOSTARCH=`arch`
 if [ "$HOSTARCH" == "armv7l" ]; then
     HOSTARCH='armhfp'
@@ -65,8 +63,13 @@ do
 done
 
 # Build src.rpm
-/usr/bin/mock -r build_cfgs/centos-$ELBASE-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$TMPDIR --disable-plugin=ccache $PKGMGR
-SRCRPM=`ls $TMPDIR/*$VERSION*.src.rpm`
+SRCDIR=`mktemp -d`
+/usr/bin/mock -r build_cfgs/centos-$ELBASE-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$SRCDIR --disable-plugin=ccache $PKGMGR
+if [ ! $? -eq 0 ]; then
+    echo "Build failed, logs in $RESULTDIR"
+    exit 1
+fi
+SRCRPM=`ls $SRCDIR/*$VERSION*.src.rpm`
 if [ ! -f "$SRCRPM" ]; then
     echo "Source RPM was not built"
     exit 1
@@ -84,7 +87,16 @@ do
         if [ "$arch" == "armhfp" ]; then
             arch=armv7hl
         fi
-        /usr/bin/mock -r fedora-$fc-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$arch --define "dist .fc$fc" --resultdir=RPMS/fedora/$fc/$rpmresultarchdir --disable-plugin=ccache $PKGMGR $SRCRPM
+        RESULTDIR=`mktemp -d`
+        /usr/bin/mock -r fedora-$fc-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$arch --define "dist .fc$fc" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        if [ ! $? -eq 0 ]; then
+            echo "Build failed, logs in $RESULTDIR"
+            exit 1
+        fi
+        cp $RESULTDIR/*.$arch.rpm RPMS/fedora/$fc/$rpmresultarchdir/
+        rm -f $RESULTDIR/*.log
+        rm -f $RESULTDIR/*.rpm
+        rmdir $RESULTDIR
     done
 done
 
@@ -105,15 +117,20 @@ do
         if [ "$arch" == "armhfp" ]; then
             arch=armv7hl
         fi
-        /usr/bin/mock -r build_cfgs/centos-$el-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$arch --define "dist .el$el" --resultdir=RPMS/el/$el/$rpmresultarchdir --disable-plugin=ccache $PKGMGR $SRCRPM
+        RESULTDIR=`mktemp -d`
+        /usr/bin/mock -r build_cfgs/centos-$el-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$arch --define "dist .el$el" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        if [ ! $? -eq 0 ]; then
+            echo "Build failed, logs in $RESULTDIR"
+            exit 1
+        fi
+        cp $RESULTDIR/*.$arch.rpm RPMS/el/$el/$rpmresultarchdir/
+        rm -f $RESULTDIR/*.log
+        rm -f $RESULTDIR/*.rpm
+        rmdir $RESULTDIR
     done
 done
 
 # Clean up after ourselves
-for f in "$TMPDIR/root.log" "$TMPDIR/state.log" "$TMPDIR/build.log" "$TMPDIR/hw_info.log" "$SRCRPM"
-do
-    if [ -f "$f" ]; then
-        rm "$f"
-    fi
-done
-rmdir $TMPDIR
+rm -f $SRCDIR/*.log
+rm -f $SRCDIR/*.rpm
+rmdir $SRCDIR
