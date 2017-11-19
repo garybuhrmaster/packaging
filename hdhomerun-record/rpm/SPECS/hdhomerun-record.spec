@@ -32,7 +32,7 @@
 
 Name:		hdhomerun-record
 Version:	0.0.%{HDHRDVR_VERSION}
-Release:	3%{?dist}
+Release:	1%{?dist}
 Group:		Applications/Internet
 Summary:	SiliconDust HDHomeRun DVR server
 Vendor:		SiliconDust USA Inc.
@@ -321,6 +321,9 @@ exit 0
 
 
 %changelog
+
+* Sat Nov 18 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
+- reset dist for new version
 
 * Tue Sep 19 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Remove provides/obsoletes, bump release
