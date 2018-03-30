@@ -115,7 +115,7 @@ This package provides the SiliconDust HDHomeRun DVR recorder service.
 %prep
 %setup -q -c -T
 
-dd if=%{SOURCE0} bs=4096 skip=1 2>/dev/null | tar -xvz 
+dd if=%{SOURCE0} bs=4096 skip=1 2>/dev/null | tar -xvz
 
 
 %build
@@ -367,5 +367,5 @@ exit 0
 * Thu Jun 22 2017 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Change _usr to _prefix macro usage
 
-* Wed Jul 08 2015 Gary Buhrmaster <gary.buhrmaster@gmail.com> 
+* Wed Jul 08 2015 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Initial package.
