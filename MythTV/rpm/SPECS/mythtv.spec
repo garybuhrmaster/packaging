@@ -552,23 +552,6 @@ pushd mythtv
     install -m 0644 %{SOURCE302}          %{buildroot}%{_datadir}/pixmaps/mythtv-setup.png
     install -m 0644 %{SOURCE303}          %{buildroot}%{_datadir}/applications/mythtv-setup.desktop
 
-
-    # Modify .py files from "/usr/bin/env python" to be "/usr/bin/python2"
-#   find %{buildroot}/ -type f -name "*.py" \
-#       -exec sed -i -e '1!b;s/^#!\/usr\/bin\/env python$/#!\/usr\/bin\/python2/' {} \;
-
-    # fix up hardware profiler python files which should not be marked as executable (ticket #11111)
-#   chmod -x                              %{buildroot}%{_datadir}/%{name}/hardwareprofile/distros/mythtv_data/uuiddb.py
-#   chmod -x                              %{buildroot}%{_datadir}/%{name}/hardwareprofile/distros/mythtv_data/orddict.py
-#   chmod -x                              %{buildroot}%{_datadir}/%{name}/hardwareprofile/distros/mythtv_data/data_mythtv.py
-#   chmod -x                              %{buildroot}%{_datadir}/%{name}/hardwareprofile/distros/mythtv_data/request.py
-
-    # fix up some internetcontent perl scripts which use /usr/bin/env perl to be /usr/bin/perl (ticket #11111)
-#   sed -i -e '1!b;s/^#!\/usr\/bin\/env perl$/#!\/usr\/bin\/perl/' \
-#                                         %{buildroot}%{_datadir}/%{name}/internetcontent/topdocumentaryfilm.pl
-#   sed -i -e '1!b;s/^#!\/usr\/bin\/env perl$/#!\/usr\/bin\/perl/' \
-#                                         %{buildroot}%{_datadir}/%{name}/internetcontent/twit.tv.pl
-
 popd
 
 ################################################################################
