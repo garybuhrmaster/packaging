@@ -1,0 +1,24 @@
+
+
+Tools to build MythTV rpms
+
+NOTE:  The BUILD_MYTHTV_RPMS command uses mockchain, of which the upstream
+       is currently broken.  You must manually create your own copy of
+       mockchain (and make sure it is in your path) with the proposed fixes
+       from issue #65 from the rpm-software-management/mock github repo.
+       ref: https://github.com/rpm-software-management/mock/issues/65# 
+
+Examples:
+
+  Build latest fixes/29 for Fedora 28:
+
+    ./BUILD_MYTHTV_RPMS -r /etc/mock/fedora-28-x86_64-rpmfusion_free.cfg fixes/29
+
+  Build latest fixes/29 for centos 7:
+
+    ./BUILD_MYTHTV_RPMS -r build_cfgs/centos-7-x86_64-rpmfusion_free.cfg fixes/29
+
+  Build master for Fedora 28:
+
+    ./BUILD_MYTHTV_RPMS -r /etc/mock/fedora-28-x86_64-rpmfusion_free.cfg master
+

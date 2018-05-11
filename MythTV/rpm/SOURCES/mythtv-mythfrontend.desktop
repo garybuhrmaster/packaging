@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=MythTV frontend
+Comment=Record, playback and watch TV
+Icon=mythfrontend
+Exec=/usr/bin/mythfrontend
+Terminal=false
+Type=Application
+Categories=Application;AudioVideo;Player;

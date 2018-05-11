@@ -1,0 +1,166 @@
+#!/bin/bash
+
+#
+# Support mock config specification
+#
+MOCKCFG="default"
+while :; do
+    case $1 in
+        -r|--root)       # Takes an option argument; ensure it has been specified.
+            if [ ! -z "$2" ]; then
+                MOCKCFG="$2"
+                shift
+            else
+                printf 'ERROR: "--root" requires a non-empty option argument.\n'
+                exit 1
+            fi
+            ;;
+         --)              # End of all options.
+             shift
+             break
+             ;;
+         -?*)
+             printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
+             ;;
+         *)               # Default case: No more options, so break out of the loop.
+             break
+     esac
+     shift
+done
+
+GITCOMMITISH=$1
+
+if [ "$GITCOMMITISH" == "" ]; then
+    GITCOMMITISH="master"
+fi
+
+#
+# First, we clone the repo, in order to obtain the
+# description and commit hash for the specified
+# version to build for/to (yes, this is sort of
+# ugly, but while we can use ls-remote to get the
+# commit hash, there is no (known) way to get the
+# describe (maybe some future github api?))
+#
+TMPCLONEDIR=`mktemp -d`
+git -C $TMPCLONEDIR clone https://github.com/MythTV/mythtv.git mythtv
+git -C $TMPCLONEDIR/mythtv checkout $GITCOMMITISH
+if [ $? -ne 0 ]; then
+    echo "Unable to checkout $GITCOMMITISH in $TMPCLONEDIR/mythtv"
+    exit 1
+fi
+
+GITDESCRIBE=`git -C $TMPCLONEDIR/mythtv describe`
+GITCOMMIT=`git -C $TMPCLONEDIR/mythtv rev-parse HEAD`
+
+# MythTV project specific tag format
+if ! [ ${GITDESCRIBE:0:1} == 'v' ]; then
+    echo "Unable to parse mythtv git describe $GITDESCRIBE from $TMPCLONEDIR/mythtv"
+    exit 1
+fi
+
+# Adjust git-describe to acceptable RPM format
+RPMVERSION=${GITDESCRIBE:1}
+RPMVERSION=${RPMVERSION//-/.}
+
+# Cleanup our clones
+rm -rf $TMPCLONEDIR/mythtv
+rmdir $TMPCLONEDIR
+
+#
+# Announce to world and dog what we are doing
+#
+echo "----"
+echo "Building mythtv version $RPMVERSION at commit $GITCOMMIT"
+echo "----"
+
+#
+# Build an expanded SPEC file with our definitions so that
+# the src.rpm will be reproducably buildable outside of this
+# build script
+#
+TMPSDIR=`mktemp -d`
+cp -r SOURCES $TMPSDIR/
+cp -r SPECS $TMPSDIR/
+sed -i -e "s/^Version: .*/Version:        $RPMVERSION/" $TMPSDIR/SPECS/mythtv.spec
+sed -i -e "s/^%global commit .*/%global commit $GITCOMMIT/" $TMPSDIR/SPECS/mythtv.spec
+sed -i -e "s/^Version: .*/Version:        $RPMVERSION/" $TMPSDIR/SPECS/mythtv-plugins.spec
+sed -i -e "s/^%global commit .*/%global commit $GITCOMMIT/" $TMPSDIR/SPECS/mythtv-plugins.spec
+
+# Use spectool to get source
+/usr/bin/spectool -g -f -s 0 -C $TMPSDIR/SOURCES $TMPSDIR/SPECS/mythtv.spec
+
+#
+# Build buildable src.rpm
+#
+TMPSRCDIR=`mktemp -d`
+# Build src.rpm
+/usr/bin/mock -r $MOCKCFG --old-chroot --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythtv.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
+if [ $? -ne 0 ]; then
+    echo "Unable to build source rpm"
+    exit 1
+fi
+SRCBASERPM=`ls $TMPSRCDIR/mythtv-*$RPMVERSION*.src.rpm`
+if [ ! -f "$SRCBASERPM" ]; then
+    echo "Source RPM was not built"
+    exit 1
+fi
+/usr/bin/mock -r $MOCKCFG --old-chroot --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythtv-plugins.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
+if [ $? -ne 0 ]; then
+    echo "Unable to build source rpm"
+    exit 1
+fi
+SRCPLUGINSRPM=`ls $TMPSRCDIR/mythtv-plugins-*$RPMVERSION*.src.rpm`
+if [ ! -f "$SRCPLUGINSRPM" ]; then
+    echo "Source RPM was not built"
+    exit 1
+fi
+
+#
+# Build the installable rpms
+#
+TMPTGTDIR=`mktemp -d`
+mockchain -r $MOCKCFG -m --old-chroot -l $TMPTGTDIR $SRCBASERPM $SRCPLUGINSRPM
+if [ $? -ne 0 ]; then
+    echo "Unable to build rpm"
+    exit 1
+fi
+
+# Obtain/copy rpms
+MOCKCFG_CHROOT_NAME=$MOCKCFG
+MOCKCFG_TEST_CFGEXT=${MOCKCFG%%.cfg}
+if [ "$MOCKCFG" != "$MOCKCFG_TEST_CFGEXT" ]; then
+   MOCKCFG_CHROOT_NAME=${MOCKCFG_TEST_CFGEXT##*/}
+fi
+REPORPMS=`dnf --quiet repoquery --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --qf="%{location}" 2>/dev/null`
+mkdir -p SRPMS RPMS
+for p in ${REPORPMS}
+do
+    [[ "$p" =~ ^.*\.(.+)\.rpm$ ]] &&
+        (
+            archdir="${BASH_REMATCH[1]}"
+            if [ "$archdir" == "src" ]; then
+                cp $TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME/$p SRPMS/
+            else
+                if [ "$archdir" == "i686" ]; then
+                    archdir="i386"
+                elif [ "$archdir" == "armv7hl" ]; then
+                    archdir="armhfp"
+                fi
+                mkdir -p RPMS/$archdir
+                cp $TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME/$p RPMS/$archdir/
+            fi
+        )
+done
+
+
+# Cleanup
+rm -f $TMPSRCDIR/*.log
+rm -f $TMPSRCDIR/*.rpm
+rmdir $TMPSRCDIR
+rm -rf $TMPTGTDIR/configs
+rm -rf $TMPTGTDIR/results
+rmdir $TMPTGTDIR
+rm -rf $TMPSDIR/SPECS
+rm -rf $TMPSDIR/SOURCES
+rmdir $TMPSDIR
