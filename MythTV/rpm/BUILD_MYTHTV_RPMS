@@ -43,15 +43,20 @@ fi
 # describe (maybe some future github api?))
 #
 TMPCLONEDIR=`mktemp -d`
-git -C $TMPCLONEDIR clone https://github.com/MythTV/mythtv.git mythtv
-git -C $TMPCLONEDIR/mythtv checkout $GITCOMMITISH
+pushd $TMPCLONEDIR >/dev/null
+git clone https://github.com/MythTV/mythtv.git mythtv
+pushd mythtv >/dev/null
+git checkout $GITCOMMITISH
 if [ $? -ne 0 ]; then
     echo "Unable to checkout $GITCOMMITISH in $TMPCLONEDIR/mythtv"
     exit 1
 fi
 
-GITDESCRIBE=`git -C $TMPCLONEDIR/mythtv describe`
-GITCOMMIT=`git -C $TMPCLONEDIR/mythtv rev-parse HEAD`
+GITDESCRIBE=`git describe`
+GITCOMMIT=`git rev-parse HEAD`
+
+popd >/dev/null
+popd >/dev/null
 
 # MythTV project specific tag format
 if ! [ ${GITDESCRIBE:0:1} == 'v' ]; then
@@ -89,6 +94,11 @@ sed -i -e "s/^%global commit .*/%global commit $GITCOMMIT/" $TMPSDIR/SPECS/mytht
 
 # Use spectool to get source
 /usr/bin/spectool -g -f -s 0 -C $TMPSDIR/SOURCES $TMPSDIR/SPECS/mythtv.spec
+if [ $? -ne 0 ]; then
+    echo "Unable to retrieve source files via spectool"
+    exit 1
+fi
+
 
 #
 # Build buildable src.rpm
