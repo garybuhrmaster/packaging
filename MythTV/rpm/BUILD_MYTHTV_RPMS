@@ -142,15 +142,26 @@ MOCKCFG_TEST_CFGEXT=${MOCKCFG%%.cfg}
 if [ "$MOCKCFG" != "$MOCKCFG_TEST_CFGEXT" ]; then
    MOCKCFG_CHROOT_NAME=${MOCKCFG_TEST_CFGEXT##*/}
 fi
-REPORPMS=`dnf --quiet repoquery --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --qf="%{location}" 2>/dev/null`
+
+if hash dnf 2>/dev/null; then
+    REPORPMS=`dnf --quiet repoquery --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null`
+else
+    REPORPMS=`repoquery --quiet --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null ; echo -n ' ' ; repoquery --quiet --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --srpm --location 2>/dev/null`
+fi
+
+decodeURL() {
+   printf "$(sed 's#^file://##;s/+/ /g;s/%\(..\)/\\x\1/g;' <<< "$@")\n";
+}
+
 mkdir -p SRPMS RPMS
-for p in ${REPORPMS}
+for r in ${REPORPMS}
 do
-    [[ "$p" =~ ^.*\.(.+)\.rpm$ ]] &&
+    fn=`decodeURL $r`
+    [[ "$fn" =~ ^.*\.(.+)\.rpm$ ]] &&
         (
             archdir="${BASH_REMATCH[1]}"
             if [ "$archdir" == "src" ]; then
-                cp $TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME/$p SRPMS/
+                cp $fn SRPMS/
             else
                 if [ "$archdir" == "i686" ]; then
                     archdir="i386"
@@ -158,7 +169,7 @@ do
                     archdir="armhfp"
                 fi
                 mkdir -p RPMS/$archdir
-                cp $TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME/$p RPMS/$archdir/
+                cp $fn RPMS/$archdir/
             fi
         )
 done
