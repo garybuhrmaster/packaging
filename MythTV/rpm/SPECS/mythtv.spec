@@ -715,7 +715,6 @@ exit 0
 %defattr(0755, root, root, 0755)
 %attr(0755, root, root) %{_bindir}/mythffmpeg
 %attr(0755, root, root) %{_bindir}/mythffprobe
-%attr(0755, root, root) %{_bindir}/mythffserver
 
 
 %files mythffmpeg-libs
