@@ -505,6 +505,9 @@ pushd mythtv
     mkdir -p                              %{buildroot}%{_sysconfdir}/logrotate.d
     install -m 0644 %{SOURCE202}          %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
 
+    # Clean up (possible) mythffserver (deleted with ffmpeg 4.0)
+    rm -f                                 %{buildroot}%{_bindir}/mythffserver
+
     # dir for backend, and starter config.xml
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythtv/.mythtv
     install -m 0644 contrib/config_files/config.xml \
