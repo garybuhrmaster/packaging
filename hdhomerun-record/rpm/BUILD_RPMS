@@ -80,20 +80,21 @@ for fc in ${FC[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
-        rpmresultarchdir=$arch
+        rpmresultarch=$arch
+        rpmtargetarch=$arch
         if [ "$arch" == "i686" ]; then
-            rpmresultarchdir="i386"
+            rpmresultarch="i386"
         fi
         if [ "$arch" == "armhfp" ]; then
-            arch=armv7hl
+            rpmtargetarch=armv7hl
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r fedora-$fc-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$arch --define "dist .fc$fc" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        /usr/bin/mock -r fedora-$fc-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .fc$fc" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo "Build failed, logs in $RESULTDIR"
             exit 1
         fi
-        cp $RESULTDIR/*.$arch.rpm RPMS/fedora/$fc/$rpmresultarchdir/
+        cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/fedora/$fc/$rpmresultarch/
         rm -f $RESULTDIR/*.log
         rm -f $RESULTDIR/*.rpm
         rmdir $RESULTDIR
@@ -110,20 +111,21 @@ do
         if [ $el -eq 6 ] && [ "$arch" == "aarch64" ]; then
             continue
         fi
-        rpmresultarchdir=$arch
+        rpmresultarch=$arch
+        rpmtargetarch=$arch
         if [ "$arch" == "i686" ]; then
-            rpmresultarchdir="i386"
+            rpmresultarch="i386"
         fi
         if [ "$arch" == "armhfp" ]; then
-            arch=armv7hl
+            rpmtargetarch=armv7hl
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r build_cfgs/centos-$el-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$arch --define "dist .el$el" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        /usr/bin/mock -r build_cfgs/centos-$el-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .el$el" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo "Build failed, logs in $RESULTDIR"
             exit 1
         fi
-        cp $RESULTDIR/*.$arch.rpm RPMS/el/$el/$rpmresultarchdir/
+        cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/el/$el/$rpmresultarch/
         rm -f $RESULTDIR/*.log
         rm -f $RESULTDIR/*.rpm
         rmdir $RESULTDIR
