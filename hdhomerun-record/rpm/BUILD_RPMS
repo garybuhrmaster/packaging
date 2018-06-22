@@ -17,14 +17,14 @@ if [ ! -f "SOURCES/hdhomerun_record_linux_$VERSION" ]; then
     exit 1
 fi
 
-PKGMGR=''
+PKGMGR=""
 if [ ! -x "/usr/bin/dnf" ]; then
-    PKGMGR='--yum'
+    PKGMGR="--yum"
 fi
 
 HOSTARCH=`arch`
 if [ "$HOSTARCH" == "armv7l" ]; then
-    HOSTARCH='armhfp'
+    HOSTARCH="armhfp"
 fi
 
 TARGETRPMARCH=("i686" "x86_64" "armhfp" "aarch64")
@@ -45,8 +45,8 @@ do
         if [ $el -eq 6 ] && [ "$arch" == "aarch64" ]; then
             continue
         fi
-        if [ "$arch" == 'i686' ]; then
-            arch='i386'
+        if [ "$arch" == "i686" ]; then
+            arch="i386"
         fi
         mkdir -p RPMS/el/$el/$arch
     done
@@ -55,8 +55,8 @@ for fc in ${FC[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
-        if [ "$arch" == 'i686' ]; then
-            arch='i386'
+        if [ "$arch" == "i686" ]; then
+            arch="i386"
         fi
         mkdir -p RPMS/fedora/$fc/$arch
     done
@@ -86,7 +86,7 @@ do
             rpmresultarch="i386"
         fi
         if [ "$arch" == "armhfp" ]; then
-            rpmtargetarch=armv7hl
+            rpmtargetarch="armv7hl"
         fi
         RESULTDIR=`mktemp -d`
         /usr/bin/mock -r fedora-$fc-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .fc$fc" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
@@ -117,7 +117,7 @@ do
             rpmresultarch="i386"
         fi
         if [ "$arch" == "armhfp" ]; then
-            rpmtargetarch=armv7hl
+            rpmtargetarch="armv7hl"
         fi
         RESULTDIR=`mktemp -d`
         /usr/bin/mock -r build_cfgs/centos-$el-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .el$el" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
