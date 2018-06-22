@@ -22,7 +22,7 @@
 			%endif
 		%else
 			%if "%{_host_cpu}" == "ppc64"
-				%ifarch %{power64} ppc
+				%ifarch ppc64 ppc
 					%define cross_build 0
 				%endif
 			%endif
@@ -65,9 +65,15 @@ Requires(preun):	initscripts
 Requires(preun):	chkconfig
 Requires(postun):	initscripts
 %if 0%{?cross_build}
+%ifarch %{arm} aarch64
 BuildRequires: binutils-aarch64-linux-gnu
+%endif
+%ifarch %{ix86} x86_64
 BuildRequires: binutils-x86_64-linux-gnu
+%endif
+%ifarch ppc64 ppc
 BuildRequires: binutils-powerpc64-linux-gnu
+%endif
 %endif
 %else
 %if 0%{?suse_version}
@@ -78,9 +84,15 @@ Requires(pre):	shadow
 Requires(pre):	glibc
 %{?systemd_requires}
 %if 0%{?cross_build}
+%ifarch %{arm} aarch64
 BuildRequires: cross-aarch64-binutils
+%endif
+%ifarch %{ix86} x86_64
 BuildRequires: cross-x86_64-binutils
+%endif
+%ifarch ppc64 ppc
 BuildRequires: cross-powerpc64-binutils
+%endif
 %endif
 %else
 BuildRequires:	coreutils
@@ -98,9 +110,15 @@ Requires(preun):	systemd
 Requires(postun):	systemd
 Requires(postun):	firewalld-filesystem
 %if 0%{?cross_build}
+%ifarch %{arm} aarch64
 BuildRequires: binutils-aarch64-linux-gnu
+%endif
+%ifarch %{ix86} x86_64
 BuildRequires: binutils-x86_64-linux-gnu
+%endif
+%ifarch ppc64 ppc
 BuildRequires: binutils-powerpc64-linux-gnu
+%endif
 %endif
 %endif
 %endif
@@ -203,7 +221,7 @@ aarch64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
 %endif
 %endif
 
-%ifarch ppc %{power64}
+%ifarch ppc64 ppc
 install -D -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 %if !0%{?cross_build}
 strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
