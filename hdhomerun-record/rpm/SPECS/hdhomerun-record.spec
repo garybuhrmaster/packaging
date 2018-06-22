@@ -31,7 +31,7 @@
 %endif
 
 Name:		hdhomerun-record
-Version:	0.0.%{HDHRDVR_VERSION}
+Version:	0.0.%{?HDHRDVR_VERSION}%{!?HDHRDVR_VERSION:0}
 Release:	1%{?dist}
 Group:		Applications/Internet
 Summary:	SiliconDust HDHomeRun DVR server
@@ -39,7 +39,7 @@ Vendor:		SiliconDust USA Inc.
 License:	Proprietary
 URL:		https://www.silicondust.com/
 
-Source0:	https://download.silicondust.com/hdhomerun/hdhomerun_record_linux_%{HDHRDVR_VERSION}
+Source0:	https://download.silicondust.com/hdhomerun/hdhomerun_record_linux%{?HDHRDVR_VERSION:_%{HDHRDVR_VERSION}}
 Source51:	hdhomerun_record-tmpfiles.conf
 Source52:	hdhomerun_record.service
 Source53:	hdhomerun_record.init
