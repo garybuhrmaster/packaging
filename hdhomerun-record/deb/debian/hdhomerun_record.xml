@@ -2,7 +2,9 @@
 <service>
   <short>HDHomeRun DVR</short>
   <description>The SiliconDust HDHomeRun DVR service provides the recorder engine for the HDHomeRun DVR product.</description>
-  <port protocol="udp" port="65001"/>   <!-- HDHR -->
-  <port protocol="tcp" port="65001"/>   <!-- HDHR -->
-  <port protocol="udp" port="1900"/>    <!-- ssdp discovery -->
+  <port protocol="udp" port="65001"/>
+  <port protocol="tcp" port="65001"/>
+  <port protocol="udp" port="1900"/>
+  <source-port port="65001" protocol="udp"/>
+  <destination ipv4="0.0.0.0/0"/>
 </service>
