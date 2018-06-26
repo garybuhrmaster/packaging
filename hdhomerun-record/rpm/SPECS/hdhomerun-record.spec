@@ -323,15 +323,13 @@ exit 0
 
 %postun
 %if 0%{?rhel} == 6
-if [ $1 == 1 ] ; then
-  /sbin/service hdhomerun_record condrestart >/dev/null 2>&1
-fi
+# Nothing to do for service based distro
 %else
 %if 0%{?suse_version}
-%service_del_postun hdhomerun_record.service
+%service_del_postun -n hdhomerun_record.service
 test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --reload --quiet || true
 %else
-%systemd_postun_with_restart hdhomerun_record.service
+%systemd_postun hdhomerun_record.service
 %firewalld_reload
 %endif
 %endif

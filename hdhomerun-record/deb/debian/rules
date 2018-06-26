@@ -39,7 +39,10 @@ override_dh_installchangelogs:
 override_dh_installdocs:
 
 override_dh_installinit:
-	dh_installinit --no-start --name hdhomerun_record
+	dh_installinit --no-start --no-stop-on-upgrade --name hdhomerun_record
+
+override_dh_installsystemd:
+	dh_installsystemd --no-enable --no-start --no-stop-on-upgrade --name hdhomerun_record
 
 override_dh_strip:
 
@@ -48,3 +51,5 @@ override_dh_systemd_enable:
 	# The user should enable it only after making sure the configuration is
 	# appropriate for his/her computer.
 
+override_dh_systemd_start:
+	dh_systemd_start --no-stop-on-upgrade
