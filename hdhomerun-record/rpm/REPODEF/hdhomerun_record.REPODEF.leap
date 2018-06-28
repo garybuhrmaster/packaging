@@ -1,0 +1,8 @@
+[unofficial-hdhomerun-dvr]
+name=Unofficial HDHomeRun DVR repository
+baseurl=https://s3.amazonaws.com/unofficial-hdhomerun-dvr-repo/rpm/leap/$releasever/
+path=/
+enabled=1
+autorefresh=1
+gpgcheck=0
+type=rpm-md
