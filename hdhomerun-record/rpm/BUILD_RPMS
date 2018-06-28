@@ -33,6 +33,8 @@ EL=(`ls build_cfgs/ | grep "centos-[[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/cen
 ELBASE=${EL[0]}
 FC=(`ls /etc/mock/ | grep "fedora-[[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/fedora-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -3`)
 FCBASE=${FC[0]}
+LEAP=(`ls /etc/mock/ | grep "opensuse-leap-[[:digit:]\\.[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/opensuse-leap-\([0-9]\+\\.[0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
+TUMBLEWEED=(`ls /etc/mock/ | grep "opensuse-tumbleweed-$HOSTARCH.cfg" | sed -n "s/opensuse-\(tumbleweed\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -1`)
 
 # Create resultdir directories
 for el in ${EL[@]}
@@ -59,6 +61,32 @@ do
             arch="i386"
         fi
         mkdir -p RPMS/fedora/$fc/$arch
+    done
+done
+for leap in ${LEAP[@]}
+do
+    for arch in ${TARGETRPMARCH[@]}
+    do
+        if [ "$arch" == "armhfp" ]; then
+            continue
+        fi
+        if [ "$arch" == "i686" ]; then
+            continue
+        fi
+        mkdir -p RPMS/leap/$leap/$arch
+    done
+done
+for tumbleweed in ${TUMBLEWEED[@]}
+do
+    for arch in ${TARGETRPMARCH[@]}
+    do
+        if [ "$arch" == "armhfp" ]; then
+            arch="armv7hl"
+        fi
+        if [ "$arch" == "i686" ]; then
+            arch="i586"
+        fi
+        mkdir -p RPMS/tumbleweed/$arch
     done
 done
 
@@ -126,6 +154,58 @@ do
             exit 1
         fi
         cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/el/$el/$rpmresultarch/
+        rm -f $RESULTDIR/*.log
+        rm -f $RESULTDIR/*.rpm
+        rmdir $RESULTDIR
+    done
+done
+
+for leap in ${LEAP[@]}
+do
+    for arch in ${TARGETRPMARCH[@]}
+    do
+        if [ "$arch" == "armhfp" ]; then
+            continue
+        fi
+        if [ "$arch" == "i686" ]; then
+            continue
+        fi
+        rpmresultarch=$arch
+        rpmtargetarch=$arch
+        RESULTDIR=`mktemp -d`
+        /usr/bin/mock -r opensuse-leap-$leap-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        if [ ! $? -eq 0 ]; then
+            echo "Build failed, logs in $RESULTDIR"
+            exit 1
+        fi
+        cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/leap/$leap/$rpmresultarch/
+        rm -f $RESULTDIR/*.log
+        rm -f $RESULTDIR/*.rpm
+        rmdir $RESULTDIR
+    done
+done
+
+for tumbleweed in ${TUMBLEWEED[@]}
+do
+    for arch in ${TARGETRPMARCH[@]}
+    do
+        rpmresultarch=$arch
+        rpmtargetarch=$arch
+        if [ "$arch" == "i686" ]; then
+            rpmtargetarch="i586"
+            rpmresultarch="i586"
+        fi
+        if [ "$arch" == "armhfp" ]; then
+            rpmresultarch="armv7hl"
+            rpmtargetarch="armv7hl"
+        fi
+        RESULTDIR=`mktemp -d`
+        /usr/bin/mock -r opensuse-tumbleweed-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        if [ ! $? -eq 0 ]; then
+            echo "Build failed, logs in $RESULTDIR"
+            exit 1
+        fi
+        cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/tumbleweed/$rpmresultarch/
         rm -f $RESULTDIR/*.log
         rm -f $RESULTDIR/*.rpm
         rmdir $RESULTDIR
