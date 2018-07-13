@@ -151,6 +151,7 @@ BuildRequires:  perl(Net::UPnP::ControlPoint)
 BuildRequires:  perl(DBD::mysql)
 BuildRequires:  perl(IO::Socket::INET6)
 BuildRequires:  perl(LWP::UserAgent)
+BuildRequires:  perl(XML::Simple)
 
 %if 0%{?fedora}
 BuildRequires:  python2-devel
