@@ -101,6 +101,14 @@ BuildRequires:  xvidcore-devel
 BuildRequires:  exiv2-devel
 # (non-free) BuildRequires:  fdk-aac-devel
 
+# External library support
+BuildRequires:  hdhomerun-devel
+BuildRequires:  libbluray-devel
+BuildRequires:  libsamplerate-devel
+BuildRequires:  libXNVCtrl-devel
+BuildRequires:  lzo-devel
+BuildRequires:  minizip-devel
+
 # Audio framework support
 BuildRequires:  sox-devel
 BuildRequires:  alsa-lib-devel
