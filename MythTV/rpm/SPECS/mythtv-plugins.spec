@@ -94,6 +94,12 @@ BuildRequires:  xz-devel
 BuildRequires:  SDL2-devel
 BuildRequires:  taglib-devel
 BuildRequires:  dcraw
+BuildRequires:  hdhomerun-devel
+BuildRequires:  libbluray-devel
+BuildRequires:  libsamplerate-devel
+BuildRequires:  libXNVCtrl-devel
+BuildRequires:  lzo-devel
+BuildRequires:  minizip-devel
 
 ################################################################################
 
