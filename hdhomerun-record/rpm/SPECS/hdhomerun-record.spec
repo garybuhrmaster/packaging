@@ -95,6 +95,34 @@ BuildRequires: cross-powerpc64-binutils
 %endif
 %endif
 %else
+%if 0%{?mageia_version}
+BuildRequires:	coreutils
+BuildRequires:	tar
+BuildRequires:	firewalld-filesystem
+Requires:	systemd
+Requires:	firewalld-filesystem
+Requires(pre):	rpm-helper
+Requires(pre):	shadow-utils
+Requires(pre):	glibc
+Requires(pre):	systemd
+Requires(post):	rpm-helper
+Requires(post):	systemd
+Requires(preun):	rpm-helper
+Requires(preun):	systemd
+Requires(postun):	rpm-helper
+Requires(postun):	systemd
+%if 0%{?cross_build}
+%ifarch %{arm} aarch64
+BuildRequires:	binutils-aarch64-linux-gnu
+%endif
+%ifarch %{ix86} x86_64
+BuildRequires:	binutils-x86_64-linux-gnu
+%endif
+%ifarch ppc64 ppc
+BuildRequires:	binutils-powerpc64-linux-gnu
+%endif
+%endif
+%else
 BuildRequires:	coreutils
 BuildRequires:	tar
 BuildRequires:	systemd
@@ -118,6 +146,7 @@ BuildRequires: binutils-x86_64-linux-gnu
 %endif
 %ifarch ppc64 ppc
 BuildRequires: binutils-powerpc64-linux-gnu
+%endif
 %endif
 %endif
 %endif
@@ -291,8 +320,13 @@ exit 0
 %service_add_post hdhomerun_record.service
 test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --reload --quiet || true
 %else
+%if 0%{?mageia}
+systemctl --system daemon-reload
+%firewalld_reload
+%else
 %systemd_post hdhomerun_record.service
 %firewalld_reload
+%endif
 %endif
 %endif
 if [ $1 == 1 ] ; then
@@ -327,9 +361,14 @@ exit 0
 %if 0%{?suse_version}
 %service_del_postun -n hdhomerun_record.service
 test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --reload --quiet || true
+%if 0%{?mageia}
+systemctl --system daemon-reload
+%firewalld_reload
+%else
 %else
 %systemd_postun hdhomerun_record.service
 %firewalld_reload
+%endif
 %endif
 %endif
 exit 0
