@@ -301,7 +301,6 @@ if [ $1 == 1 ] ; then
       echo -e "\n\n# StorageID automatically added by package installation\nStorageID="`uuidgen`"\n" >>/etc/hdhomerun.conf
   fi
 fi
-
 exit 0
 
 
