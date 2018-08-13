@@ -8,6 +8,13 @@ NOTE:  The BUILD_MYTHTV_RPMS command uses mockchain, of which the upstream
        from issue #65 from the rpm-software-management/mock github repo.
        ref: https://github.com/rpm-software-management/mock/issues/65# 
 
+NOTE:  With the latest FFmpeg in master (targeted to be version 30) the EL7
+       version of libvpx is too old.  The local definition of the centos
+       repository includes a COPR reference that will support compilation.
+       To install the EL7 RPMs, you will (likely) need to add that COPR
+       (or some equivalent) to your system (`yum copr enable gtb/libvpx`)
+       before installation.
+
 Examples:
 
   Build latest fixes/29 for Fedora 28:
