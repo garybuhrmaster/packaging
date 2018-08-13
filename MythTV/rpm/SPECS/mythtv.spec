@@ -517,6 +517,9 @@ pushd mythtv
     # Clean up (possible) mythffserver (deleted with ffmpeg 4.0)
     rm -f                                 %{buildroot}%{_bindir}/mythffserver
 
+    # Clean up (possible) mythhdhomerun_config (deleted with v30)
+    rm -f                                 %{buildroot}%{_bindir}/mythhdhomerun_config
+
     # dir for backend, and starter config.xml
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythtv/.mythtv
     install -m 0644 contrib/config_files/config.xml \
@@ -666,7 +669,6 @@ exit 0
 %{_bindir}/mythbackend
 %{_bindir}/mythfilldatabase
 %{_bindir}/mythfilerecorder
-%{_bindir}/mythhdhomerun_config
 %{_bindir}/mythjobqueue
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
