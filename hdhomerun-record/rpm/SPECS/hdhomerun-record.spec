@@ -95,7 +95,7 @@ BuildRequires: cross-powerpc64-binutils
 %endif
 %endif
 %else
-%if 0%{?mageia_version}
+%if 0%{?mageia}
 BuildRequires:	coreutils
 BuildRequires:	tar
 BuildRequires:	firewalld-filesystem
