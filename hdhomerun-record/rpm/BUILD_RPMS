@@ -29,12 +29,12 @@ fi
 
 TARGETRPMARCH=("i686" "x86_64" "armhfp" "aarch64")
 
-EL=(`ls build_cfgs/ | grep "centos-[[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/centos-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
+EL=(`find build_cfgs/ -type f -printf "%f\n" | grep "centos-[[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/centos-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
 ELBASE=${EL[0]}
-FC=(`ls /etc/mock/ | grep "fedora-[[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/fedora-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -3`)
+FC=(`find /etc/mock/ -type f -printf "%f\n" | grep "fedora-[[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/fedora-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -3`)
 FCBASE=${FC[0]}
-LEAP=(`ls /etc/mock/ | grep "opensuse-leap-[[:digit:]\\.[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/opensuse-leap-\([0-9]\+\\.[0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
-TUMBLEWEED=(`ls /etc/mock/ | grep "opensuse-tumbleweed-$HOSTARCH.cfg" | sed -n "s/opensuse-\(tumbleweed\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -1`)
+LEAP=(`find /etc/mock/ -type f -printf "%f\n" | grep "opensuse-leap-[[:digit:]\\.[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/opensuse-leap-\([0-9]\+\\.[0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
+TUMBLEWEED=(`find /etc/mock/ -type f -printf "%f\n" | grep "opensuse-tumbleweed-$HOSTARCH.cfg" | sed -n "s/opensuse-\(tumbleweed\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -1`)
 
 # Create resultdir directories
 for el in ${EL[@]}
@@ -94,7 +94,11 @@ done
 SRCDIR=`mktemp -d`
 /usr/bin/mock -r build_cfgs/centos-$ELBASE-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$SRCDIR --disable-plugin=ccache $PKGMGR
 if [ ! $? -eq 0 ]; then
-    echo "Build failed, logs in $RESULTDIR"
+    echo ""
+    echo "***********************************************************"
+    echo "******** Build failed, logs in $RESULTDIR ********"
+    echo "***********************************************************"
+    echo ""
     exit 1
 fi
 SRCRPM=`ls $SRCDIR/*$VERSION*.src.rpm`
@@ -102,6 +106,8 @@ if [ ! -f "$SRCRPM" ]; then
     echo "Source RPM was not built"
     exit 1
 fi
+
+BUILDFAILURE=0
 
 # Build arch specific rpms
 for fc in ${FC[@]}
@@ -119,13 +125,19 @@ do
         RESULTDIR=`mktemp -d`
         /usr/bin/mock -r fedora-$fc-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .fc$fc" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
-            echo "Build failed, logs in $RESULTDIR"
-            exit 1
+            echo ""
+            echo "***********************************************************"
+            echo "******** Build failed, logs in $RESULTDIR ********"
+            echo "***********************************************************"
+            echo ""
+            BUILDFAILURE=1
+            #exit 1
+        else
+            cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/fedora/$fc/$rpmresultarch/
+            rm -f $RESULTDIR/*.log
+            rm -f $RESULTDIR/*.rpm
+            rmdir $RESULTDIR
         fi
-        cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/fedora/$fc/$rpmresultarch/
-        rm -f $RESULTDIR/*.log
-        rm -f $RESULTDIR/*.rpm
-        rmdir $RESULTDIR
     done
 done
 
@@ -150,13 +162,19 @@ do
         RESULTDIR=`mktemp -d`
         /usr/bin/mock -r build_cfgs/centos-$el-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .el$el" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
-            echo "Build failed, logs in $RESULTDIR"
-            exit 1
+            echo ""
+            echo "***********************************************************"
+            echo "******** Build failed, logs in $RESULTDIR ********"
+            echo "***********************************************************"
+            echo ""
+            BUILDFAILURE=1
+            #exit 1
+        else
+            cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/el/$el/$rpmresultarch/
+            rm -f $RESULTDIR/*.log
+            rm -f $RESULTDIR/*.rpm
+            rmdir $RESULTDIR
         fi
-        cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/el/$el/$rpmresultarch/
-        rm -f $RESULTDIR/*.log
-        rm -f $RESULTDIR/*.rpm
-        rmdir $RESULTDIR
     done
 done
 
@@ -175,13 +193,19 @@ do
         RESULTDIR=`mktemp -d`
         /usr/bin/mock -r opensuse-leap-$leap-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
-            echo "Build failed, logs in $RESULTDIR"
-            exit 1
+            echo ""
+            echo "***********************************************************"
+            echo "******** Build failed, logs in $RESULTDIR ********"
+            echo "***********************************************************"
+            echo ""
+            BUILDFAILURE=1
+            #exit 1
+        else
+            cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/leap/$leap/$rpmresultarch/
+            rm -f $RESULTDIR/*.log
+            rm -f $RESULTDIR/*.rpm
+            rmdir $RESULTDIR
         fi
-        cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/leap/$leap/$rpmresultarch/
-        rm -f $RESULTDIR/*.log
-        rm -f $RESULTDIR/*.rpm
-        rmdir $RESULTDIR
     done
 done
 
@@ -202,13 +226,19 @@ do
         RESULTDIR=`mktemp -d`
         /usr/bin/mock -r opensuse-tumbleweed-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
-            echo "Build failed, logs in $RESULTDIR"
-            exit 1
+            echo ""
+            echo "***********************************************************"
+            echo "******** Build failed, logs in $RESULTDIR ********"
+            echo "***********************************************************"
+            echo ""
+            BUILDFAILURE=1
+            #exit 1
+        else
+            cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/tumbleweed/$rpmresultarch/
+            rm -f $RESULTDIR/*.log
+            rm -f $RESULTDIR/*.rpm
+            rmdir $RESULTDIR
         fi
-        cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/tumbleweed/$rpmresultarch/
-        rm -f $RESULTDIR/*.log
-        rm -f $RESULTDIR/*.rpm
-        rmdir $RESULTDIR
     done
 done
 
@@ -216,3 +246,12 @@ done
 rm -f $SRCDIR/*.log
 rm -f $SRCDIR/*.rpm
 rmdir $SRCDIR
+
+if [ $BUILDFAILURE -eq 1 ]; then
+    echo ""
+    echo "***********************************************************"
+    echo "********** One or more builds failed, check logs **********"
+    echo "***********************************************************"
+    echo ""
+    exit 1
+fi
