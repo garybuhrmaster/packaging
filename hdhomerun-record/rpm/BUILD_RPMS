@@ -18,6 +18,9 @@ if [ ! -f "SOURCES/hdhomerun_record_linux_$VERSION" ]; then
 fi
 
 PKGMGR=""
+if [ ! -x "/usr/bin/yum" ]; then
+    PKGMGR="--dnf"
+fi
 if [ ! -x "/usr/bin/dnf" ]; then
     PKGMGR="--yum"
 fi
