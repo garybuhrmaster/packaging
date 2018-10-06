@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 #
 # Support mock config specification
@@ -157,8 +157,6 @@ do
             fi
         )
 done
-
-exit 1
 
 # Cleanup
 rm -f $TMPSRCDIR/*.log
