@@ -50,6 +50,8 @@ Source301:      mythtv-mythfrontend.desktop
 Source302:      mythtv-mythtv-setup.png
 Source303:      mythtv-mythtv-setup.desktop
 
+#Patch1:         mythtv-0001.patch
+
 # Global MythTV and Shared Build Requirements
 
 BuildRequires:  git
@@ -467,6 +469,8 @@ MythTV python bindings
 %prep
 
 %setup -q -n %{name}-%{commit}
+
+#%patch1 -p1
 
 ################################################################################
 
