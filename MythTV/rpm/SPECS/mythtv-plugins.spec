@@ -76,6 +76,7 @@ BuildRequires:  libavc1394-devel
 BuildRequires:  libcrystalhd-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libogg-devel
+BuildRequires:  libomxil-bellagio-devel
 BuildRequires:  libraw1394-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libva-devel
