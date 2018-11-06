@@ -143,11 +143,13 @@ if [ "$MOCKCFG" != "$MOCKCFG_TEST_CFGEXT" ]; then
    MOCKCFG_CHROOT_NAME=${MOCKCFG_TEST_CFGEXT##*/}
 fi
 
-if hash dnf 2>/dev/null; then
-    REPORPMS=`dnf --quiet repoquery --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null`
-else
-    REPORPMS=`repoquery --quiet --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null ; echo -n ' ' ; repoquery --quiet --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --srpm --location 2>/dev/null`
-fi
+# Workaround dnf 4.x issue with repoquery
+#if hash dnf 2>/dev/null; then
+#    REPORPMS=`dnf --quiet repoquery --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null`
+#else
+#    REPORPMS=`repoquery --quiet --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null ; echo -n ' ' ; repoquery --quiet --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --srpm --location 2>/dev/null`
+#fi
+REPORPMS=`find $TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME -name \*.rpm -printf "file://%p\\n"`
 
 decodeURL() {
    printf "$(sed 's#^file://##;s/+/ /g;s/%\(..\)/\\x\1/g;' <<< "$@")\n";
