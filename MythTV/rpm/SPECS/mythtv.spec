@@ -514,11 +514,20 @@ pushd mythtv
     mkdir -p                              %{buildroot}%{_sysconfdir}/logrotate.d
     install -m 0644 %{SOURCE202}          %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
 
-    # Clean up (possible) mythffserver (deleted with ffmpeg 4.0)
+    # Remove mythffserver (removed with v30 commit d24aa851 for FFmpeg 4.0 merge,
+    # and deprecated in earlier FFmpeg variants, so do not package it in any case)
     rm -f                                 %{buildroot}%{_bindir}/mythffserver
 
-    # Clean up (possible) mythhdhomerun_config (deleted with v30)
+    # Remove mythhdhomerun_config (removed with v30 commit 4b577277 and the upstream
+    # hdhomerun_config binary is available as part of all current distros packages)
     rm -f                                 %{buildroot}%{_bindir}/mythhdhomerun_config
+
+    # Add in a dummy mythexternrecorder if not built for an older mythtv
+    # (mythexternrecorder added in v30 commit 826d57e3, and backported to
+    # later fixes/29)
+    if [ ! -e "%{buildroot}%{_bindir}/mythexternrecorder" ] ; then
+    touch                                 %{buildroot}%{_bindir}/mythexternrecorder
+    fi
 
     # dir for backend, and starter config.xml
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythtv/.mythtv
@@ -667,6 +676,7 @@ exit 0
 %files backend
 %defattr(0755, root, root, 0755)
 %{_bindir}/mythbackend
+%{_bindir}/mythexternrecorder
 %{_bindir}/mythfilldatabase
 %{_bindir}/mythfilerecorder
 %{_bindir}/mythjobqueue
