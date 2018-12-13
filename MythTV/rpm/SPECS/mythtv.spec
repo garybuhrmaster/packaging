@@ -634,10 +634,12 @@ exit 0
 %files base
 %defattr(0644, root, root, 0755)
 %{_datadir}/mythtv/locales
-%{_datadir}/mythtv/metadata
 %{_datadir}/mythtv/hardwareprofile
 %{_datadir}/mythtv/i18n
 %{_datadir}/mythtv/fonts
+%defattr(-, root, root, 0755)
+%{_datadir}/mythtv/metadata
+%defattr(0644, root, root, 0755)
 %config(noreplace) %{_sysconfdir}/logrotate.d/mythtv
 %attr(0755, mythtv, mythtv) %dir %{_localstatedir}/log/mythtv
 %defattr(0755, root, root, 0755)
