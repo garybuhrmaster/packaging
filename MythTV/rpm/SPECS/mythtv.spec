@@ -494,8 +494,7 @@ pushd mythtv
         --enable-libx264                            \
         --enable-libx265                            \
         --enable-libxvid                            \
-        --enable-libvpx                             \
-        --disable-mythlogserver
+        --enable-libvpx
 
     make %{?_smp_mflags}
 
