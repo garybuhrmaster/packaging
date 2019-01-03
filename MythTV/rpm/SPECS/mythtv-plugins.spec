@@ -74,9 +74,11 @@ BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  libass-devel
 BuildRequires:  libavc1394-devel
 BuildRequires:  libcrystalhd-devel
+%if 0%{?fedora}
+BuildRequires:  libomxil-bellagio-devel
+%endif
 BuildRequires:  libiec61883-devel
 BuildRequires:  libogg-devel
-BuildRequires:  libomxil-bellagio-devel
 BuildRequires:  libraw1394-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libva-devel
