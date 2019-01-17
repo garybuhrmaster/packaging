@@ -93,6 +93,7 @@ BuildRequires:  systemd-devel
 BuildRequires:  x264-devel
 BuildRequires:  x265-devel
 BuildRequires:  xvidcore-devel
+BuildRequires:  nv-codec-headers
 BuildRequires:  xz-devel
 BuildRequires:  SDL2-devel
 BuildRequires:  taglib-devel

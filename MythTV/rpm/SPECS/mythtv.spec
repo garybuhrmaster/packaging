@@ -99,6 +99,7 @@ BuildRequires:  x264-devel
 BuildRequires:  x265-devel
 BuildRequires:  xvidcore-devel
 BuildRequires:  exiv2-devel
+BuildRequires:  nv-codec-headers
 # (non-free) BuildRequires:  fdk-aac-devel
 
 # External library support
