@@ -58,6 +58,7 @@ BuildRequires:	tar
 Requires(pre):	initscripts
 Requires(pre):	chkconfig
 Requires(pre):	shadow-utils
+Requires(pre):	coreutils
 Requires(pre):	glibc-common
 Requires(post):	initscripts
 Requires(post):	chkconfig
@@ -81,6 +82,8 @@ BuildRequires:	coreutils
 BuildRequires:	tar
 BuildRequires:	systemd-rpm-macros
 Requires(pre):	shadow
+Requires(pre):	coreutils
+Requires(pre):	systemd
 Requires(pre):	glibc
 %{?systemd_requires}
 %if 0%{?cross_build}
@@ -99,10 +102,12 @@ BuildRequires: cross-powerpc64-binutils
 BuildRequires:	coreutils
 BuildRequires:	tar
 BuildRequires:	firewalld-filesystem
+BuildRequires:	systemd
 Requires:	systemd
 Requires:	firewalld-filesystem
 Requires(pre):	rpm-helper
 Requires(pre):	shadow-utils
+Requires(pre):	coreutils
 Requires(pre):	glibc
 Requires(pre):	systemd
 Requires(post):	rpm-helper
@@ -130,6 +135,7 @@ BuildRequires:	firewalld-filesystem
 Requires:	systemd
 Requires:	firewalld-filesystem
 Requires(pre):	shadow-utils
+Requires(pre):	coreutils
 Requires(pre):	glibc-common
 Requires(pre):	systemd
 Requires(pre):	firewalld-filesystem
