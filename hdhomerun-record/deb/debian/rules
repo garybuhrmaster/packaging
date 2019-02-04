@@ -45,6 +45,7 @@ override_dh_installsystemd:
 	dh_installsystemd --no-enable --no-start --no-stop-on-upgrade --name hdhomerun_record
 
 override_dh_strip:
+override_dh_strip_nondeterminism:
 
 override_dh_systemd_enable:
 	# Do not enable the file by default on purpose.
