@@ -367,10 +367,10 @@ exit 0
 %if 0%{?suse_version}
 %service_del_postun -n hdhomerun_record.service
 test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --reload --quiet || true
+%else
 %if 0%{?mageia}
 systemctl --system daemon-reload
 %firewalld_reload
-%else
 %else
 %systemd_postun hdhomerun_record.service
 %firewalld_reload
