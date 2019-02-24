@@ -38,6 +38,7 @@ FC=(`find /etc/mock/ -type f -printf "%f\n" | grep "fedora-[[:digit:]]\\+-$HOSTA
 FCBASE=${FC[0]}
 LEAP=(`find /etc/mock/ -type f -printf "%f\n" | grep "opensuse-leap-[[:digit:]\\.[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/opensuse-leap-\([0-9]\+\\.[0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
 TUMBLEWEED=(`find /etc/mock/ -type f -printf "%f\n" | grep "opensuse-tumbleweed-$HOSTARCH.cfg" | sed -n "s/opensuse-\(tumbleweed\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -1`)
+MAGEIA=(`find /etc/mock -type f -printf "%f\n" | grep "mageia-[[:digit:]]\\+-$HOSTARCH.cfg" | sed -n "s/mageia-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
 
 # Create resultdir directories
 for el in ${EL[@]}
@@ -90,6 +91,22 @@ do
             arch="i586"
         fi
         mkdir -p RPMS/tumbleweed/$arch
+    done
+done
+for mageia in ${MAGEIA[@]}
+do
+    for arch in ${TARGETRPMARCH[@]}
+    do
+        if [ "$arch" == "aarch64" ]; then
+            continue
+        fi
+        if [ "$arch" == "armhfp" ]; then
+            continue
+        fi
+        if [ "$arch" == "i686" ]; then
+            arch="i386"
+        fi
+        mkdir -p RPMS/mageia/$mageia/$arch
     done
 done
 
@@ -238,6 +255,41 @@ do
             #exit 1
         else
             cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/tumbleweed/$rpmresultarch/
+            rm -f $RESULTDIR/*.log
+            rm -f $RESULTDIR/*.rpm
+            rmdir $RESULTDIR
+        fi
+    done
+done
+
+for mageia in ${MAGEIA[@]}
+do
+    for arch in ${TARGETRPMARCH[@]}
+    do
+        if [ "$arch" == "aarch64" ]; then
+            continue
+        fi
+        if [ "$arch" == "armhfp" ]; then
+            continue
+        fi
+        rpmresultarch=$arch
+        rpmtargetarch=$arch
+        if [ "$arch" == "i686" ]; then
+            rpmtargetarch="i586"
+            rpmresultarch="i386"
+        fi
+        RESULTDIR=`mktemp -d`
+        /usr/bin/mock -r mageia-$mageia-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        if [ ! $? -eq 0 ]; then
+            echo ""
+            echo "***********************************************************"
+            echo "******** Build failed, logs in $RESULTDIR ********"
+            echo "***********************************************************"
+            echo ""
+            BUILDFAILURE=1
+            #exit 1
+        else
+            cp $RESULTDIR/*.$rpmtargetarch.rpm RPMS/mageia/$mageia/$rpmresultarch/
             rm -f $RESULTDIR/*.log
             rm -f $RESULTDIR/*.rpm
             rmdir $RESULTDIR
