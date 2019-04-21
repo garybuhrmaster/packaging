@@ -586,8 +586,19 @@ getent group mythtv >/dev/null || groupadd -r mythtv
 getent passwd mythtv >/dev/null || \
     useradd -r -g mythtv \
     -d "/var/lib/mythtv" -s /bin/sh \
-    -c "mythbackend user" mythtv && \
-    usermod -a -G audio,video,cdrom,dialout mythtv
+    -c "mythbackend user" mythtv
+for group in 'video' 'audio' 'cdrom' 'dialout'
+{
+    ent=`getent group $group 2>/dev/null`
+    # only proceed if the group exists
+    if [ $? -eq 0 ]; then
+        cnt=`echo "$ent" | cut -d: -f4 | tr ',' '\n' | grep -c '^mythtv$'`
+        cnt=$(($cnt + 0))
+        if [ $cnt -lt 1 ]; then
+            usermod -a -G $group mythtv
+        fi
+    fi
+}
 exit 0
 
 %post libs -p /sbin/ldconfig
