@@ -373,9 +373,15 @@ Requires:       perl(LWP::Simple)
 Requires:       perl(SOAP::Lite)
 Requires:       perl(XML::Simple)
 Requires:       perl(XML::XPath)
+%if 0%{?fedora}
+Requires:       python2-future
+Requires:       python2-requests
+Requires:       python2-requests-cache
+%else
 Requires:       python-future
 Requires:       python-requests
 Requires:       python-requests-cache
+%endif
 
 
 %description base
