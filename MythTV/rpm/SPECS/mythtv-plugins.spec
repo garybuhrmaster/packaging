@@ -191,6 +191,17 @@ pushd mythplugins
 
     make install INSTALL_ROOT=%{buildroot}
 
+    # In the case that some plugins are not built due to
+    # upstream library differences (and to avoid failing
+    # the build entirely), create a few directories if
+    # they do not exist.
+
+    mkdir -p %{buildroot}%{_datadir}/mythtv/metadata/Game
+    mkdir -p %{buildroot}%{_datadir}/mythtv/mytharchive
+    mkdir -p %{buildroot}%{_datadir}/mythtv/mythnetvision
+    mkdir -p %{buildroot}%{_datadir}/mythtv/mythnews
+    mkdir -p %{buildroot}%{_datadir}/mythtv/mythweather
+
 popd
 
 ################################################################################
