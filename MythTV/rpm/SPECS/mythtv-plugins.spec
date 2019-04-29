@@ -105,6 +105,15 @@ BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
 BuildRequires:  minizip-devel
 
+%if 0%{?fedora}
+BuildRequires:  python2-devel
+%else
+BuildRequires:  python-devel
+%endif
+
+# python fixups
+BuildRequires:  /usr/bin/pathfix.py
+
 ################################################################################
 
 # Package for all (buildable) MythTV plugins
@@ -147,6 +156,8 @@ distributed as separate downloads from mythtv.org.
 
 %setup -q -n mythtv-%{commit}
 
+pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
+
 ################################################################################
 
 %build
@@ -179,10 +190,6 @@ popd
 pushd mythplugins
 
     make install INSTALL_ROOT=%{buildroot}
-
-    # Modify .py files from "/usr/bin/env python" to be "/usr/bin/python2"
-    find %{buildroot}/ -type f -name "*.py" \
-        -exec sed -i -e '1!b;s/^#!\/usr\/bin\/env python$/#!\/usr\/bin\/python2/' {} \;
 
 popd
 

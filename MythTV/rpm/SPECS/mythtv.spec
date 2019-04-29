@@ -144,7 +144,6 @@ BuildRequires:  libomxil-bellagio-devel
 BuildRequires:  systemd-devel
 BuildRequires:  systemd
 
-
 # API Build Requirements
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -173,6 +172,9 @@ BuildRequires:  MySQL-python
 BuildRequires:  python-urlgrabber
 BuildRequires:  python-lxml
 %endif
+
+# python fixups
+BuildRequires:  /usr/bin/pathfix.py
 
 
 
@@ -474,6 +476,8 @@ MythTV python bindings
 %prep
 
 %setup -q -n %{name}-%{commit}
+
+pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 
 ################################################################################
 
