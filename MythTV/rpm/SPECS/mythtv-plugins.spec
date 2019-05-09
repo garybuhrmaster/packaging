@@ -41,6 +41,7 @@ Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{comm
 BuildRequires:  mythtv-devel              = %{version}-%{release}
 BuildRequires:  python-MythTV             = %{version}-%{release}
 BuildRequires:  git
+BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  gcc-c++
 BuildRequires:  gcc

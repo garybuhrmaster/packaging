@@ -53,6 +53,7 @@ Source303:      mythtv-mythtv-setup.desktop
 # Global MythTV and Shared Build Requirements
 
 BuildRequires:  git
+BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
