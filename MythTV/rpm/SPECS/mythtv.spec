@@ -194,7 +194,7 @@ Requires:       php-MythTV              = %{version}-%{release}
 Requires:       python-MythTV           = %{version}-%{release}
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
 Requires:       mariadb
-%{?fedora:Recommends:  xmltv-grabbers}
+%{?fedora:Recommends:  xmltv}
 
 ################################################################################
 
