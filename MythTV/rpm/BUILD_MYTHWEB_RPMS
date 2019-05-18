@@ -91,7 +91,7 @@ sed -i -e "s/^Version: .*/Version:        $RPMVERSION/" $TMPSDIR/SPECS/mythweb.s
 sed -i -e "s/^%global commit .*/%global commit $GITCOMMIT/" $TMPSDIR/SPECS/mythweb.spec
 
 # Use spectool to get source
-/usr/bin/spectool -g -f -s 0 -C $TMPSDIR/SOURCES $TMPSDIR/SPECS/mythweb.spec
+/usr/bin/spectool --get-files --force --source 0 --directory $TMPSDIR/SOURCES $TMPSDIR/SPECS/mythweb.spec
 if [ $? -ne 0 ]; then
     echo "Unable to retrieve source files via spectool"
     exit 1
@@ -102,7 +102,7 @@ fi
 #
 TMPSRCDIR=`mktemp -d`
 # Build src.rpm
-/usr/bin/mock -r $MOCKCFG --old-chroot --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythweb.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
+/usr/bin/mock --root $MOCKCFG --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythweb.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
@@ -114,35 +114,17 @@ if [ ! -f "$SRCRPM" ]; then
 fi
 
 TMPTGTDIR=`mktemp -d`
-mockchain -r $MOCKCFG -m --old-chroot -l $TMPTGTDIR $SRCRPM
+mock --root $MOCKCFG --resultdir $TMPTGTDIR --rebuild $SRCRPM
 if [ $? -ne 0 ]; then
     echo "Unable to build rpm"
     exit 1
 fi
 
-# Obtain/copy rpms
-MOCKCFG_CHROOT_NAME=$MOCKCFG
-MOCKCFG_TEST_CFGEXT=${MOCKCFG%%.cfg}
-if [ "$MOCKCFG" != "$MOCKCFG_TEST_CFGEXT" ]; then
-   MOCKCFG_CHROOT_NAME=${MOCKCFG_TEST_CFGEXT##*/}
-fi
-
-# Workaround dnf 4.x issue with repoquery
-#if hash dnf 2>/dev/null; then
-#    REPORPMS=`dnf --quiet repoquery --repo buildrepo --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null`
-#else
-#    REPORPMS=`repoquery --quiet --repo buildrepo --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null ; echo -n ' ' ; repoquery --quiet --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --srpm --location 2>/dev/null`
-#fi
-REPORPMS=`find $TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME -name \*.rpm -printf "file://%p\\n"`
-
-decodeURL() {
-   printf "$(sed 's#^file://##;s/+/ /g;s/%\(..\)/\\x\1/g;' <<< "$@")\n";
-}
+BUILTRPMS=`find $TMPTGTDIR -name \*.rpm -print`
 
 mkdir -p SRPMS RPMS
-for r in ${REPORPMS}
+for fn in ${BUILTRPMS}
 do
-    fn=`decodeURL $r`
     [[ "$fn" =~ ^.*\.(.+)\.rpm$ ]] &&
         (
             archdir="${BASH_REMATCH[1]}"
@@ -160,12 +142,13 @@ do
         )
 done
 
+
 # Cleanup
 rm -f $TMPSRCDIR/*.log
 rm -f $TMPSRCDIR/*.rpm
 rmdir $TMPSRCDIR
-rm -rf $TMPTGTDIR/configs
-rm -rf $TMPTGTDIR/results
+rm -rf $TMPTGTDIR/*.log
+rm -rf $TMPTGTDIR/*.rpm
 rmdir $TMPTGTDIR
 rm -rf $TMPSDIR/SPECS
 rm -rf $TMPSDIR/SOURCES
