@@ -35,6 +35,15 @@ client connections.  This is primarily needed for firewall
 rules.
 .RE
 .LP
+RecordStreamsMax=<number> - \fBOptional\fR
+.RS 4
+Specifies the maximum number of streams this record engine
+will record.  The default is 16.  Scheduled recordings that
+exceed this value will be recorded on other record engines
+on your network.  Setting the value to zero (0) will make
+the record engine essentially read-only.
+.RE
+.LP
 StorageID=<uuid> - \fBOptional\fR but \fBRecommended\fR
 .RS 4
 Specifies the StorageID that is provided to the my.hdhomerun.com
