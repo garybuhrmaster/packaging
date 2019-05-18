@@ -39,7 +39,7 @@ The web interface to MythTV.
 
 %prep
 
-%setup -q -n %{name}-%{commit}
+%autosetup -p1 -n %{name}-%{commit}
 
 # Build package mythweb.conf
 cp mythweb.conf.apache mythweb.conf
