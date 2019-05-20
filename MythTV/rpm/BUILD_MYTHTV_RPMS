@@ -93,7 +93,7 @@ sed -i -e "s/^Version: .*/Version:        $RPMVERSION/" $TMPSDIR/SPECS/mythtv-pl
 sed -i -e "s/^%global commit .*/%global commit $GITCOMMIT/" $TMPSDIR/SPECS/mythtv-plugins.spec
 
 # Use spectool to get source
-/usr/bin/spectool -g -f -s 0 -C $TMPSDIR/SOURCES $TMPSDIR/SPECS/mythtv.spec
+/usr/bin/spectool --get-files --force --source 0 --directory $TMPSDIR/SOURCES $TMPSDIR/SPECS/mythtv.spec
 if [ $? -ne 0 ]; then
     echo "Unable to retrieve source files via spectool"
     exit 1
@@ -105,7 +105,7 @@ fi
 #
 TMPSRCDIR=`mktemp -d`
 # Build src.rpm
-/usr/bin/mock -r $MOCKCFG --old-chroot --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythtv.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
+/usr/bin/mock --root $MOCKCFG --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythtv.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
@@ -115,7 +115,7 @@ if [ ! -f "$SRCBASERPM" ]; then
     echo "Source RPM was not built"
     exit 1
 fi
-/usr/bin/mock -r $MOCKCFG --old-chroot --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythtv-plugins.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
+/usr/bin/mock --root $MOCKCFG --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythtv-plugins.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
