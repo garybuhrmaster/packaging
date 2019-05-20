@@ -155,7 +155,7 @@ distributed as separate downloads from mythtv.org.
 
 %prep
 
-%setup -q -n mythtv-%{commit}
+%autosetup -p1 -n mythtv-%{commit}
 
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 

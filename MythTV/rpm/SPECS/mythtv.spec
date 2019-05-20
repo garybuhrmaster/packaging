@@ -476,7 +476,7 @@ MythTV python bindings
 
 %prep
 
-%setup -q -n %{name}-%{commit}
+%autosetup -p1 -n %{name}-%{commit}
 
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 
