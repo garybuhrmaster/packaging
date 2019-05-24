@@ -125,11 +125,11 @@ Requires(pre):  mythtv-libs             = %{version}-%{release}
 Requires(pre):  mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-frontend         = %{version}-%{release}
 Requires:       python-MythTV           = %{version}-%{release}
-Requires:       cdrecord
+Requires:       wodim
 Requires:       dvd+rw-tools
 Requires:       dvdauthor
 Requires:       mjpegtools
-Requires:       mkisofs
+Requires:       genisoimage
 Requires:       pmount
 Requires:       perl(XML::Simple)
 Requires:       perl(DateTime::Format::ISO8601)
