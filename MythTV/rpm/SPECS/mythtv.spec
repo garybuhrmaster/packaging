@@ -540,6 +540,10 @@ pushd mythtv
     touch                                 %{buildroot}%{_bindir}/mythexternrecorder
     fi
 
+    # Add in dummy filters directory if not installed as future merge
+    # (from render branch) will be deleting filters directory
+    mkdir -p                              %{buildroot}%{_libdir}/mythtv/filters
+
     # dir for backend, and starter config.xml
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythtv/.mythtv
     install -m 0644 contrib/config_files/config.xml \
