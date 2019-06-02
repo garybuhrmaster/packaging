@@ -38,6 +38,11 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # Plugins are now in the mythtv source repo
 Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{commit}.tar.gz
 
+# For el7, include software collections to get gcc 8
+%if (0%{?rhel} == 7)
+BuildRequires:  devtoolset-8
+%endif
+
 BuildRequires:  mythtv-devel              = %{version}-%{release}
 BuildRequires:  python-MythTV             = %{version}-%{release}
 BuildRequires:  git
@@ -163,6 +168,10 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 
 %build
 
+%if (0%{?rhel} == 7)
+source scl_source enable devtoolset-8 >/dev/null 2>/dev/null && true || true
+%endif
+
 pushd mythplugins
 
     # Similar to 'percent' configure, but without {_target_platform} and
@@ -187,6 +196,10 @@ popd
 ################################################################################
 
 %install
+
+%if (0%{?rhel} == 7)
+source scl_source enable devtoolset-8 >/dev/null 2>/dev/null && true || true
+%endif
 
 pushd mythplugins
 
