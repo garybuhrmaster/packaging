@@ -80,25 +80,6 @@ cp -r              tests                 %{buildroot}%{_var}/www/html/%{name}/
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
 install -p -m 0644 mythweb.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/mythweb.conf
 
-#### FIXUPS ####
-
-#
-# This is a (mostly safe) fixup until the upstream
-# applies the patches from MythTV trac ticket #13260,
-# after which time this fixup can be deleted.
-# Arguably this should be a local patch, but then
-# the patch will fail when the fix is applied.  Using
-# sed replacement means we can fix the spec file
-# at some later time.  Yes, this is about being
-# lazy about tracking commits.
-#
-sed -i -e "s/define(disk_size,/define('disk_size',/g" \
-                                         %{buildroot}%{_var}/www/html/%{name}/modules/tv/recorded.php
-sed -i -e "s/define(disk_used,/define('disk_used',/g" \
-                                         %{buildroot}%{_var}/www/html/%{name}/modules/tv/recorded.php
-
-#### END FIXUPS ####
-
 ################################################################################
 
 %files
