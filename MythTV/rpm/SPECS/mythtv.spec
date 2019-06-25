@@ -559,6 +559,9 @@ pushd mythtv
     # (from render branch) will be deleting filters directory
     mkdir -p                              %{buildroot}%{_libdir}/mythtv/filters
 
+    # Add in dummy externrecorder if not installed
+    mkdir -p                              %{buildroot}%{_datadir}/%{name}/externrecorder
+
     # dir for backend, and starter config.xml
     mkdir -p %{buildroot}%{_localstatedir}/lib/mythtv/.mythtv
     install -m 0644 contrib/config_files/config.xml \
@@ -734,6 +737,7 @@ exit 0
 %{_udevrulesdir}/99-mythbackend.rules
 %{_datadir}/mythtv/internetcontent
 %{_datadir}/mythtv/html
+%{_datadir}/mythtv/externrecorder
 %{_tmpfilesdir}/*
 
 
