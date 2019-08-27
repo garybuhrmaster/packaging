@@ -15,15 +15,24 @@ while :; do
                 exit 1
             fi
             ;;
-         --)              # End of all options.
-             shift
-             break
-             ;;
-         -?*)
-             printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
-             ;;
-         *)               # Default case: No more options, so break out of the loop.
-             break
+        --root=*)        # directly specified long argument
+            optarg=${1:7}
+            if [ ! -z "$optarg" ]; then
+                MOCKCFG="$optarg"
+            else
+                printf 'ERROR: "--root" requires a non-empty option argument.\n'
+                exit 1
+            fi
+            ;;
+        --)              # End of all options.
+            shift
+            break
+            ;;
+        -?*)
+            printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
+            ;;
+        *)               # Default case: No more options, so break out of the loop.
+            break
      esac
      shift
 done
