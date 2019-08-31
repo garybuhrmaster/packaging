@@ -102,7 +102,7 @@ sed -i -e "s/^Version: .*/Version:        $RPMVERSION/" $TMPSDIR/SPECS/mythtv-pl
 sed -i -e "s/^%global commit .*/%global commit $GITCOMMIT/" $TMPSDIR/SPECS/mythtv-plugins.spec
 
 # Use spectool to get source
-/usr/bin/spectool --get-files --force --source 0 --directory $TMPSDIR/SOURCES $TMPSDIR/SPECS/mythtv.spec
+spectool --get-files --force --source=0 --directory=$TMPSDIR/SOURCES $TMPSDIR/SPECS/mythtv.spec
 if [ $? -ne 0 ]; then
     echo "Unable to retrieve source files via spectool"
     exit 1
@@ -110,64 +110,86 @@ fi
 
 
 #
-# Build buildable src.rpm
+# Rebuild root cache
 #
-TMPSRCDIR=`mktemp -d`
-# Build src.rpm
-/usr/bin/mock --root $MOCKCFG --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythtv.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
+mock --root=$MOCKCFG --scrub=root-cache
+mock --root=$MOCKCFG --init
+
+
+#
+# create src.rpm resultdir
+#
+TMPSRCRPMDIR=`mktemp -d`
+
+#
+# Build buildable src.rpms
+#
+mock --root=$MOCKCFG --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
 fi
-SRCBASERPM=`ls $TMPSRCDIR/mythtv-*$RPMVERSION*.src.rpm`
+
+SRCBASERPM=`ls $TMPSRCRPMDIR/mythtv-*$RPMVERSION*.src.rpm`
 if [ ! -f "$SRCBASERPM" ]; then
-    echo "Source RPM was not built"
+    echo "Source RPM for mythtv was not built"
     exit 1
 fi
-/usr/bin/mock --root $MOCKCFG --define "dist %{nil}" --buildsrpm --spec=$TMPSDIR/SPECS/mythtv-plugins.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCDIR
+
+mock --root=$MOCKCFG --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv-plugins.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
 fi
-SRCPLUGINSRPM=`ls $TMPSRCDIR/mythtv-plugins-*$RPMVERSION*.src.rpm`
+
+SRCPLUGINSRPM=`ls $TMPSRCRPMDIR/mythtv-plugins-*$RPMVERSION*.src.rpm`
 if [ ! -f "$SRCPLUGINSRPM" ]; then
-    echo "Source RPM was not built"
+    echo "Source RPM for mythtv-plugins was not built"
     exit 1
 fi
 
+
 #
-# Build the installable rpms
+# Create rpm resultdir
 #
-TMPTGTDIR=`mktemp -d`
-mockchain -r $MOCKCFG -m --old-chroot -l $TMPTGTDIR $SRCBASERPM $SRCPLUGINSRPM
+TMPRESULTDIR=`mktemp -d`
+
+#
+# Build the mythtv rpms
+#
+mock --root=$MOCKCFG --resultdir=$TMPRESULTDIR $SRCBASERPM
 if [ $? -ne 0 ]; then
-    echo "Unable to build rpm"
+    echo "Unable to build mythtv rpms"
     exit 1
 fi
 
-# Obtain/copy rpms
-MOCKCFG_CHROOT_NAME=$MOCKCFG
-MOCKCFG_TEST_CFGEXT=${MOCKCFG%%.cfg}
-if [ "$MOCKCFG" != "$MOCKCFG_TEST_CFGEXT" ]; then
-   MOCKCFG_CHROOT_NAME=${MOCKCFG_TEST_CFGEXT##*/}
+#
+# Install the required mythtv rpms to the root for plugins build
+#
+mock --root=$MOCKCFG --cache-alterations --install $TMPRESULTDIR/mythtv-devel-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-filesystem-[!debuginfo]*.rpm $TMPRESULTDIR/python*MythTV-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-libs-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-mythffmpeg-libs-[!debuginfo]*.rpm
+
+#
+# Build the plugins rpms
+#
+mock --root=$MOCKCFG --resultdir=$TMPRESULTDIR $SRCPLUGINSRPM
+if [ $? -ne 0 ]; then
+    echo "Unable to build mythtv-plugins rpms"
+    exit 1
 fi
 
-# Workaround dnf 4.x issue with repoquery
-#if hash dnf 2>/dev/null; then
-#    REPORPMS=`dnf --quiet repoquery --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null`
-#else
-#    REPORPMS=`repoquery --quiet --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --location 2>/dev/null ; echo -n ' ' ; repoquery --quiet --repofrompath buildrepo,file://$TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME --repoid=buildrepo -a --srpm --location 2>/dev/null`
-#fi
-REPORPMS=`find $TMPTGTDIR/results/$MOCKCFG_CHROOT_NAME -name \*.rpm -printf "file://%p\\n"`
+#
+# Force a clean root cache (removes mythtv and dependant rpms)
+#
+mock --root=$MOCKCFG --scrub=root-cache
 
-decodeURL() {
-   printf "$(sed 's#^file://##;s/+/ /g;s/%\(..\)/\\x\1/g;' <<< "$@")\n";
-}
+#
+# Obtain/copy rpms
+#
+REPORPMS=`find $TMPRESULTDIR/ -name \*.rpm -print`
 
 mkdir -p SRPMS RPMS
-for r in ${REPORPMS}
+for fn in ${REPORPMS}
 do
-    fn=`decodeURL $r`
     [[ "$fn" =~ ^.*\.(.+)\.rpm$ ]] &&
         (
             archdir="${BASH_REMATCH[1]}"
@@ -186,13 +208,15 @@ do
 done
 
 
+#
 # Cleanup
-rm -f $TMPSRCDIR/*.log
-rm -f $TMPSRCDIR/*.rpm
-rmdir $TMPSRCDIR
-rm -rf $TMPTGTDIR/configs
-rm -rf $TMPTGTDIR/results
-rmdir $TMPTGTDIR
+#
+rm -f $TMPSRCRPMDIR/*.log
+rm -f $TMPSRCRPMDIR/*.rpm
+rmdir $TMPSRCRPMDIR
+rm -f $TMPRESULTDIR/*.log
+rm -f $TMPRESULTDIR/*.rpm
+rmdir $TMPRESULTDIR
 rm -rf $TMPSDIR/SPECS
 rm -rf $TMPSDIR/SOURCES
 rmdir $TMPSDIR
