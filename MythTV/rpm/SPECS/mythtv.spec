@@ -313,7 +313,9 @@ Requires:       perl-MythTV             = %{version}-%{release}
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-%{?fedora:Recommends:  xmltv-grabbers}
+%if 0%{?fedora} || 0%{?rhel} > 7
+Recommends:     xmltv-grabbers
+%endif
 
 %description backend
 MythTV backend, the server for video capture and content services.
