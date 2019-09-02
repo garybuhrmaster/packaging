@@ -51,6 +51,9 @@ do
         if [ $el -eq 6 ] && [ "$arch" == "aarch64" ]; then
             continue
         fi
+        if [ $el -gt 7 ] && [ "$arch" == "i686" ]; then
+            continue
+        fi
         if [ "$arch" == "i686" ]; then
             arch="i386"
         fi
@@ -61,6 +64,9 @@ for fc in ${FC[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
+        if [ $fc -gt 30 ] && [ "$arch" == "i686" ]; then
+            continue
+        fi
         if [ "$arch" == "i686" ]; then
             arch="i386"
         fi
@@ -136,6 +142,9 @@ do
     do
         rpmresultarch=$arch
         rpmtargetarch=$arch
+        if [ $fc -gt 30 ] && [ "$arch" == "i686" ]; then
+            continue
+        fi
         if [ "$arch" == "i686" ]; then
             rpmresultarch="i386"
         fi
@@ -169,6 +178,9 @@ do
             continue
         fi
         if [ $el -eq 6 ] && [ "$arch" == "aarch64" ]; then
+            continue
+        fi
+        if [ $el -gt 7 ] && [ "$arch" == "i686" ]; then
             continue
         fi
         rpmresultarch=$arch
