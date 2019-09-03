@@ -32,13 +32,13 @@ fi
 
 TARGETRPMARCH=("i686" "x86_64" "armhfp" "aarch64")
 
-EL=(`find /etc/mock/ -type f -printf "%f\n" | grep "^epel-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/epel-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | grep -v "5" | sort -n`)
+EL=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^epel-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/epel-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
 ELBASE=${EL[0]}
-FC=(`find /etc/mock/ -type f -printf "%f\n" | grep "^fedora-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/fedora-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -3`)
+FC=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^fedora-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/fedora-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -3`)
 FCBASE=${FC[0]}
-LEAP=(`find /etc/mock/ -type f -printf "%f\n" | grep "^opensuse-leap-[[:digit:]\\.[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/opensuse-leap-\([0-9]\+\\.[0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
-TUMBLEWEED=(`find /etc/mock/ -type f -printf "%f\n" | grep "^opensuse-tumbleweed-$HOSTARCH.cfg$" | sed -n "s/opensuse-\(tumbleweed\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -1`)
-MAGEIA=(`find /etc/mock -type f -printf "%f\n" | grep "^mageia-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/mageia-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
+LEAP=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^opensuse-leap-[[:digit:]\\.[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/opensuse-leap-\([0-9]\+\\.[0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
+TUMBLEWEED=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^opensuse-tumbleweed-$HOSTARCH.cfg$" | sed -n "s/opensuse-\(tumbleweed\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -1`)
+MAGEIA=(`find /etc/mock -maxdepth 1 -type f -printf "%f\n" | grep "^mageia-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/mageia-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
 
 # Create resultdir directories
 for el in ${EL[@]}
