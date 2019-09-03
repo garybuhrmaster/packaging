@@ -1,6 +1,6 @@
 [unofficial-hdhomerun-dvr]
 name=Unofficial HDHomeRun DVR repository
-baseurl=https://unofficial-hdhomerun-dvr-repo.s3.us-east-1.amazonaws.com/rpm/leap/$releasever/
+baseurl=https://unofficial-hdhomerun-dvr-repo.s3.us-east-1.amazonaws.com/rpm/mageia/$releasever/$basearch/
 path=/
 enabled=1
 autorefresh=1
