@@ -608,8 +608,10 @@ pushd mythtv
     mkdir -p                              %{buildroot}%{_datadir}/applications
     install -m 0644 %{SOURCE300}          %{buildroot}%{_datadir}/pixmaps/mythfrontend.png
     install -m 0644 %{SOURCE301}          %{buildroot}%{_datadir}/applications/mythfrontend.desktop
+    desktop-file-validate                 %{buildroot}%{_datadir}/applications/mythfrontend.desktop
     install -m 0644 %{SOURCE302}          %{buildroot}%{_datadir}/pixmaps/mythtv-setup.png
     install -m 0644 %{SOURCE303}          %{buildroot}%{_datadir}/applications/mythtv-setup.desktop
+    desktop-file-validate                 %{buildroot}%{_datadir}/applications/mythtv-setup.desktop
 
 popd
 

@@ -1,9 +1,8 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=MythTV setup
 Comment=Setup for MythTV
 Icon=mythtv-setup
 Exec=/usr/bin/mythtv-setup
 Terminal=false
 Type=Application
-Categories=Application;AudioVideo;
+Categories=AudioVideo;
