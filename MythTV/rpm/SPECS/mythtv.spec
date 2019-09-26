@@ -72,7 +72,7 @@ BuildRequires:  libcec-devel
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
-BuildRequires:  nasm, yasm-devel
+BuildRequires:  yasm
 
 # X, and Xv video support
 BuildRequires:  libXmu-devel
