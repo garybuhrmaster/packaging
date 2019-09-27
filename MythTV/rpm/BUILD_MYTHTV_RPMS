@@ -166,6 +166,7 @@ fi
 #
 # Install the required mythtv rpms to the root for plugins build
 #
+mock --root=$MOCKCFG --install $TMPRESULTDIR/mythtv-devel-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-filesystem-[!debuginfo]*.rpm $TMPRESULTDIR/python*MythTV-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-libs-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-mythffmpeg-libs-[!debuginfo]*.rpm
 mock --root=$MOCKCFG --cache-alterations --install $TMPRESULTDIR/mythtv-devel-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-filesystem-[!debuginfo]*.rpm $TMPRESULTDIR/python*MythTV-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-libs-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-mythffmpeg-libs-[!debuginfo]*.rpm
 
 #
