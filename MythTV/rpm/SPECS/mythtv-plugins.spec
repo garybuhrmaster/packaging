@@ -38,13 +38,24 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # Plugins are now in the mythtv source repo
 Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{commit}.tar.gz
 
+# Python prefix adjustments (python for rhel < 8 of fedora < 31, python3 for everything else)
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+%if (0%{?rhel})
+%global py_prefix python
+%else
+%global py_prefix python2
+%endif
+%else
+%global py_prefix python3
+%endif
+
 # For el7, include software collections to get gcc 8
 %if (0%{?rhel} == 7)
 BuildRequires:  devtoolset-8
 %endif
 
 BuildRequires:  mythtv-devel              = %{version}-%{release}
-BuildRequires:  python-MythTV             = %{version}-%{release}
+BuildRequires:  %{py_prefix}-MythTV       = %{version}-%{release}
 BuildRequires:  git
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
@@ -54,7 +65,11 @@ BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
 BuildRequires:  qt5-qtwebkit-devel
 BuildRequires:  freetype-devel
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+BuildRequires:  mariadb-connector-c-devel
+%else
 BuildRequires:  mariadb-devel
+%endif
 BuildRequires:  perl(XML::Simple)
 BuildRequires:  perl(DateTime::Format::ISO8601)
 BuildRequires:  perl(XML::XPath)
@@ -62,10 +77,13 @@ BuildRequires:  perl(Date::Manip)
 BuildRequires:  perl(Image::Size)
 BuildRequires:  perl(SOAP::Lite)
 BuildRequires:  perl(JSON)
-BuildRequires:  python
-BuildRequires:  python-pycurl
-BuildRequires:  python-lxml
-BuildRequires:  python-oauth
+BuildRequires:  %{py_prefix}
+BuildRequires:  %{py_prefix}-pycurl
+BuildRequires:  %{py_prefix}-lxml
+BuildRequires:  %{py_prefix}-oauth
+BuildRequires:  %{py_prefix}-rpm-macros
+BuildRequires:  %{py_prefix}-devel
+BuildRequires:  /usr/bin/pathfix.py
 BuildRequires:  libvorbis-devel
 BuildRequires:  flac-devel
 BuildRequires:  lame-devel
@@ -80,7 +98,7 @@ BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  libass-devel
 BuildRequires:  libavc1394-devel
 BuildRequires:  libcrystalhd-devel
-%if 0%{?fedora}
+%if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
 BuildRequires:  libiec61883-devel
@@ -111,15 +129,6 @@ BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
 BuildRequires:  minizip-devel
 
-%if 0%{?fedora}
-BuildRequires:  python2-devel
-%else
-BuildRequires:  python-devel
-%endif
-
-# python fixups
-BuildRequires:  /usr/bin/pathfix.py
-
 ################################################################################
 
 # Package for all (buildable) MythTV plugins
@@ -129,7 +138,7 @@ Requires(pre):  mythtv-base             = %{version}-%{release}
 Requires(pre):  mythtv-libs             = %{version}-%{release}
 Requires(pre):  mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-frontend         = %{version}-%{release}
-Requires:       python-MythTV           = %{version}-%{release}
+Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       wodim
 Requires:       dvd+rw-tools
 Requires:       dvdauthor
@@ -144,10 +153,10 @@ Requires:       perl(Image::Size)
 Requires:       perl(SOAP::Lite)
 Requires:       perl(JSON)
 Requires:       perl(XML::SAX::Base)
-Requires:       python-pycurl
-Requires:       python-lxml
-Requires:       python-oauth
-Requires:       python-imaging
+Requires:       %{py_prefix}-pycurl
+Requires:       %{py_prefix}-lxml
+Requires:       %{py_prefix}-oauth
+Requires:       %{py_prefix}-imaging
 Requires:       dcraw
 
 ################################################################################
@@ -162,7 +171,11 @@ distributed as separate downloads from mythtv.org.
 
 %autosetup -p1 -n mythtv-%{commit}
 
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
+%else
+pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
+%endif
 
 ################################################################################
 
@@ -186,7 +199,11 @@ pushd mythplugins
         --extra-cxxflags="${CXXFLAGS}"              \
         --prefix=%{_prefix}                         \
         --bindir=%{_bindir}                         \
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
         --python=/usr/bin/python2                   \
+%else
+        --python=/usr/bin/python3                   \
+%endif
         --compile-type=profile
 
     make %{?_smp_mflags}

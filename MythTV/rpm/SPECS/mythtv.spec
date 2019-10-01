@@ -55,6 +55,17 @@ Source303:      mythtv-mythtv-setup.desktop
 BuildRequires:  devtoolset-8
 %endif
 
+# Python prefix adjustments (python for rhel < 8 of fedora < 31, python3 for everything else)
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+%if (0%{?rhel})
+%global py_prefix python
+%else
+%global py_prefix python2
+%endif
+%else
+%global py_prefix python3
+%endif
+
 # Global MythTV and Shared Build Requirements
 
 BuildRequires:  git
@@ -63,11 +74,15 @@ BuildRequires:  perl-generators
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
 BuildRequires:  desktop-file-utils
-BuildRequires:  qt5-qtbase-devel
-BuildRequires:  qt5-qtscript-devel
-BuildRequires:  qt5-qtwebkit-devel
+BuildRequires:  qt5-qtbase-devel        >= 5.3
+BuildRequires:  qt5-qtscript-devel      >= 5.3
+BuildRequires:  qt5-qtwebkit-devel      >= 5.3
 BuildRequires:  freetype-devel
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+BuildRequires:  mariadb-connector-c-devel
+%else
 BuildRequires:  mariadb-devel
+%endif
 BuildRequires:  libcec-devel
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
@@ -142,7 +157,7 @@ BuildRequires:  libraw1394-devel
 BuildRequires:  libvdpau-devel
 BuildRequires:  libva-devel
 BuildRequires:  libcrystalhd-devel
-%if 0%{?fedora}
+%if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
 
@@ -167,17 +182,19 @@ BuildRequires:  perl(IO::Socket::INET6)
 BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(XML::Simple)
 
-%if 0%{?fedora}
-BuildRequires:  python2-devel
-BuildRequires:  python2-mysql
-BuildRequires:  python2-urlgrabber
-BuildRequires:  python2-lxml
-%else
-BuildRequires:  python-devel
+BuildRequires:  %{py_prefix}
+BuildRequires:  %{py_prefix}-pycurl
+BuildRequires:  %{py_prefix}-lxml
+BuildRequires:  %{py_prefix}-oauth
+BuildRequires:  %{py_prefix}-rpm-macros
+BuildRequires:  %{py_prefix}-urlgrabber
+%if ((0%{?rhel}) && (0%{?rhel} < 8))
 BuildRequires:  MySQL-python
-BuildRequires:  python-urlgrabber
-BuildRequires:  python-lxml
+%else
+BuildRequires:  %{py_prefix}-mysql
 %endif
+BuildRequires:  %{py_prefix}-devel
+
 
 # python fixups
 BuildRequires:  /usr/bin/pathfix.py
@@ -187,6 +204,7 @@ BuildRequires:  /usr/bin/pathfix.py
 ################################################################################
 # Requirements for the mythtv meta package
 
+Requires(pre):  mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-backend          = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
@@ -197,10 +215,10 @@ Requires:       mythtv-mythwelcome      = %{version}-%{release}
 Requires:       mythtv-mythshutdown     = %{version}-%{release}
 Requires:       perl-MythTV             = %{version}-%{release}
 Requires:       php-MythTV              = %{version}-%{release}
-Requires:       python-MythTV           = %{version}-%{release}
+Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
 Requires:       mariadb
-%if 0%{?fedora} || 0%{?rhel} > 7
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Recommends:     xmltv
 %endif
 
@@ -246,9 +264,106 @@ BuildArch:      noarch
 
 Requires(pre):  mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
-Requires:       qt5-qtbase-devel        >= 5.2
-Requires:       qt5-qtscript-devel      >= 5.2
-Requires:       qt5-qtwebkit-devel      >= 5.2
+Requires:       qt5-qtbase-devel        >= 5.3
+Requires:       qt5-qtscript-devel      >= 5.3
+Requires:       qt5-qtwebkit-devel      >= 5.3
+
+# BuildRequires are Requires for -devel package
+Requires:       git
+Requires:       perl-interpreter
+Requires:       gcc-c++
+Requires:       gcc
+Requires:       desktop-file-utils
+Requires:       freetype-devel
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+Requires:       mariadb-connector-c-devel
+%else
+Requires:       mariadb-devel
+%endif
+Requires:       libcec-devel
+Requires:       libvpx-devel
+Requires:       lm_sensors-devel
+Requires:       lirc-devel
+Requires:       yasm
+Requires:       libXmu-devel
+Requires:       libXv-devel
+Requires:       libXvMC-devel
+Requires:       libXxf86vm-devel
+Requires:       libXinerama-devel
+Requires:       libXrandr-devel
+Requires:       mesa-libGLU-devel
+%ifarch %arm
+Requires:       mesa-libGLES-devel
+%endif
+Requires:       xorg-x11-proto-devel
+Requires:       libGL-devel
+Requires:       libGLU-devel
+Requires:       fftw-devel
+Requires:       flac-devel
+Requires:       lame-devel
+Requires:       libcdio-devel
+Requires:       libcdio-paranoia-devel
+Requires:       libogg-devel
+Requires:       libtheora-devel
+Requires:       libvorbis-devel
+Requires:       taglib-devel
+Requires:       x264-devel
+Requires:       x265-devel
+Requires:       xvidcore-devel
+Requires:       exiv2-devel
+Requires:       nv-codec-headers
+Requires:       hdhomerun-devel
+Requires:       libbluray-devel
+Requires:       libsamplerate-devel
+Requires:       libXNVCtrl-devel
+Requires:       lzo-devel
+Requires:       minizip-devel
+Requires:       sox-devel
+Requires:       alsa-lib-devel
+Requires:       jack-audio-connection-kit-devel
+Requires:       pulseaudio-libs-devel
+Requires:       avahi-compat-libdns_sd-devel
+Requires:       libxml2-devel
+Requires:       libass-devel
+Requires:       kernel-headers
+Requires:       libavc1394-devel
+Requires:       libiec61883-devel
+Requires:       libraw1394-devel
+Requires:       libvdpau-devel
+Requires:       libva-devel
+Requires:       libcrystalhd-devel
+%if (0%{?fedora})
+Requires:       libomxil-bellagio-devel
+%endif
+Requires:       systemd-devel
+Requires:       systemd
+Requires:       perl
+Requires:       perl(ExtUtils::MakeMaker)
+Requires:       perl(Config)
+Requires:       perl(Exporter)
+Requires:       perl(Fcntl)
+Requires:       perl(File::Copy)
+Requires:       perl(Sys::Hostname)
+Requires:       perl(DBI)
+Requires:       perl(HTTP::Request)
+Requires:       perl(Net::UPnP::QueryResponse)
+Requires:       perl(Net::UPnP::ControlPoint)
+Requires:       perl(DBD::mysql)
+Requires:       perl(IO::Socket::INET6)
+Requires:       perl(LWP::UserAgent)
+Requires:       perl(XML::Simple)
+Requires:       %{py_prefix}
+Requires:       %{py_prefix}-pycurl
+Requires:       %{py_prefix}-lxml
+Requires:       %{py_prefix}-oauth
+Requires:       %{py_prefix}-rpm-macros
+Requires:       %{py_prefix}-urlgrabber
+%if ((0%{?rhel}) && (0%{?rhel} < 8))
+Requires:       MySQL-python
+%else
+Requires:       %{py_prefix}-mysql
+%endif
+Requires:       %{py_prefix}-devel
 
 %description devel
 MythTV development headers and libraries
@@ -292,7 +407,7 @@ Requires(pre):  mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
-Requires:       python-MythTV           = %{version}-%{release}
+Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       perl-MythTV             = %{version}-%{release}
 
 %description frontend
@@ -304,16 +419,17 @@ viewing television, video, and music content.
 %package backend
 Summary:        Server component of mythtv (a DVR)
 
+Requires(pre):  mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
-Requires:       python-MythTV           = %{version}-%{release}
+Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       perl-MythTV             = %{version}-%{release}
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-%if 0%{?fedora} || 0%{?rhel} > 7
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Recommends:     xmltv-grabbers
 %endif
 
@@ -325,6 +441,7 @@ MythTV backend, the server for video capture and content services.
 %package setup
 Summary:        Program to setup the MythTV backend
 
+Requires(pre):  mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
@@ -341,6 +458,7 @@ mythtv backend.
 %package mythwelcome
 Summary:        Program to shutdown and wakeup the MythTV backend
 
+Requires(pre):  mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
@@ -357,6 +475,7 @@ system shutdown and wakeup
 %package mythshutdown
 Summary:        Program to shutdown and wakeup the MythTV system
 
+Requires(pre):  mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
@@ -385,15 +504,7 @@ Requires:       perl(LWP::Simple)
 Requires:       perl(SOAP::Lite)
 Requires:       perl(XML::Simple)
 Requires:       perl(XML::XPath)
-%if 0%{?fedora}
-Requires:       python2-future
-Requires:       python2-requests
-Requires:       python2-requests-cache
-%else
-Requires:       python-future
-Requires:       python-requests
-Requires:       python-requests-cache
-%endif
+Requires:       %{py_prefix}-MythTV
 
 
 %description base
@@ -458,27 +569,43 @@ MythTV PHP bindings
 
 ################################################################################
 
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 %package -n python2-MythTV
+%else
+%package -n python3-MythTV
+%endif
 Summary:        Python bindings for MythTV
 BuildArch:      noarch
 
-%if 0%{?fedora}
-Requires(pre):  python2-libs
-Requires:       python2-mysql
-Requires:       python2-lxml
-Requires:       python2-future
-Requires:       python2-urlgrabber
-%else
-Requires(pre):  python-libs
+Requires(pre):  %{py_prefix}-libs
+Requires:       %{py_prefix}-lxml
+Requires:       %{py_prefix}-future
+Requires:       %{py_prefix}-urlgrabber
+Requires:       %{py_prefix}-requests
+%if ((0%{?rhel}) && (0%{?rhel} < 8))
 Requires:       MySQL-python
-Requires:       python-lxml
-Requires:       python-future
-Requires:       python-urlgrabber
+%else
+Requires:       %{py_prefix}-mysql
+Requires:       %{py_prefix}-requests-cache
 %endif
 
-%{?python_provide:%python_provide python2-MythTV}
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+#
+%else
+Obsoletes:      python2-MythTV
+%endif
 
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+%{?python_provide:%python_provide python2-MythTV}
+%else
+%{?python_provide:%python_provide python3-MythTV}
+%endif
+
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 %description -n python2-MythTV
+%else
+%description -n python3-MythTV
+%endif
 MythTV python bindings
 
 ################################################################################
@@ -487,7 +614,11 @@ MythTV python bindings
 
 %autosetup -p1 -n %{name}-%{commit}
 
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
+%else
+pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
+%endif
 
 ################################################################################
 
@@ -513,7 +644,11 @@ pushd mythtv
         --bindir=%{_bindir}                         \
         --libdir-name=%{_lib}                       \
         --compile-type=profile                      \
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
         --python=/usr/bin/python2                   \
+%else
+        --python=/usr/bin/python3                   \
+%endif
         --perl-config-opts="INSTALLDIRS=vendor OPTIMIZE=\"$RPM_OPT_FLAGS\"" \
         --enable-libmp3lame                         \
         --enable-libx264                            \
@@ -818,10 +953,18 @@ exit 0
 %{_datadir}/mythtv/bindings
 
 
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 %files -n python2-MythTV
+%else
+%files -n python3-MythTV
+%endif
 %defattr(0644, root, root, 0755)
 %attr(0755, root, root) %{_bindir}/mythpython
+%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 %{python2_sitelib}/*
+%else
+%{python3_sitelib}/*
+%endif
 
 
 ################################################################################
