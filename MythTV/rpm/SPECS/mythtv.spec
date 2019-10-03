@@ -185,7 +185,6 @@ BuildRequires:  perl(XML::Simple)
 BuildRequires:  %{py_prefix}
 BuildRequires:  %{py_prefix}-pycurl
 BuildRequires:  %{py_prefix}-lxml
-BuildRequires:  %{py_prefix}-oauth
 BuildRequires:  %{py_prefix}-rpm-macros
 BuildRequires:  %{py_prefix}-urlgrabber
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
@@ -355,7 +354,6 @@ Requires:       perl(XML::Simple)
 Requires:       %{py_prefix}
 Requires:       %{py_prefix}-pycurl
 Requires:       %{py_prefix}-lxml
-Requires:       %{py_prefix}-oauth
 Requires:       %{py_prefix}-rpm-macros
 Requires:       %{py_prefix}-urlgrabber
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
