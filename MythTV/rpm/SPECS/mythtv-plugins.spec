@@ -200,9 +200,9 @@ pushd mythplugins
         --prefix=%{_prefix}                         \
         --bindir=%{_bindir}                         \
 %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-        --python=/usr/bin/python2                   \
+        --python=%{__python2}                       \
 %else
-        --python=/usr/bin/python3                   \
+        --python=%{__python3}                       \
 %endif
         --compile-type=profile
 
