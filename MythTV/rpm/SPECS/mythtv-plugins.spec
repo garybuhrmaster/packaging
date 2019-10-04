@@ -15,6 +15,8 @@
 #    Paul Howarth <paul@city-fan.org>
 #
 
+%global _hardened_build 1
+
 #
 # Basic descriptive tags for this package:
 #
