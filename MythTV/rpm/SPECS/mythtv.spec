@@ -382,6 +382,7 @@ MythTV filesystem directory definitions
 %package libs
 Summary:        Libraries providing mythtv support
 
+Requires(pre):  mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-mythffmpeg-libs  = %{version}-%{release}
 Requires:       qt5-qtbase-mysql
 
@@ -505,7 +506,6 @@ Requires:       perl(SOAP::Lite)
 Requires:       perl(XML::Simple)
 Requires:       perl(XML::XPath)
 Requires:       %{py_prefix}-MythTV
-
 
 %description base
 MythTV provides a unified graphical interface for recording and viewing
@@ -856,6 +856,10 @@ exit 0
 %exclude %{_libdir}/libmythswscale.*
 %exclude %{_libdir}/libmythavutil.*
 %{_libdir}/mythtv/filters
+%{_datadir}/mythtv/MXML_scpd.xml
+%{_datadir}/mythtv/CDS_scpd.xml
+%{_datadir}/mythtv/CMGR_scpd.xml
+%{_datadir}/mythtv/MSRR_scpd.xml
 
 
 %files backend
@@ -868,7 +872,6 @@ exit 0
 %{_bindir}/mythmediaserver
 %{_bindir}/mythreplex
 %defattr(0644, root, root, 0755)
-%{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/backend-config/
 %{_unitdir}/mythbackend.service
 %{_unitdir}/mythjobqueue.service
@@ -878,6 +881,8 @@ exit 0
 %{_datadir}/mythtv/html
 %{_datadir}/mythtv/externrecorder
 %{_tmpfilesdir}/*
+%{_datadir}/mythtv/devicemaster.xml
+%{_datadir}/mythtv/deviceslave.xml
 
 
 %files setup
@@ -896,12 +901,7 @@ exit 0
 %{_bindir}/mythlcdserver
 %{_bindir}/mythscreenwizard
 %defattr(0644, root, root, 0755)
-%{_datadir}/mythtv/CDS_scpd.xml
-%{_datadir}/mythtv/CMGR_scpd.xml
 %{_datadir}/mythtv/MFEXML_scpd.xml
-%{_datadir}/mythtv/MSRR_scpd.xml
-%{_datadir}/mythtv/devicemaster.xml
-%{_datadir}/mythtv/deviceslave.xml
 %{_datadir}/pixmaps/mythfrontend.png
 %{_datadir}/applications/mythfrontend.desktop
 
