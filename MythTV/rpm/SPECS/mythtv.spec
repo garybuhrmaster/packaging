@@ -856,6 +856,7 @@ exit 0
 %exclude %{_libdir}/libmythswscale.*
 %exclude %{_libdir}/libmythavutil.*
 %{_libdir}/mythtv/filters
+%defattr(0644, root, root, 0755)
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/CDS_scpd.xml
 %{_datadir}/mythtv/CMGR_scpd.xml
