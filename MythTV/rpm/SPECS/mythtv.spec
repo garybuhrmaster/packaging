@@ -134,7 +134,6 @@ BuildRequires:  lzo-devel
 BuildRequires:  minizip-devel
 
 # Audio framework support
-BuildRequires:  sox-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  pulseaudio-libs-devel
@@ -319,7 +318,6 @@ Requires:       libsamplerate-devel
 Requires:       libXNVCtrl-devel
 Requires:       lzo-devel
 Requires:       minizip-devel
-Requires:       sox-devel
 Requires:       alsa-lib-devel
 Requires:       jack-audio-connection-kit-devel
 Requires:       pulseaudio-libs-devel
