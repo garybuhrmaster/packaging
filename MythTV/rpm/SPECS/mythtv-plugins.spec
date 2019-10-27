@@ -135,10 +135,10 @@ BuildRequires:  minizip-devel
 
 # Package for all (buildable) MythTV plugins
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
-Requires(pre):  mythtv-base             = %{version}-%{release}
-Requires(pre):  mythtv-libs             = %{version}-%{release}
-Requires(pre):  mythtv-base-themes      = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-base             = %{version}-%{release}
+Requires:       mythtv-libs             = %{version}-%{release}
+Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-frontend         = %{version}-%{release}
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       wodim

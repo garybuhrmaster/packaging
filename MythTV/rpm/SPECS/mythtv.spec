@@ -204,7 +204,7 @@ BuildRequires:  /usr/bin/pathfix.py
 ################################################################################
 # Requirements for the mythtv meta package
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-backend          = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
@@ -251,7 +251,7 @@ unified graphical interface:
 Summary:        MythTV documentation
 BuildArch:      noarch
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 
 %description docs
 MythTV documentation
@@ -262,7 +262,7 @@ MythTV documentation
 Summary:        Development files for mythtv
 BuildArch:      noarch
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
 Requires:       qt5-qtbase-devel        >= 5.3
 Requires:       qt5-qtscript-devel      >= 5.3
@@ -380,7 +380,7 @@ MythTV filesystem directory definitions
 %package libs
 Summary:        Libraries providing mythtv support
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-mythffmpeg-libs  = %{version}-%{release}
 Requires:       qt5-qtbase-mysql
 
@@ -392,7 +392,7 @@ MythTV run-time libraries
 %package base-themes
 Summary:        Core user interface themes for mythtv
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 
 %description base-themes
 MythTV base themes for graphical applications
@@ -402,7 +402,7 @@ MythTV base themes for graphical applications
 %package frontend
 Summary:        Client component of mythtv (a DVR)
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
@@ -418,13 +418,14 @@ viewing television, video, and music content.
 %package backend
 Summary:        Server component of mythtv (a DVR)
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       perl-MythTV             = %{version}-%{release}
+Requires:       systemd
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
@@ -440,7 +441,7 @@ MythTV backend, the server for video capture and content services.
 %package setup
 Summary:        Program to setup the MythTV backend
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
@@ -457,7 +458,7 @@ mythtv backend.
 %package mythwelcome
 Summary:        Program to shutdown and wakeup the MythTV backend
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
@@ -474,7 +475,7 @@ system shutdown and wakeup
 %package mythshutdown
 Summary:        Program to shutdown and wakeup the MythTV system
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
@@ -492,7 +493,8 @@ system shutdown and wakeup
 Summary:        Common components needed by multiple other MythTV components
 
 Requires(pre):  shadow-utils
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
+Requires:       logrotate
 Requires:       google-droid-sans-mono-fonts
 Requires:       google-droid-sans-fonts
 Requires:       perl(Date::Manip)
@@ -559,7 +561,7 @@ MythTV perl bindings
 Summary:        PHP bindings for MythTV
 BuildArch:      noarch
 
-Requires(pre):  mythtv-filesystem       = %{version}-%{release}
+Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       php-common
 
 %description -n php-MythTV
@@ -575,7 +577,7 @@ MythTV PHP bindings
 Summary:        Python bindings for MythTV
 BuildArch:      noarch
 
-Requires(pre):  %{py_prefix}-libs
+Requires:       %{py_prefix}-libs
 Requires:       %{py_prefix}-lxml
 Requires:       %{py_prefix}-future
 Requires:       %{py_prefix}-urlgrabber
@@ -971,6 +973,6 @@ exit 0
 
 %changelog
 
-* Wed May 09 2018 Gary Buhrmaster <gary.buhrmaster@gmail.com> - 29.0
+* Wed May 09 2018 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Rework for managed rebuilds
 
