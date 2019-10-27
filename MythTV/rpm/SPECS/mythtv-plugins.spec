@@ -235,21 +235,32 @@ pushd mythplugins
     mkdir -p %{buildroot}%{_datadir}/mythtv/mythnews
     mkdir -p %{buildroot}%{_datadir}/mythtv/mythweather
 
+    # Fixup a few files from mythgame that rpmlint reports
+    if [ -e "%{buildroot}%{_datadir}/mythtv/metadata/Game/giantbomb/giantbomb_api.py" ] ; then
+       chmod a+x %{buildroot}%{_datadir}/mythtv/metadata/Game/giantbomb/giantbomb_api.py
+    fi
+    if [ -e "%{buildroot}%{_datadir}/mythtv/metadata/Game/giantbomb/giantbomb_exceptions.py" ] ; then
+       chmod a+x %{buildroot}%{_datadir}/mythtv/metadata/Game/giantbomb/giantbomb_exceptions.py
+    fi
+
+    %{_fixperms} %{buildroot}
+
 popd
 
 ################################################################################
 
+%if (0%{?rhel} == 7)
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
+%endif
 
 ################################################################################
 
 %files
-%defattr(0644, root, root, 0755)
 
-%attr(0755, root, root)%{_bindir}/*
+%{_bindir}/*
 %dir %{_libdir}/mythtv/plugins
-%attr(0755, root, root)%{_libdir}/mythtv/plugins/*
+%{_libdir}/mythtv/plugins/*
 %{_datadir}/mythtv/themes/default/*
 %{_datadir}/mythtv/themes/default-wide/*
 %{_datadir}/mythtv/i18n/*
@@ -264,7 +275,7 @@ popd
 
 %changelog
 
-* Wed May 09 2018 Gary Buhrmaster <gary.buhrmaster@gmail.com> - 29.0
+* Wed May 09 2018 Gary Buhrmaster <gary.buhrmaster@gmail.com>
 - Rework for managed rebuilds
 
 
