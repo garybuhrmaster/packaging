@@ -773,9 +773,13 @@ for group in 'video' 'audio' 'cdrom' 'dialout'
 }
 exit 0
 
+%if (0%{?rhel} == 7)
 %post libs -p /sbin/ldconfig
+%endif
 
+%if (0%{?rhel} == 7)
 %post mythffmpeg-libs -p /sbin/ldconfig
+%endif
 
 %post backend
     %systemd_post mythbackend.service
@@ -787,9 +791,13 @@ exit 0
     %systemd_preun mythjobqueue.service
     %systemd_preun mythmediaserver.service
 
+%if (0%{?rhel} == 7)
 %postun libs -p /sbin/ldconfig
+%endif
 
+%if (0%{?rhel} == 7)
 %postun mythffmpeg-libs -p /sbin/ldconfig
+%endif
 
 %postun backend
     %systemd_postun_with_restart mythbackend.service
