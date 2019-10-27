@@ -43,6 +43,7 @@ if [ "$GITCOMMITISH" == "" ]; then
     GITCOMMITISH="master"
 fi
 
+
 #
 # First, we clone the repo, in order to obtain the
 # description and commit hash for the specified
@@ -81,6 +82,7 @@ RPMVERSION=${RPMVERSION//-/.}
 rm -rf $TMPCLONEDIR/mythtv
 rmdir $TMPCLONEDIR
 
+
 #
 # Announce to world and dog what we are doing
 #
@@ -107,13 +109,6 @@ if [ $? -ne 0 ]; then
     echo "Unable to retrieve source files via spectool"
     exit 1
 fi
-
-
-#
-# Rebuild root cache
-#
-mock --root=$MOCKCFG --scrub=root-cache
-mock --root=$MOCKCFG --init
 
 
 #
@@ -150,43 +145,24 @@ fi
 
 
 #
-# Create rpm resultdir
+# Create rpm localrepo dir
 #
-TMPRESULTDIR=`mktemp -d`
+TMPLOCALREPODIR=`mktemp -d`
 
 #
 # Build the mythtv rpms
 #
-mock --root=$MOCKCFG --resultdir=$TMPRESULTDIR $SRCBASERPM
+mock --root=$MOCKCFG --chain --localrepo=$TMPLOCALREPODIR $SRCBASERPM $SRCPLUGINSRPM
 if [ $? -ne 0 ]; then
     echo "Unable to build mythtv rpms"
     exit 1
 fi
 
-#
-# Install the required mythtv rpms to the root for plugins build
-#
-mock --root=$MOCKCFG --install $TMPRESULTDIR/mythtv-devel-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-filesystem-[!debuginfo]*.rpm $TMPRESULTDIR/python*MythTV-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-libs-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-mythffmpeg-libs-[!debuginfo]*.rpm
-mock --root=$MOCKCFG --cache-alterations --install $TMPRESULTDIR/mythtv-devel-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-filesystem-[!debuginfo]*.rpm $TMPRESULTDIR/python*MythTV-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-libs-[!debuginfo]*.rpm $TMPRESULTDIR/mythtv-mythffmpeg-libs-[!debuginfo]*.rpm
-
-#
-# Build the plugins rpms
-#
-mock --root=$MOCKCFG --resultdir=$TMPRESULTDIR $SRCPLUGINSRPM
-if [ $? -ne 0 ]; then
-    echo "Unable to build mythtv-plugins rpms"
-    exit 1
-fi
-
-#
-# Force a clean root cache (removes mythtv and dependant rpms)
-#
-mock --root=$MOCKCFG --scrub=root-cache
 
 #
 # Obtain/copy rpms
 #
-REPORPMS=`find $TMPRESULTDIR/ -name \*.rpm -print`
+REPORPMS=`find $TMPLOCALREPODIR/ -name \*.rpm -print`
 
 mkdir -p SRPMS RPMS
 for fn in ${REPORPMS}
@@ -215,9 +191,8 @@ done
 rm -f $TMPSRCRPMDIR/*.log
 rm -f $TMPSRCRPMDIR/*.rpm
 rmdir $TMPSRCRPMDIR
-rm -f $TMPRESULTDIR/*.log
-rm -f $TMPRESULTDIR/*.rpm
-rmdir $TMPRESULTDIR
+rm -rf $TMPLOCALREPODIR/results
+rmdir $TMPLOCALREPODIR
 rm -rf $TMPSDIR/SPECS
 rm -rf $TMPSDIR/SOURCES
 rmdir $TMPSDIR
