@@ -260,108 +260,10 @@ MythTV documentation
 
 %package devel
 Summary:        Development files for mythtv
-BuildArch:      noarch
 
 Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
-Requires:       qt5-qtbase-devel        >= 5.3
-Requires:       qt5-qtscript-devel      >= 5.3
-Requires:       qt5-qtwebkit-devel      >= 5.3
-
-# BuildRequires are Requires for -devel package
-Requires:       git
-Requires:       perl-interpreter
-Requires:       gcc-c++
-Requires:       gcc
-Requires:       desktop-file-utils
-Requires:       freetype-devel
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
-Requires:       mariadb-connector-c-devel
-%else
-Requires:       mariadb-devel
-%endif
-Requires:       libcec-devel
-Requires:       libvpx-devel
-Requires:       lm_sensors-devel
-Requires:       lirc-devel
-Requires:       yasm
-Requires:       libXmu-devel
-Requires:       libXv-devel
-Requires:       libXvMC-devel
-Requires:       libXxf86vm-devel
-Requires:       libXinerama-devel
-Requires:       libXrandr-devel
-Requires:       mesa-libGLU-devel
-%ifarch %arm
-Requires:       mesa-libGLES-devel
-%endif
-Requires:       xorg-x11-proto-devel
-Requires:       libGL-devel
-Requires:       libGLU-devel
-Requires:       fftw-devel
-Requires:       flac-devel
-Requires:       lame-devel
-Requires:       libcdio-devel
-Requires:       libcdio-paranoia-devel
-Requires:       libogg-devel
-Requires:       libtheora-devel
-Requires:       libvorbis-devel
-Requires:       taglib-devel
-Requires:       x264-devel
-Requires:       x265-devel
-Requires:       xvidcore-devel
-Requires:       exiv2-devel
-Requires:       nv-codec-headers
-Requires:       hdhomerun-devel
-Requires:       libbluray-devel
-Requires:       libsamplerate-devel
-Requires:       libXNVCtrl-devel
-Requires:       lzo-devel
-Requires:       minizip-devel
-Requires:       alsa-lib-devel
-Requires:       jack-audio-connection-kit-devel
-Requires:       pulseaudio-libs-devel
-Requires:       avahi-compat-libdns_sd-devel
-Requires:       libxml2-devel
-Requires:       libass-devel
-Requires:       kernel-headers
-Requires:       libavc1394-devel
-Requires:       libiec61883-devel
-Requires:       libraw1394-devel
-Requires:       libvdpau-devel
-Requires:       libva-devel
-Requires:       libcrystalhd-devel
-%if (0%{?fedora})
-Requires:       libomxil-bellagio-devel
-%endif
-Requires:       systemd-devel
-Requires:       systemd
-Requires:       perl
-Requires:       perl(ExtUtils::MakeMaker)
-Requires:       perl(Config)
-Requires:       perl(Exporter)
-Requires:       perl(Fcntl)
-Requires:       perl(File::Copy)
-Requires:       perl(Sys::Hostname)
-Requires:       perl(DBI)
-Requires:       perl(HTTP::Request)
-Requires:       perl(Net::UPnP::QueryResponse)
-Requires:       perl(Net::UPnP::ControlPoint)
-Requires:       perl(DBD::mysql)
-Requires:       perl(IO::Socket::INET6)
-Requires:       perl(LWP::UserAgent)
-Requires:       perl(XML::Simple)
-Requires:       %{py_prefix}
-Requires:       %{py_prefix}-pycurl
-Requires:       %{py_prefix}-lxml
-Requires:       %{py_prefix}-rpm-macros
-Requires:       %{py_prefix}-urlgrabber
-%if ((0%{?rhel}) && (0%{?rhel} < 8))
-Requires:       MySQL-python
-%else
-Requires:       %{py_prefix}-mysql
-%endif
-Requires:       %{py_prefix}-devel
+Requires:       mythtv-mythffmpeg-libs  = %{version}-%{release}
 
 %description devel
 MythTV development headers and libraries
@@ -818,6 +720,7 @@ exit 0
 
 %files devel
 %defattr(0644, root, root, 0755)
+%{_libdir}/libmyth*.so
 %{_includedir}/%{name}
 %{_datadir}/mythtv/build
 
@@ -854,7 +757,7 @@ exit 0
 
 %files libs
 %defattr(0755, root, root, 0755)
-%{_libdir}/libmyth*
+%{_libdir}/libmyth*.so.*
 %exclude %{_libdir}/libmythavdevice.*
 %exclude %{_libdir}/libmythavfilter.*
 %exclude %{_libdir}/libmythavformat.*
@@ -938,14 +841,14 @@ exit 0
 
 %files mythffmpeg-libs
 %defattr(0755, root, root, 0755)
-%{_libdir}/libmythavdevice.*
-%{_libdir}/libmythavfilter.*
-%{_libdir}/libmythavformat.*
-%{_libdir}/libmythavcodec.*
-%{_libdir}/libmythpostproc.*
-%{_libdir}/libmythswresample.*
-%{_libdir}/libmythswscale.*
-%{_libdir}/libmythavutil.*
+%{_libdir}/libmythavdevice.so.*
+%{_libdir}/libmythavfilter.so.*
+%{_libdir}/libmythavformat.so.*
+%{_libdir}/libmythavcodec.so.*
+%{_libdir}/libmythpostproc.so.*
+%{_libdir}/libmythswresample.so.*
+%{_libdir}/libmythswscale.so.*
+%{_libdir}/libmythavutil.so.*
 
 
 %files -n perl-MythTV
