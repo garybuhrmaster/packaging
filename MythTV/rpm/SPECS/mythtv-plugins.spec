@@ -243,6 +243,10 @@ pushd mythplugins
        chmod a+x %{buildroot}%{_datadir}/mythtv/metadata/Game/giantbomb/giantbomb_exceptions.py
     fi
 
+    # remove unnecessary packaging/SCM files
+    find %{buildroot} -name .gitignore -delete >/dev/null
+    find %{buildroot} -name .packlist -delete >/dev/null
+
     %{_fixperms} %{buildroot}
 
 popd

@@ -594,6 +594,17 @@ pushd mythtv
     touch                                 %{buildroot}%{_bindir}/mythexternrecorder
     fi
 
+    # Insure various files/directories exist for optional feature builds
+    touch                                 %{buildroot}%{_bindir}/mythwikiscripts
+    touch                                 %{buildroot}%{_bindir}/mythpython
+    %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+    mkdir -p                              %{buildroot}%{python2_sitelib}/MythTV
+    %else
+    mkdir -p                              %{buildroot}%{python3_sitelib}/MythTV
+    %endif
+    mkdir -p                              %{buildroot}%{perl_vendorlib}
+    mkdir -p                              %{buildroot}%{_datadir}/mythtv/bindings/php
+
     # Add in dummy filters directory if not installed as future merge
     # (from render branch) will be deleting filters directory
     mkdir -p                              %{buildroot}%{_libdir}/mythtv/filters
@@ -649,6 +660,12 @@ pushd mythtv
     install -m 0644 %{SOURCE302}          %{buildroot}%{_datadir}/pixmaps/mythtv-setup.png
     install -m 0644 %{SOURCE303}          %{buildroot}%{_datadir}/applications/mythtv-setup.desktop
     desktop-file-validate                 %{buildroot}%{_datadir}/applications/mythtv-setup.desktop
+
+    # remove unnecessary packaging/SCM files
+    find %{buildroot} -name .gitignore -delete >/dev/null
+    find %{buildroot} -name .packlist -delete >/dev/null
+
+    %{_fixperms} %{buildroot}
 
 popd
 
@@ -741,7 +758,6 @@ exit 0
 %{_bindir}/mythcommflag
 %{_bindir}/mythpreviewgen
 %{_bindir}/mythtranscode
-%{_bindir}/mythwikiscripts
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
 %{_datadir}/mythtv/mythconverg*.pl
@@ -753,6 +769,7 @@ exit 0
 %files filesystem
 %defattr(0644, root, root, 0755)
 %dir %{_datadir}/mythtv
+%dir %{_datadir}/mythtv/bindings
 
 
 %files libs
@@ -853,16 +870,13 @@ exit 0
 
 %files -n perl-MythTV
 %defattr(0644, root, root, 0755)
-%{perl_vendorlib}/MythTV.pm
-%dir %{perl_vendorlib}/MythTV
-%{perl_vendorlib}/MythTV/*.pm
+%{perl_vendorlib}/MythTV*
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
-%exclude %{perl_vendorarch}/auto/MythTV/.packlist
 
 
 %files -n php-MythTV
 %defattr(0644, root, root, 0755)
-%{_datadir}/mythtv/bindings
+%{_datadir}/mythtv/bindings/php
 
 
 %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
@@ -872,6 +886,7 @@ exit 0
 %endif
 %defattr(0644, root, root, 0755)
 %attr(0755, root, root) %{_bindir}/mythpython
+%attr(0755, root, root) %{_bindir}/mythwikiscripts
 %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 %{python2_sitelib}/*
 %else
