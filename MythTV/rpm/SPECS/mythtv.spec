@@ -188,6 +188,10 @@ BuildRequires:  %{py_prefix}-pycurl
 BuildRequires:  %{py_prefix}-lxml
 BuildRequires:  %{py_prefix}-rpm-macros
 BuildRequires:  %{py_prefix}-urlgrabber
+BuildRequires:  %{py_prefix}-requests
+BuildRequires:  %{py_prefix}-simplejson
+BuildRequires:  %{py_prefix}-future
+
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
 BuildRequires:  MySQL-python
 %else
@@ -484,6 +488,8 @@ Requires:       %{py_prefix}-lxml
 Requires:       %{py_prefix}-future
 Requires:       %{py_prefix}-urlgrabber
 Requires:       %{py_prefix}-requests
+Requires:       %{py_prefix}-simplejson
+Requires:       %{py_prefix}-future
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
 Requires:       MySQL-python
 %else
