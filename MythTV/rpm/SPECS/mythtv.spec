@@ -92,9 +92,7 @@ BuildRequires:  lirc-devel
 BuildRequires:  nasm
 
 # X, and Xv video support
-BuildRequires:  libXmu-devel
 BuildRequires:  libXv-devel
-BuildRequires:  libXvMC-devel
 BuildRequires:  libXxf86vm-devel
 BuildRequires:  libXinerama-devel
 BuildRequires:  libXrandr-devel
