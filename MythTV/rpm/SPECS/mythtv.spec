@@ -487,7 +487,6 @@ Requires:       %{py_prefix}-future
 Requires:       %{py_prefix}-urlgrabber
 Requires:       %{py_prefix}-requests
 Requires:       %{py_prefix}-simplejson
-Requires:       %{py_prefix}-future
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
 Requires:       MySQL-python
 %else
