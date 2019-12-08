@@ -1,0 +1,10 @@
+diff -ru pterm-6.0.4/getkitver.py pterm-6.0.4.new/getkitver.py
+--- pterm-6.0.4/getkitver.py	2018-10-01 21:15:42.000000000 +0000
++++ pterm-6.0.4.new/getkitver.py	2019-05-27 17:00:10.091951192 +0000
+@@ -12,5 +14,5 @@
+         nums2 = [ ]
+         for n in nums:
+             nums2.append (int (n))
+-        print "%d.%d.%d" % tuple (nums2)[:3]
++        print ("%d.%d.%d" % tuple (nums2)[:3])
+         sys.exit (0)

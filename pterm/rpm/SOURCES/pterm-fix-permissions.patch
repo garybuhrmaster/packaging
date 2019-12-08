@@ -1,0 +1,27 @@
+diff --git a/FrameCanvas.cpp b/FrameCanvas.cpp
+old mode 100755
+new mode 100644
+diff --git a/MTFile.cpp b/MTFile.cpp
+old mode 100755
+new mode 100644
+diff --git a/PtermApp.cpp b/PtermApp.cpp
+old mode 100755
+new mode 100644
+diff --git a/PtermConnDialog.cpp b/PtermConnDialog.cpp
+old mode 100755
+new mode 100644
+diff --git a/PtermConnFailDialog.cpp b/PtermConnFailDialog.cpp
+old mode 100755
+new mode 100644
+diff --git a/PtermConnection.cpp b/PtermConnection.cpp
+old mode 100755
+new mode 100644
+diff --git a/PtermPrefDialog.cpp b/PtermPrefDialog.cpp
+old mode 100755
+new mode 100644
+diff --git a/PtermPrintout.cpp b/PtermPrintout.cpp
+old mode 100755
+new mode 100644
+diff --git a/PtermTrace.cpp b/PtermTrace.cpp
+old mode 100755
+new mode 100644

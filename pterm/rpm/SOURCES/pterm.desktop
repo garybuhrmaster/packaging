@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Pterm
+Icon=pterm
+Exec=/usr/bin/pterm
+Terminal=false
+Type=Application
