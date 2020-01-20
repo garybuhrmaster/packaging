@@ -85,7 +85,9 @@ BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel
 %endif
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  libcec-devel
+%endif
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
@@ -125,7 +127,9 @@ BuildRequires:  nv-codec-headers
 
 # External library support
 BuildRequires:  hdhomerun-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  libbluray-devel
+%endif
 BuildRequires:  libsamplerate-devel
 BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
@@ -148,9 +152,11 @@ BuildRequires:  libass-devel
 BuildRequires:  kernel-headers
 
 # FireWire cable box support
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
+%endif
 
 # HW video support
 BuildRequires:  libvdpau-devel
@@ -193,7 +199,9 @@ BuildRequires:  %{py_prefix}-future
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
 BuildRequires:  MySQL-python
 %else
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  %{py_prefix}-mysql
+%endif
 %endif
 BuildRequires:  %{py_prefix}-devel
 
@@ -217,7 +225,9 @@ Requires:       mythtv-mythwelcome      = %{version}-%{release}
 Requires:       mythtv-mythshutdown     = %{version}-%{release}
 Requires:       perl-MythTV             = %{version}-%{release}
 Requires:       php-MythTV              = %{version}-%{release}
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
+%endif
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
 Requires:       mariadb
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
@@ -310,7 +320,9 @@ Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
+%endif
 Requires:       perl-MythTV             = %{version}-%{release}
 
 %description frontend
@@ -327,7 +339,9 @@ Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
+%endif
 Requires:       perl-MythTV             = %{version}-%{release}
 Requires:       systemd
 Requires(post): systemd
@@ -349,6 +363,9 @@ Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+Recommends:     xmltv-grabbers
+%endif
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -409,7 +426,6 @@ Requires:       perl(LWP::Simple)
 Requires:       perl(SOAP::Lite)
 Requires:       perl(XML::Simple)
 Requires:       perl(XML::XPath)
-Requires:       %{py_prefix}-MythTV
 
 %description base
 MythTV provides a unified graphical interface for recording and viewing
@@ -490,14 +506,16 @@ Requires:       %{py_prefix}-simplejson
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
 Requires:       MySQL-python
 %else
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 Requires:       %{py_prefix}-mysql
+%endif
 Requires:       %{py_prefix}-requests-cache
 %endif
 
 %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 #
 %else
-Obsoletes:      python2-MythTV
+Obsoletes:      python2-MythTV          <= %{version}-%{release}
 %endif
 
 %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
@@ -607,6 +625,9 @@ pushd mythtv
     %endif
     mkdir -p                              %{buildroot}%{perl_vendorlib}
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/bindings/php
+    mkdir -p                              %{buildroot}%{_datadir}/mythtv/hardwareprofile
+    mkdir -p                              %{buildroot}%{_datadir}/mythtv/metadata
+    mkdir -p                              %{buildroot}%{_datadir}/mythtv/internetcontent
 
     # Add in dummy filters directory if not installed as future merge
     # (from render branch) will be deleting filters directory

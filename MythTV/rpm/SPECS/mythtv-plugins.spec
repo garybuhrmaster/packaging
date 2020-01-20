@@ -57,7 +57,9 @@ BuildRequires:  devtoolset-8
 %endif
 
 BuildRequires:  mythtv-devel              = %{version}-%{release}
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  %{py_prefix}-MythTV       = %{version}-%{release}
+%endif
 BuildRequires:  git
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
@@ -82,7 +84,9 @@ BuildRequires:  perl(JSON)
 BuildRequires:  %{py_prefix}
 BuildRequires:  %{py_prefix}-pycurl
 BuildRequires:  %{py_prefix}-lxml
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  %{py_prefix}-oauth
+%endif
 BuildRequires:  %{py_prefix}-rpm-macros
 BuildRequires:  %{py_prefix}-devel
 BuildRequires:  /usr/bin/pathfix.py
@@ -91,21 +95,22 @@ BuildRequires:  flac-devel
 BuildRequires:  lame-devel
 BuildRequires:  libexif-devel
 BuildRequires:  zlib-devel
-BuildRequires:  ncurses-devel
 BuildRequires:  libcdio-paranoia-devel
 BuildRequires:  fftw-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  avahi-compat-libdns_sd-devel
 BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  libass-devel
-BuildRequires:  libavc1394-devel
 BuildRequires:  libcrystalhd-devel
 %if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
-BuildRequires:  libogg-devel
 BuildRequires:  libraw1394-devel
+%endif
+BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libva-devel
 BuildRequires:  libvdpau-devel
@@ -125,7 +130,9 @@ BuildRequires:  SDL2-devel
 BuildRequires:  taglib-devel
 BuildRequires:  dcraw
 BuildRequires:  hdhomerun-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  libbluray-devel
+%endif
 BuildRequires:  libsamplerate-devel
 BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
@@ -135,12 +142,7 @@ BuildRequires:  minizip-devel
 
 # Package for all (buildable) MythTV plugins
 
-Requires:       mythtv-filesystem       = %{version}-%{release}
-Requires:       mythtv-base             = %{version}-%{release}
-Requires:       mythtv-libs             = %{version}-%{release}
-Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-frontend         = %{version}-%{release}
-Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       wodim
 Requires:       dvd+rw-tools
 Requires:       dvdauthor
