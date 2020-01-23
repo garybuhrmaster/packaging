@@ -123,6 +123,10 @@ BuildRequires:  x265-devel
 BuildRequires:  xvidcore-devel
 BuildRequires:  exiv2-devel
 BuildRequires:  nv-codec-headers
+BuildRequires:  libaom-devel
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+BuildRequires:  libdav1d-devel
+%endif
 # (non-free) BuildRequires:  fdk-aac-devel
 
 # External library support

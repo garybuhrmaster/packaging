@@ -119,6 +119,10 @@ BuildRequires:  libXinerama-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  libXrandr-devel
 BuildRequires:  libXv-devel
+BuildRequires:  libaom-devel
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+BuildRequires:  libdav1d-devel
+%endif
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  systemd-devel
 BuildRequires:  x264-devel
