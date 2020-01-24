@@ -631,7 +631,14 @@ pushd mythtv
     %else
     mkdir -p                              %{buildroot}%{python3_sitelib}/MythTV
     %endif
-    mkdir -p                              %{buildroot}%{perl_vendorlib}
+    mkdir -p                              %{buildroot}%{perl_vendorlib}/MythTV
+    if [ ! -e "%{buildroot}%{perl_vendorlib}/MythTV.pm" ] ; then
+    touch                                 %{buildroot}%{perl_vendorlib}/MythTV.pm
+    fi
+    mkdir -p                              %{buildroot}%{perl_vendorlib}/IO/Socket/INET
+    if [ ! -e "%{buildroot}%{perl_vendorlib}/IO/Socket/INET/MythTV.pm" ] ; then
+    touch                                 %{buildroot}%{perl_vendorlib}/IO/Socket/INET/MythTV.pm
+    fi
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/bindings/php
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/hardwareprofile
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/metadata
@@ -902,7 +909,8 @@ exit 0
 
 %files -n perl-MythTV
 %defattr(0644, root, root, 0755)
-%{perl_vendorlib}/MythTV*
+%{perl_vendorlib}/MythTV
+%{perl_vendorlib}/MythTV.pm
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 
 
