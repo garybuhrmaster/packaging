@@ -620,8 +620,12 @@ pushd mythtv
     fi
 
     # Insure various files/directories exist for optional feature builds
+    if [ ! -e "%{buildroot}%{_bindir}/mythwikiscripts" ] ; then
     touch                                 %{buildroot}%{_bindir}/mythwikiscripts
+    fi
+    if [ ! -e "%{buildroot}%{_bindir}/mythpython" ] ; then
     touch                                 %{buildroot}%{_bindir}/mythpython
+    fi
     %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
     mkdir -p                              %{buildroot}%{python2_sitelib}/MythTV
     %else
