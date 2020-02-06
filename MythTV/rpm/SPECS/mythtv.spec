@@ -37,6 +37,11 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 ################################################################################
 
+# The following options are disabled by default.  Use --with to enable them
+%define with_llvm           %{?_with_llvm:           1} %{?!_with_llvm:           0}
+
+################################################################################
+
 # Source based on commit hash
 Source0:        https://github.com/MythTV/%{name}/archive/%{commit}/%{name}-%{commit}.tar.gz
 
@@ -54,7 +59,11 @@ Source303:      mythtv-mythtv-setup.desktop
 
 # For el7, include software collections to get gcc 8
 %if (0%{?rhel} == 7)
+%if %{with_llvm}
+BuildRequires:  llvm-toolset-7
+%else
 BuildRequires:  devtoolset-8
+%endif
 %endif
 
 # Python prefix adjustments (python for rhel < 8 of fedora < 31, python3 for everything else)
@@ -73,8 +82,13 @@ BuildRequires:  devtoolset-8
 BuildRequires:  git
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
+%if %{with_llvm}
+BuildRequires:  llvm
+BuildRequires:  clang
+%else
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
+%endif
 BuildRequires:  desktop-file-utils
 BuildRequires:  qt5-qtbase-devel        >= 5.3
 BuildRequires:  qt5-qtscript-devel      >= 5.3
@@ -422,6 +436,7 @@ Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       logrotate
 Requires:       google-droid-sans-mono-fonts
 Requires:       google-droid-sans-fonts
+Requires:       google-droid-serif-fonts
 Requires:       perl(Date::Manip)
 Requires:       perl(DateTime::Format::ISO8601)
 Requires:       perl(Image::Size)
@@ -552,7 +567,11 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 %build
 
 %if (0%{?rhel} == 7)
+%if %{with_llvm}
+source scl_source enable llvm-toolset-7 >/dev/null 2>/dev/null && true || true
+%else
 source scl_source enable devtoolset-8 >/dev/null 2>/dev/null && true || true
+%endif
 %endif
 
 pushd mythtv
@@ -564,7 +583,19 @@ pushd mythtv
     CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
     CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
 
+%if %{with_llvm}
+    CFLAGS="${CFLAGS//-fstack-clash-protection}" ; export CFLAGS ;
+    CXXFLAGS="${CXXFLAGS//-fstack-clash-protection}" ; export CXXFLAGS ;
+%endif
+
     ./configure                                     \
+%if %{with_llvm}
+        --cc="clang"                                \
+        --cxx="clang"                               \
+%else
+        --cc="gcc"                                  \
+        --cxx="g++"                                 \
+%endif
         --extra-cflags="${CFLAGS}"                  \
         --extra-cxxflags="${CXXFLAGS}"              \
         --prefix=%{_prefix}                         \
@@ -592,7 +623,11 @@ popd
 %install
 
 %if (0%{?rhel} == 7)
+%if %{with_llvm}
+source scl_source enable llvm-toolset-7 >/dev/null 2>/dev/null && true || true
+%else
 source scl_source enable devtoolset-8 >/dev/null 2>/dev/null && true || true
+%endif
 %endif
 
 pushd mythtv

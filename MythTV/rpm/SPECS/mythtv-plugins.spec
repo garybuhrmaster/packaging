@@ -37,6 +37,13 @@ Release:        100%{?dist}
 # projects... For a breakdown of the licensing, see the base LICENSING.
 License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
 
+################################################################################
+
+# The following options are disabled by default.  Use --with to enable them
+%define with_llvm           %{?_with_llvm:           1} %{?!_with_llvm:           0}
+
+################################################################################
+
 # Plugins are now in the mythtv source repo
 Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{commit}.tar.gz
 
@@ -53,7 +60,11 @@ Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{comm
 
 # For el7, include software collections to get gcc 8
 %if (0%{?rhel} == 7)
+%if %{with_llvm}
+BuildRequires:  llvm-toolset-7
+%else
 BuildRequires:  devtoolset-8
+%endif
 %endif
 
 BuildRequires:  mythtv-devel              = %{version}-%{release}
@@ -63,8 +74,13 @@ BuildRequires:  %{py_prefix}-MythTV       = %{version}-%{release}
 BuildRequires:  git
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
+%if %{with_llvm}
+BuildRequires:  llvm
+BuildRequires:  clang
+%else
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
+%endif
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
 BuildRequires:  qt5-qtwebkit-devel
@@ -190,7 +206,11 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 %build
 
 %if (0%{?rhel} == 7)
+%if %{with_llvm}
+source scl_source enable llvm-toolset-7 >/dev/null 2>/dev/null && true || true
+%else
 source scl_source enable devtoolset-8 >/dev/null 2>/dev/null && true || true
+%endif
 %endif
 
 pushd mythplugins
@@ -223,7 +243,11 @@ popd
 %install
 
 %if (0%{?rhel} == 7)
+%if %{with_llvm}
+source scl_source enable llvm-toolset-7 >/dev/null 2>/dev/null && true || true
+%else
 source scl_source enable devtoolset-8 >/dev/null 2>/dev/null && true || true
+%endif
 %endif
 
 pushd mythplugins
