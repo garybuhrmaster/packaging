@@ -3,12 +3,12 @@
 #
 # Support mock config specification
 #
-MOCKCFG="default"
+MOCKOPTS=""
 while :; do
     case $1 in
         -r|--root)       # Takes an option argument; ensure it has been specified.
             if [ ! -z "$2" ]; then
-                MOCKCFG="$2"
+                MOCKOPTS="$MOCKOPTS --root=$2"
                 shift
             else
                 printf 'ERROR: "--root" requires a non-empty option argument.\n'
@@ -16,13 +16,31 @@ while :; do
             fi
             ;;
         --root=*)        # directly specified long argument
-            optarg=${1:7}
-            if [ ! -z "$optarg" ]; then
-                MOCKCFG="$optarg"
+            MOCKOPTS="$MOCKOPTS $1"
+            ;;
+        --with)
+            if [ ! -z "$2" ]; then
+                MOCKOPTS="$MOCKOPTS --with=$2"
+                shift
             else
-                printf 'ERROR: "--root" requires a non-empty option argument.\n'
+                printf 'ERROR: "--with" requires a non-empty option argument.\n'
                 exit 1
             fi
+            ;;
+        --with=*)
+            MOCKOPTS="$MOCKOPTS $1"
+            ;;
+        --without)
+            if [ ! -z "$2" ]; then
+                MOCKOPTS="$MOCKOPTS --without=$2"
+                shift
+            else
+                printf 'ERROR: "--without" requires a non-empty option argument.\n'
+                exit 1
+            fi
+            ;;
+        --without=*)
+            MOCKOPTS="$MOCKOPTS $1"
             ;;
         --)              # End of all options.
             shift
@@ -119,7 +137,7 @@ TMPSRCRPMDIR=`mktemp -d`
 #
 # Build buildable src.rpms
 #
-mock --root=$MOCKCFG --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
+mock $MOCKOPTS --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
@@ -131,7 +149,7 @@ if [ ! -f "$SRCBASERPM" ]; then
     exit 1
 fi
 
-mock --root=$MOCKCFG --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv-plugins.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
+mock $MOCKOPTS --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv-plugins.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
@@ -152,7 +170,7 @@ TMPLOCALREPODIR=`mktemp -d`
 #
 # Build the mythtv rpms
 #
-mock --root=$MOCKCFG --chain --localrepo=$TMPLOCALREPODIR $SRCBASERPM $SRCPLUGINSRPM
+mock $MOCKOPTS --chain --localrepo=$TMPLOCALREPODIR $SRCBASERPM $SRCPLUGINSRPM
 if [ $? -ne 0 ]; then
     echo "Unable to build mythtv rpms"
     exit 1
