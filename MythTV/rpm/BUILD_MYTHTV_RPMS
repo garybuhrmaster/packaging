@@ -165,7 +165,7 @@ fi
 #
 # Create rpm localrepo dir
 #
-TMPLOCALREPODIR=`mktemp -d`
+TMPLOCALREPODIR=`mktemp -p /var/tmp -d`
 
 #
 # Build the mythtv rpms
