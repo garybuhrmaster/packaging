@@ -122,7 +122,7 @@ SRCDIR=`mktemp -d`
 if [ ! $? -eq 0 ]; then
     echo ""
     echo "***********************************************************"
-    echo "******** Build failed, logs in $RESULTDIR ********"
+    echo "******** Build failed, logs in $SRCDIR ********"
     echo "***********************************************************"
     echo ""
     exit 1
