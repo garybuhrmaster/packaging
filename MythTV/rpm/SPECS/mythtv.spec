@@ -432,6 +432,7 @@ system shutdown and wakeup
 Summary:        Common components needed by multiple other MythTV components
 
 Requires(pre):  shadow-utils
+Requires(pre):  grep
 Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       logrotate
 Requires:       google-droid-sans-mono-fonts
