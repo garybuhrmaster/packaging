@@ -129,7 +129,7 @@ fi
 #
 TMPSRCDIR=`mktemp -d`
 # Build src.rpm
-mock $MOCKOPTS --define="dist %{nil}" --resultdir=$TMPSRCDIR --spec=$TMPSDIR/SPECS/mythweb.spec --sources=$TMPSDIR/SOURCES --buildsrpm
+mock $MOCKOPTS --no-bootstrap-chroot --isolation simple --define="dist %{nil}" --resultdir=$TMPSRCDIR --spec=$TMPSDIR/SPECS/mythweb.spec --sources=$TMPSDIR/SOURCES --buildsrpm
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
@@ -141,7 +141,7 @@ if [ ! -f "$SRCRPM" ]; then
 fi
 
 TMPTGTDIR=`mktemp -d`
-mock $MOCKOPTS --resultdir=$TMPTGTDIR --rebuild $SRCRPM
+mock $MOCKOPTS --no-bootstrap-chroot --isolation simple --resultdir=$TMPTGTDIR --rebuild $SRCRPM
 if [ $? -ne 0 ]; then
     echo "Unable to build rpm"
     exit 1
