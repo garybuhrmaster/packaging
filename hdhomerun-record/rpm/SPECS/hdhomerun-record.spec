@@ -159,6 +159,7 @@ BuildRequires: binutils-powerpc64-linux-gnu
 %endif
 Requires(post):	util-linux
 Requires(post):	coreutils
+Requires(post):	grep
 
 
 %description
