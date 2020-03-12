@@ -118,7 +118,7 @@ done
 
 # Build src.rpm
 SRCDIR=`mktemp -d`
-/usr/bin/mock -r epel-$ELBASE-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$SRCDIR --disable-plugin=ccache $PKGMGR
+/usr/bin/mock -r epel-$ELBASE-$HOSTARCH --no-bootstrap-chroot --isolation simple --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$SRCDIR --disable-plugin=ccache $PKGMGR
 if [ ! $? -eq 0 ]; then
     echo ""
     echo "***********************************************************"
@@ -152,7 +152,7 @@ do
             rpmtargetarch="armv7hl"
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r fedora-$fc-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .fc$fc" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        /usr/bin/mock -r fedora-$fc-$HOSTARCH --no-bootstrap-chroot --isolation simple --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .fc$fc" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
@@ -192,7 +192,7 @@ do
             rpmtargetarch="armv7hl"
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r epel-$el-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .el$el" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        /usr/bin/mock -r epel-$el-$HOSTARCH --no-bootstrap-chroot --isolation simple --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .el$el" --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
@@ -223,7 +223,7 @@ do
         rpmresultarch=$arch
         rpmtargetarch=$arch
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r opensuse-leap-$leap-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        /usr/bin/mock -r opensuse-leap-$leap-$HOSTARCH --no-bootstrap-chroot --isolation simple --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
@@ -256,7 +256,7 @@ do
             rpmtargetarch="armv7hl"
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r opensuse-tumbleweed-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        /usr/bin/mock -r opensuse-tumbleweed-$HOSTARCH --no-bootstrap-chroot --isolation simple --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
@@ -291,7 +291,7 @@ do
             rpmresultarch="i386"
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r mageia-$mageia-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
+        /usr/bin/mock -r mageia-$mageia-$HOSTARCH --no-bootstrap-chroot --isolation simple --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $PKGMGR $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
