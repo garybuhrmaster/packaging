@@ -117,6 +117,7 @@ BuildRequires:  mesa-libGLU-devel
 BuildRequires:  mesa-libGLES-devel
 %endif
 BuildRequires:  xorg-x11-proto-devel
+BuildRequires:  libdrm-devel
 
 # OpenGL video output and vsync support
 BuildRequires:  libGL-devel

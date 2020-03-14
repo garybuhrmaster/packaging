@@ -135,6 +135,8 @@ BuildRequires:  libXinerama-devel
 BuildRequires:  libxml2-devel
 BuildRequires:  libXrandr-devel
 BuildRequires:  libXv-devel
+BuildRequires:  libXxf86vm-devel
+BuildRequires:  libdrm-devel
 BuildRequires:  libaom-devel
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  libdav1d-devel
