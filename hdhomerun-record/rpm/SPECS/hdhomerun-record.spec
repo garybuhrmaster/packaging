@@ -310,9 +310,18 @@ powerpc64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_reco
 
 %pre
 getent group hdhomerun >/dev/null || groupadd -r hdhomerun
+%if 0%{?rhel} == 6
 getent passwd hdhomerun >/dev/null || \
     useradd -r -g hdhomerun -d "/var/run/hdhomerun" -s /sbin/nologin \
     -c "HDHomeRun DVR server" hdhomerun
+%else
+getent passwd hdhomerun >/dev/null || \
+    useradd -r -g hdhomerun -d "/run/hdhomerun" -s /sbin/nologin \
+    -c "HDHomeRun DVR server" hdhomerun
+if [ "`getent passwd hdhomerun | cut -d: -f6`" = "/var/run/hdhomerun" ]; then
+    usermod -d "/run/hdhomerun" hdhomerun >/dev/null 2>/dev/null || true
+fi
+%endif
 %if 0%{?suse_version}
 %service_add_pre hdhomerun_record.service
 %endif

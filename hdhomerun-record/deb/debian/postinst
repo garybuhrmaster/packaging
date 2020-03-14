@@ -27,10 +27,14 @@ case "$1" in
 	if ! getent passwd hdhomerun > /dev/null ; then
 	    echo 'Adding system user for HDHomeRun DVR' 1>&2
 	    adduser --system --group --quiet \
-	        --home /var/run/hdhomerun \
+	        --home /run/hdhomerun \
 	        --no-create-home --disabled-login \
 	        --gecos "HDHomeRun DVR server" \
 	        hdhomerun
+	fi
+
+	if [ "`getent passwd hdhomerun | cut -d: -f6`" = "/var/run/hdhomerun" ]; then
+		usermod -d "/run/hdhomerun" hdhomerun >/dev/null 2>/dev/null || true
 	fi
 
 	if [ -f /etc/hdhomerun.conf -a -r /etc/hdhomerun.conf -a -w /etc/hdhomerun.conf ] ; then
