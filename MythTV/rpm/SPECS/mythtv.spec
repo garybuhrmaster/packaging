@@ -153,6 +153,7 @@ BuildRequires:  libsamplerate-devel
 BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
 BuildRequires:  minizip-devel
+BuildRequires:  gnutls-devel
 
 # Audio framework support
 BuildRequires:  alsa-lib-devel
