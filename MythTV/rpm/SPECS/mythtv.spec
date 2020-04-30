@@ -172,11 +172,9 @@ BuildRequires:  libass-devel
 BuildRequires:  kernel-headers
 
 # FireWire cable box support
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
-%endif
 
 # HW video support
 BuildRequires:  libvdpau-devel
@@ -219,7 +217,7 @@ BuildRequires:  %{py_prefix}-future
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
 BuildRequires:  MySQL-python
 %else
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} > 7)))
 BuildRequires:  %{py_prefix}-mysql
 %endif
 %endif
@@ -528,7 +526,7 @@ Requires:       %{py_prefix}-simplejson
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
 Requires:       MySQL-python
 %else
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} > 7)))
 Requires:       %{py_prefix}-mysql
 %endif
 Requires:       %{py_prefix}-requests-cache

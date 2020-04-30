@@ -121,11 +121,9 @@ BuildRequires:  libcrystalhd-devel
 %if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
-%endif
 BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libva-devel
