@@ -66,7 +66,7 @@ BuildRequires:  devtoolset-8
 %endif
 %endif
 
-# Python prefix adjustments (python for rhel < 8 of fedora < 31, python3 for everything else)
+# Python prefix adjustments
 %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 %if (0%{?rhel})
 %global py_prefix python
@@ -243,9 +243,7 @@ Requires:       mythtv-mythwelcome      = %{version}-%{release}
 Requires:       mythtv-mythshutdown     = %{version}-%{release}
 Requires:       perl-MythTV             = %{version}-%{release}
 Requires:       php-MythTV              = %{version}-%{release}
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
-%endif
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
 Requires:       mariadb
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
@@ -338,9 +336,7 @@ Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
-%endif
 Requires:       perl-MythTV             = %{version}-%{release}
 
 %description frontend
@@ -357,9 +353,7 @@ Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
-%endif
 Requires:       perl-MythTV             = %{version}-%{release}
 Requires:       systemd
 Requires(post): systemd

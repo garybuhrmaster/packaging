@@ -47,7 +47,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 # Plugins are now in the mythtv source repo
 Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{commit}.tar.gz
 
-# Python prefix adjustments (python for rhel < 8 of fedora < 31, python3 for everything else)
+# Python prefix adjustments
 %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 %if (0%{?rhel})
 %global py_prefix python
@@ -68,9 +68,7 @@ BuildRequires:  devtoolset-8
 %endif
 
 BuildRequires:  mythtv-devel              = %{version}-%{release}
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  %{py_prefix}-MythTV       = %{version}-%{release}
-%endif
 BuildRequires:  git
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
