@@ -63,7 +63,7 @@ Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{comm
 %if %{with_llvm}
 BuildRequires:  llvm-toolset-7
 %else
-BuildRequires:  devtoolset-8
+BuildRequires:  devtoolset-9
 %endif
 %endif
 
@@ -208,7 +208,7 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 %if %{with_llvm}
 source scl_source enable llvm-toolset-7 >/dev/null 2>/dev/null && true || true
 %else
-source scl_source enable devtoolset-8 >/dev/null 2>/dev/null && true || true
+source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
 %endif
 %endif
 
@@ -245,7 +245,7 @@ popd
 %if %{with_llvm}
 source scl_source enable llvm-toolset-7 >/dev/null 2>/dev/null && true || true
 %else
-source scl_source enable devtoolset-8 >/dev/null 2>/dev/null && true || true
+source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
 %endif
 %endif
 
