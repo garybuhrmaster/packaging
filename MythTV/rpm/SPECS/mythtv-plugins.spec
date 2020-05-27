@@ -233,7 +233,7 @@ pushd mythplugins
 %endif
         --compile-type=profile
 
-    make %{?_smp_mflags}
+    %{make_build}
 
 popd
 

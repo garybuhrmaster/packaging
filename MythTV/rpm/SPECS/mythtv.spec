@@ -609,7 +609,7 @@ pushd mythtv
         --enable-libxvid                            \
         --enable-libvpx
 
-    make %{?_smp_mflags}
+    %{make_build}
 
 popd
 
@@ -627,7 +627,7 @@ source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
 
 pushd mythtv
 
-    make install                          INSTALL_ROOT=%{buildroot} -j 1
+    make install                          INSTALL_ROOT=%{buildroot}
 
     # log and rotate configuration
     mkdir -p                              %{buildroot}%{_localstatedir}/log/mythtv
