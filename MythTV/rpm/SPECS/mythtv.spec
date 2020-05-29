@@ -338,6 +338,13 @@ Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       perl-MythTV             = %{version}-%{release}
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+Recommends:     libaacs
+Recommends:     mesa-vdpau-drivers
+%else
+Requires:       libaacs
+Requires:       mesa-vdpau-drivers
+%endif
 
 %description frontend
 MythTV frontend, a graphical interface for recording and
