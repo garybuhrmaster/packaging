@@ -58,10 +58,10 @@ Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{comm
 %global py_prefix python3
 %endif
 
-# For el7, include software collections to get gcc 8
+# For el7, include software collections to get gcc 9 or llvm 7 as appropriate
 %if (0%{?rhel} == 7)
 %if %{with_llvm}
-BuildRequires:  llvm-toolset-7
+BuildRequires:  llvm-toolset-7.0
 %else
 BuildRequires:  devtoolset-9
 %endif
@@ -206,7 +206,7 @@ pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
 
 %if (0%{?rhel} == 7)
 %if %{with_llvm}
-source scl_source enable llvm-toolset-7 >/dev/null 2>/dev/null && true || true
+source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 %else
 source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
 %endif
@@ -243,7 +243,7 @@ popd
 
 %if (0%{?rhel} == 7)
 %if %{with_llvm}
-source scl_source enable llvm-toolset-7 >/dev/null 2>/dev/null && true || true
+source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 %else
 source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
 %endif
