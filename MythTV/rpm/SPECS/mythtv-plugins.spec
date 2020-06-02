@@ -148,7 +148,7 @@ BuildRequires:  SDL2-devel
 BuildRequires:  taglib-devel
 BuildRequires:  dcraw
 BuildRequires:  hdhomerun-devel
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+%if (0%{?fedora})
 BuildRequires:  libbluray-devel
 %endif
 BuildRequires:  libsamplerate-devel

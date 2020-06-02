@@ -146,7 +146,7 @@ BuildRequires:  libdav1d-devel
 
 # External library support
 BuildRequires:  hdhomerun-devel
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+%if (0%{?fedora})
 BuildRequires:  libbluray-devel
 %endif
 BuildRequires:  libsamplerate-devel
@@ -246,9 +246,6 @@ Requires:       php-MythTV              = %{version}-%{release}
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
 Requires:       mariadb
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
-Recommends:     xmltv
-%endif
 
 ################################################################################
 
@@ -368,6 +365,8 @@ Requires(preun): systemd
 Requires(postun): systemd
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 Recommends:     xmltv-grabbers
+%else
+Requires:       xmltv-grabbers
 %endif
 
 %description backend
@@ -384,6 +383,8 @@ Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 Recommends:     xmltv-grabbers
+%else
+Requires:       xmltv-grabbers
 %endif
 
 %description setup
@@ -527,9 +528,9 @@ Requires:       %{py_prefix}-simplejson
 %if ((0%{?rhel}) && (0%{?rhel} < 8))
 Requires:       MySQL-python
 %else
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} > 7)))
 Requires:       %{py_prefix}-mysql
 %endif
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       %{py_prefix}-requests-cache
 %endif
 
