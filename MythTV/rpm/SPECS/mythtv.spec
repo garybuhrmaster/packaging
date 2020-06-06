@@ -99,9 +99,7 @@ BuildRequires:  mariadb-connector-c-devel
 %else
 BuildRequires:  mariadb-devel
 %endif
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
 BuildRequires:  libcec-devel
-%endif
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
 BuildRequires:  lirc-devel
