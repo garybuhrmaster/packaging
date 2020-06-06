@@ -178,6 +178,9 @@ BuildRequires:  libcrystalhd-devel
 %if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+BuildRequires:  vulkan-headers
+%endif
 
 # systemd ready and journald logging support
 BuildRequires:  systemd-devel

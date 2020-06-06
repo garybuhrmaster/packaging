@@ -120,6 +120,9 @@ BuildRequires:  libcrystalhd-devel
 %if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+BuildRequires:  vulkan-headers
+%endif
 BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
