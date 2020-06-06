@@ -41,6 +41,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 # The following options are disabled by default.  Use --with to enable them
 %define with_llvm           %{?_with_llvm:           1} %{?!_with_llvm:           0}
+%define with_python2        %{?_with_python2:        1} %{?!_with_python2:        0}
 
 ################################################################################
 
@@ -48,15 +49,15 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{commit}.tar.gz
 
 # Python prefix adjustments
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-%if (0%{?rhel})
-%global py_prefix python
-%else
-%global py_prefix python2
-%endif
-%else
 %global py_prefix python3
+%if %{with_python2}
+%global py_prefix python2
+%if (0%{?rhel} == 7)
+%global py_prefix python
 %endif
+%endif
+
+
 
 # For el7, include software collections to get gcc 9 or llvm 7 as appropriate
 %if (0%{?rhel} == 7)
@@ -98,7 +99,7 @@ BuildRequires:  perl(JSON)
 BuildRequires:  %{py_prefix}
 BuildRequires:  %{py_prefix}-pycurl
 BuildRequires:  %{py_prefix}-lxml
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} < 8)))
+%if ((0%{?fedora}) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 BuildRequires:  %{py_prefix}-oauth
 %endif
 BuildRequires:  %{py_prefix}-rpm-macros
@@ -176,8 +177,15 @@ Requires:       perl(JSON)
 Requires:       perl(XML::SAX::Base)
 Requires:       %{py_prefix}-pycurl
 Requires:       %{py_prefix}-lxml
+%if ((0%{?fedora}) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-oauth
+%endif
+%if ((0%{?fedora}) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-imaging
+%endif
+%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
+Requires:       python36-imaging
+%endif
 Requires:       dcraw
 
 ################################################################################
@@ -192,10 +200,10 @@ distributed as separate downloads from mythtv.org.
 
 %autosetup -p1 -n mythtv-%{commit}
 
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
-%else
+%if ("%{py_prefix}" == "python3")
 pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
+%else
+pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %endif
 
 ################################################################################
@@ -224,10 +232,10 @@ pushd mythplugins
         --extra-cxxflags="${CXXFLAGS}"              \
         --prefix=%{_prefix}                         \
         --bindir=%{_bindir}                         \
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-        --python=%{__python2}                       \
-%else
+%if ("%{py_prefix}" == "python3")
         --python=%{__python3}                       \
+%else
+        --python=%{__python2}                       \
 %endif
         --compile-type=profile
 

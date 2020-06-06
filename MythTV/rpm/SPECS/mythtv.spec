@@ -39,6 +39,7 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 
 # The following options are disabled by default.  Use --with to enable them
 %define with_llvm           %{?_with_llvm:           1} %{?!_with_llvm:           0}
+%define with_python2        %{?_with_python2:        1} %{?!_with_python2:        0}
 
 ################################################################################
 
@@ -67,14 +68,12 @@ BuildRequires:  devtoolset-9
 %endif
 
 # Python prefix adjustments
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-%if (0%{?rhel})
-%global py_prefix python
-%else
-%global py_prefix python2
-%endif
-%else
 %global py_prefix python3
+%if %{with_python2}
+%global py_prefix python2
+%if (0%{?rhel} == 7)
+%global py_prefix python
+%endif
 %endif
 
 # Global MythTV and Shared Build Requirements
@@ -205,17 +204,30 @@ BuildRequires:  %{py_prefix}
 BuildRequires:  %{py_prefix}-pycurl
 BuildRequires:  %{py_prefix}-lxml
 BuildRequires:  %{py_prefix}-rpm-macros
+%if ("%{py_prefix}" != "python3")
 BuildRequires:  %{py_prefix}-urlgrabber
+%endif
+%if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 BuildRequires:  %{py_prefix}-requests
+%endif
+%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
+BuildRequires:  python36-requests
+%endif
+%if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 BuildRequires:  %{py_prefix}-simplejson
+%endif
+%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
+BuildRequires:  python36-simplejson
+%endif
 BuildRequires:  %{py_prefix}-future
-
-%if ((0%{?rhel}) && (0%{?rhel} < 8))
-BuildRequires:  MySQL-python
-%else
-%if ((0%{?fedora}) || ((0%{?rhel}) && (0%{?rhel} > 7)))
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  %{py_prefix}-mysql
 %endif
+%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python"))
+BuildRequires:  MySQL-python
+%endif
+%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
+BuildRequires:  python36-mysql
 %endif
 BuildRequires:  %{py_prefix}-devel
 
@@ -507,10 +519,10 @@ MythTV PHP bindings
 
 ################################################################################
 
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-%package -n python2-MythTV
-%else
+%if ("%{py_prefix}" == "python3")
 %package -n python3-MythTV
+%else
+%package -n python2-MythTV
 %endif
 Summary:        Python bindings for MythTV
 BuildArch:      noarch
@@ -518,34 +530,48 @@ BuildArch:      noarch
 Requires:       %{py_prefix}-libs
 Requires:       %{py_prefix}-lxml
 Requires:       %{py_prefix}-future
-Requires:       %{py_prefix}-urlgrabber
+%if ("%{py_prefix}" != "python3")
+BuildRequires:  %{py_prefix}-urlgrabber
+%endif
+%if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-requests
+%endif
+%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
+Requires:       python36-requests
+%endif
+%if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-simplejson
-%if ((0%{?rhel}) && (0%{?rhel} < 8))
-Requires:       MySQL-python
-%else
+%endif
+%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
+Requires:       python36-simplejson
+%endif
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       %{py_prefix}-mysql
+%endif
+%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python"))
+Requires:       MySQL-python
+%endif
+%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
+Requires:       python36-mysql
 %endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       %{py_prefix}-requests-cache
 %endif
 
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-#
-%else
+%if ("%{py_prefix}" == "python3")
 Obsoletes:      python2-MythTV          <= %{version}-%{release}
 %endif
 
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-%{?python_provide:%python_provide python2-MythTV}
-%else
+%if ("%{py_prefix}" == "python3")
 %{?python_provide:%python_provide python3-MythTV}
+%else
+%{?python_provide:%python_provide python2-MythTV}
 %endif
 
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-%description -n python2-MythTV
-%else
+%if ("%{py_prefix}" == "python3")
 %description -n python3-MythTV
+%else
+%description -n python2-MythTV
 %endif
 MythTV python bindings
 
@@ -555,10 +581,10 @@ MythTV python bindings
 
 %autosetup -p1 -n %{name}-%{commit}
 
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
-%else
+%if ("%{py_prefix}" == "python3")
 pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
+%else
+pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %endif
 
 ################################################################################
@@ -601,10 +627,10 @@ pushd mythtv
         --bindir=%{_bindir}                         \
         --libdir-name=%{_lib}                       \
         --compile-type=profile                      \
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-        --python=%{__python2}                       \
-%else
+%if ("%{py_prefix}" == "python3")
         --python=%{__python3}                       \
+%else
+        --python=%{__python2}                       \
 %endif
         --perl-config-opts="INSTALLDIRS=vendor OPTIMIZE=\"$RPM_OPT_FLAGS\"" \
         --enable-libmp3lame                         \
@@ -660,10 +686,10 @@ pushd mythtv
     if [ ! -e "%{buildroot}%{_bindir}/mythpython" ] ; then
     touch                                 %{buildroot}%{_bindir}/mythpython
     fi
-    %if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-    mkdir -p                              %{buildroot}%{python2_sitelib}/MythTV
-    %else
+    %if ("%{py_prefix}" == "python3")
     mkdir -p                              %{buildroot}%{python3_sitelib}/MythTV
+    %else
+    mkdir -p                              %{buildroot}%{python2_sitelib}/MythTV
     %endif
     mkdir -p                              %{buildroot}%{perl_vendorlib}/MythTV
     if [ ! -e "%{buildroot}%{perl_vendorlib}/MythTV.pm" ] ; then
@@ -953,18 +979,18 @@ exit 0
 %{_datadir}/mythtv/bindings/php
 
 
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-%files -n python2-MythTV
-%else
+%if ("%{py_prefix}" == "python3")
 %files -n python3-MythTV
+%else
+%files -n python2-MythTV
 %endif
 %defattr(0644, root, root, 0755)
 %attr(0755, root, root) %{_bindir}/mythpython
 %attr(0755, root, root) %{_bindir}/mythwikiscripts
-%if (((0%{?fedora}) && (0%{?fedora} < 31)) || ((0%{?rhel}) && (0%{?rhel} < 8)))
-%{python2_sitelib}/*
-%else
+%if ("%{py_prefix}" == "python3")
 %{python3_sitelib}/*
+%else
+%{python2_sitelib}/*
 %endif
 
 
