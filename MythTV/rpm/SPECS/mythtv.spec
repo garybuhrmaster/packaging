@@ -635,7 +635,7 @@ pushd mythtv
 %else
         --python=%{__python2}                       \
 %endif
-        --perl-config-opts="INSTALLDIRS=vendor OPTIMIZE=\"$RPM_OPT_FLAGS\"" \
+        --perl-config-opts="INSTALLDIRS=vendor"     \
         --enable-libmp3lame                         \
         --enable-libx264                            \
         --enable-libx265                            \
