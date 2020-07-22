@@ -58,27 +58,27 @@ Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{comm
 %endif
 
 
-
-# For el7, include software collections to get gcc 9 or llvm 7 as appropriate
-%if (0%{?rhel} == 7)
-%if %{with_llvm}
-BuildRequires:  llvm-toolset-7.0
-%else
-BuildRequires:  devtoolset-9
-%endif
-%endif
-
 BuildRequires:  mythtv-devel              = %{version}-%{release}
 BuildRequires:  %{py_prefix}-MythTV       = %{version}-%{release}
 BuildRequires:  git
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
+BuildRequires:  binutils
 %if %{with_llvm}
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  llvm
 BuildRequires:  clang
+BuildRequires:  lld
 %else
+BuildRequires:  llvm-toolset-7.0
+%endif
+%else
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
+%else
+BuildRequires:  devtoolset-9
+%endif
 %endif
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
@@ -223,24 +223,18 @@ source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
 
 pushd mythplugins
 
-    # Similar to 'percent' configure, but without {_target_platform} and
-    # {_exec_prefix} etc... MythTV no longer accepts the parameters that the
-    # configure macro passes, so we do this manually.
-
-    CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
-    CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+    # mythplugins configure obtains most options from the
+    # mythtv configuration stored in mythconfig.mak in order
+    # to insure the plugins are compatible with the base
+    # libraries.  --prefix is used to find mythconfig.mak
 
     ./configure \
-        --extra-cflags="${CFLAGS}"                  \
-        --extra-cxxflags="${CXXFLAGS}"              \
         --prefix=%{_prefix}                         \
-        --bindir=%{_bindir}                         \
 %if ("%{py_prefix}" == "python3")
-        --python=%{__python3}                       \
+        --python=%{__python3}
 %else
-        --python=%{__python2}                       \
+        --python=%{__python2}
 %endif
-        --compile-type=profile
 
     %{make_build}
 

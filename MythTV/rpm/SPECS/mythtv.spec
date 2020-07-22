@@ -58,15 +58,6 @@ Source301:      mythtv-mythfrontend.desktop
 Source302:      mythtv-mythtv-setup.png
 Source303:      mythtv-mythtv-setup.desktop
 
-# For el7, include software collections to get gcc 9 or llvm 7 as appropriate
-%if (0%{?rhel} == 7)
-%if %{with_llvm}
-BuildRequires:  llvm-toolset-7.0
-%else
-BuildRequires:  devtoolset-9
-%endif
-%endif
-
 # Python prefix adjustments
 %global py_prefix python3
 %if %{with_python2}
@@ -81,12 +72,22 @@ BuildRequires:  devtoolset-9
 BuildRequires:  git
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
+BuildRequires:  binutils
 %if %{with_llvm}
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  llvm
 BuildRequires:  clang
+BuildRequires:  lld
 %else
+BuildRequires:  llvm-toolset-7.0
+%endif
+%else
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
+%else
+BuildRequires:  devtoolset-9
+%endif
 %endif
 BuildRequires:  desktop-file-utils
 BuildRequires:  qt5-qtbase-devel        >= 5.3
