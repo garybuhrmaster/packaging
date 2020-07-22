@@ -15,7 +15,33 @@
 #    Paul Howarth <paul@city-fan.org>
 #
 
+
+################################################################################
+
+# The following options are disabled by default.  Use --with to enable them
+%global with_llvm           %{?_with_llvm:           1} %{?!_with_llvm:           0}
+%global with_python2        %{?_with_python2:        1} %{?!_with_python2:        0}
+
+################################################################################
+
+#
+# _hardended_build is the default for recent releases.
+#
 %global _hardened_build 1
+
+#
+# Default to python3, but allow override (needed for fixes/30)
+#
+%global py_prefix python3
+%if %{with_python2}
+%global py_prefix python2
+%if (0%{?rhel} == 7)
+%global py_prefix python
+%endif
+%endif
+
+################################################################################
+
 
 # Basic descriptive tags for this package:
 Name:           mythtv
@@ -35,14 +61,6 @@ Release:        100%{?dist}
 # projects... For a breakdown of the licensing, see PACKAGE-LICENSING.
 License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or LGPLv2+)
 
-################################################################################
-
-# The following options are disabled by default.  Use --with to enable them
-%define with_llvm           %{?_with_llvm:           1} %{?!_with_llvm:           0}
-%define with_python2        %{?_with_python2:        1} %{?!_with_python2:        0}
-
-################################################################################
-
 # Source based on commit hash
 Source0:        https://github.com/MythTV/%{name}/archive/%{commit}/%{name}-%{commit}.tar.gz
 
@@ -57,15 +75,6 @@ Source300:      mythtv-mythfrontend.png
 Source301:      mythtv-mythfrontend.desktop
 Source302:      mythtv-mythtv-setup.png
 Source303:      mythtv-mythtv-setup.desktop
-
-# Python prefix adjustments
-%global py_prefix python3
-%if %{with_python2}
-%global py_prefix python2
-%if (0%{?rhel} == 7)
-%global py_prefix python
-%endif
-%endif
 
 # Global MythTV and Shared Build Requirements
 
