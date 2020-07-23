@@ -618,12 +618,26 @@ pushd mythtv
     # {_exec_prefix} etc... MythTV no longer accepts the parameters that the
     # configure macro passes, so we do this manually.
 
-    CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
-    CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+%if (0%{?rhel} == 7)
+    CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ;
+    CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ;
+    FFLAGS="${FFLAGS:-%optflags -I%_fmoddir}" ; export FFLAGS ;
+    FCFLAGS="${FCFLAGS:-%optflags -I%_fmoddir}" ; export FCFLAGS ;
+    LDFLAGS="${LDFLAGS:-%__global_ldflags}"; export LDFLAGS ;
+%else
+    %{set_build_flags}
+%endif
 
 %if %{with_llvm}
+%if ((0%{?fedora}) >= 33)
+%else
     CFLAGS="${CFLAGS//-fstack-clash-protection}" ; export CFLAGS ;
     CXXFLAGS="${CXXFLAGS//-fstack-clash-protection}" ; export CXXFLAGS ;
+    FFLAGS="${FFLAGS//-fstack-clash-protection}" ; export FFLAGS ;
+    FCFLAGS="${FCFLAGS//-fstack-clash-protection}" ; export FCFLAGS ;
+    LDFLAGS="${LDFLAGS//-fstack-clash-protection}" ; export LDFLAGS ;
+%endif
+    LDFLAGS="${LDFLAGS} -fuse-ld=lld -Wl,--build-id=sha1" ; export LDFLAGS ;
 %endif
 
     ./configure                                     \
@@ -636,6 +650,7 @@ pushd mythtv
 %endif
         --extra-cflags="${CFLAGS}"                  \
         --extra-cxxflags="${CXXFLAGS}"              \
+        --extra-ldflags="${LDFLAGS}"                \
         --prefix=%{_prefix}                         \
         --bindir=%{_bindir}                         \
         --libdir-name=%{_lib}                       \
