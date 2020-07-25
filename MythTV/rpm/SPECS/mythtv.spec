@@ -21,6 +21,7 @@
 # The following options are disabled by default.  Use --with to enable them
 %global with_llvm           %{?_with_llvm:           1} %{?!_with_llvm:           0}
 %global with_python2        %{?_with_python2:        1} %{?!_with_python2:        0}
+%global with_lto            %{?_with_lto:            1} %{?!_with_lto:            0}
 
 ################################################################################
 
@@ -644,9 +645,21 @@ pushd mythtv
 %if %{with_llvm}
         --cc="clang"                                \
         --cxx="clang"                               \
+%if %{with_lto}
+        --enable-lto                                \
+        --ar="llvm-ar"                              \
+        --ranlib="llvm-ranlib"                      \
+        --nm="llvm-nm -g"                           \
+%endif
 %else
         --cc="gcc"                                  \
         --cxx="g++"                                 \
+%if %{with_lto}
+        --enable-lto                                \
+        --ar="gcc-ar"                               \
+        --ranlib="gcc-ranlib"                       \
+        --nm="gcc-nm -g"                            \
+%endif
 %endif
         --extra-cflags="${CFLAGS}"                  \
         --extra-cxxflags="${CXXFLAGS}"              \
