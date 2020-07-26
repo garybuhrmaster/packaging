@@ -364,6 +364,7 @@ Recommends:     mesa-vdpau-drivers
 Requires:       libaacs
 Requires:       mesa-vdpau-drivers
 %endif
+Requires:       qt5-qtwayland
 
 %description frontend
 MythTV frontend, a graphical interface for recording and
@@ -408,6 +409,7 @@ Recommends:     xmltv-grabbers
 %else
 Requires:       xmltv-grabbers
 %endif
+Requires:       qt5-qtwayland
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -425,6 +427,7 @@ Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
+Requires:       qt5-qtwayland
 
 %description mythwelcome
 MythTV provides a unified graphical interface for recording and viewing
