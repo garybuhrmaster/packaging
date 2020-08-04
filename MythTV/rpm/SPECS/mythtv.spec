@@ -632,6 +632,13 @@ pushd mythtv
     %{set_build_flags}
 %endif
 
+    CFLAGS="${CFLAGS} -fno-semantic-interposition" ; export CFLAGS ;
+    CXXFLAGS="${CXXFLAGS} -fno-semantic-interposition" ; export CXXFLAGS;
+
+%if %{with lto}
+    LDFLAGS="${LDFLAGS} ${CFLAGS}"; export LDFLAGS;
+%endif
+
 %if %{with llvm}
 %if ((0%{?fedora}) >= 33)
 %else
@@ -641,6 +648,11 @@ pushd mythtv
     FCFLAGS="${FCFLAGS//-fstack-clash-protection}" ; export FCFLAGS ;
     LDFLAGS="${LDFLAGS//-fstack-clash-protection}" ; export LDFLAGS ;
 %endif
+    CFLAGS="${CFLAGS//-fno-semantic-interposition}" ; export CFLAGS ;
+    CXXFLAGS="${CXXFLAGS//-fno-semantic-interposition}" ; export CXXFLAGS ;
+    FFLAGS="${FFLAGS//-fno-semantic-interposition}" ; export FFLAGS ;
+    FCFLAGS="${FCFLAGS//-fno-semantic-interposition}" ; export FCFLAGS ;
+    LDFLAGS="${LDFLAGS//-fno-semantic-interposition}" ; export LDFLAGS ;
     LDFLAGS="${LDFLAGS} -fuse-ld=lld -Wl,--build-id=sha1" ; export LDFLAGS ;
 %endif
 
