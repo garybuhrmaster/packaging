@@ -19,8 +19,9 @@
 ################################################################################
 
 # The following options are disabled by default.  Use --with to enable them
-%global with_llvm           %{?_with_llvm:           1} %{?!_with_llvm:           0}
-%global with_python2        %{?_with_python2:        1} %{?!_with_python2:        0}
+%bcond_with     llvm
+%bcond_with     python2
+%bcond_with     lto
 
 ################################################################################
 
@@ -33,7 +34,7 @@
 # Default to python3, but allow override (needed for fixes/30)
 #
 %global py_prefix python3
-%if %{with_python2}
+%if %{with python2}
 %global py_prefix python2
 %if (0%{?rhel} == 7)
 %global py_prefix python
@@ -73,7 +74,7 @@ BuildRequires:  git
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  binutils
-%if %{with_llvm}
+%if %{with llvm}
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  llvm
 BuildRequires:  clang
@@ -223,7 +224,7 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %build
 
 %if (0%{?rhel} == 7)
-%if %{with_llvm}
+%if %{with llvm}
 source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 %else
 source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
@@ -254,7 +255,7 @@ popd
 %install
 
 %if (0%{?rhel} == 7)
-%if %{with_llvm}
+%if %{with llvm}
 source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 %else
 source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
