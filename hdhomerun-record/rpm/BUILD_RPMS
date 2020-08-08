@@ -103,10 +103,10 @@ for mageia in ${MAGEIA[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
-        if [ "$arch" == "aarch64" ]; then
+        if [ $mageia -lt 8 ] && [ "$arch" == "armhfp" ]; then
             continue
         fi
-        if [ "$arch" == "armhfp" ]; then
+        if [ $mageia -lt 8 ] && [ "$arch" == "aarch64" ]; then
             continue
         fi
         if [ "$arch" == "i686" ]; then
