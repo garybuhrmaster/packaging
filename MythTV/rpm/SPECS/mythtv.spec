@@ -100,9 +100,10 @@ BuildRequires:  devtoolset-9
 %endif
 %endif
 BuildRequires:  desktop-file-utils
-BuildRequires:  qt5-qtbase-devel        >= 5.3
-BuildRequires:  qt5-qtscript-devel      >= 5.3
-BuildRequires:  qt5-qtwebkit-devel      >= 5.3
+BuildRequires:  qt5-qtbase-devel
+BuildRequires:  qt5-qtbase-private-devel
+BuildRequires:  qt5-qtscript-devel
+BuildRequires:  qt5-qtwebkit-devel
 BuildRequires:  freetype-devel
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  mariadb-connector-c-devel
