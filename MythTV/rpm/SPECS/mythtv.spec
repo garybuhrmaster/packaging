@@ -366,6 +366,9 @@ Requires:       libaacs
 Requires:       mesa-vdpau-drivers
 %endif
 Requires:       qt5-qtwayland
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+Requires:       vulkan-loader
+%endif
 
 %description frontend
 MythTV frontend, a graphical interface for recording and
@@ -411,6 +414,9 @@ Recommends:     xmltv-grabbers
 Requires:       xmltv-grabbers
 %endif
 Requires:       qt5-qtwayland
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+Requires:       vulkan-loader
+%endif
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -429,6 +435,9 @@ Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
 Requires:       qt5-qtwayland
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+Requires:       vulkan-loader
+%endif
 
 %description mythwelcome
 MythTV provides a unified graphical interface for recording and viewing
