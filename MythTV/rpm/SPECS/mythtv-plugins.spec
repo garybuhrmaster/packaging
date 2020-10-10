@@ -31,6 +31,14 @@
 %global _hardened_build 1
 
 #
+# At least for now, we need to opt-out of LTO flags if
+# we are not explicitly handing it via our overrides
+#
+%if %{without lto}
+%define _lto_cflags %{nil}
+%endif
+
+#
 # Default to python3, but allow override (needed for fixes/30)
 #
 %global py_prefix python3
