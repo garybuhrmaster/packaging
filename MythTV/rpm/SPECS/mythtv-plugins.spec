@@ -78,7 +78,7 @@ Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{comm
 
 BuildRequires:  mythtv-devel              = %{version}-%{release}
 BuildRequires:  %{py_prefix}-MythTV       = %{version}-%{release}
-BuildRequires:  git
+BuildRequires:  git-core
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  binutils
