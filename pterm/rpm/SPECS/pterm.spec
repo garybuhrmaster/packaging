@@ -19,6 +19,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  desktop-file-utils
 BuildRequires:  svn
 BuildRequires:  python3
+BuildRequires:  make
 
 
 %description
