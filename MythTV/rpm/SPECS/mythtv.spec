@@ -110,7 +110,6 @@ BuildRequires:  devtoolset-9
 %endif
 BuildRequires:  desktop-file-utils
 BuildRequires:  qt5-qtbase-devel
-BuildRequires:  qt5-qtbase-private-devel
 BuildRequires:  qt5-qtscript-devel
 BuildRequires:  qt5-qtwebkit-devel
 BuildRequires:  freetype-devel
@@ -199,6 +198,12 @@ BuildRequires:  libcrystalhd-devel
 %if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
+
+# Wayland (extras) support
+BuildRequires:  wayland-devel
+BuildRequires:  qt5-qtbase-private-devel
+
+# Vulkan support
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  vulkan-headers
 %endif
