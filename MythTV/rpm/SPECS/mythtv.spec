@@ -283,6 +283,7 @@ Requires:       php-MythTV              = %{version}-%{release}
 Requires:       %{py_prefix}-MythTV     = %{version}-%{release}
 Requires:       mythtv-mythffmpeg       = %{version}-%{release}
 Requires:       mariadb
+Requires:       mariadb-server
 
 ################################################################################
 
