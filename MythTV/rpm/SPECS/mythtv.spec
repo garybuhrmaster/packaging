@@ -92,7 +92,11 @@ BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  binutils
 BuildRequires:  make
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  cmake
+%else
+BuildRequires:  cmake3
+%endif
 %if %{with llvm}
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  llvm
