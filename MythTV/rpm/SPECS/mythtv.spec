@@ -429,8 +429,10 @@ Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
+Recommends:     xmltv
 Recommends:     xmltv-grabbers
 %else
+Requires:       xmltv
 Requires:       xmltv-grabbers
 %endif
 Requires:       qt5-qtwayland
