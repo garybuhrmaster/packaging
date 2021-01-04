@@ -32,7 +32,7 @@ fi
 
 TARGETRPMARCH=("i686" "x86_64" "armhfp" "aarch64")
 
-EL=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^epel-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/epel-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
+EL=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^epel-[[:digit:]]\\+-$HOSTARCH.cfg$" | grep -v "^epel-6-" |  sed -n "s/epel-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
 ELBASE=${EL[0]}
 FC=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^fedora-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/fedora-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -3`)
 FCBASE=${FC[0]}
@@ -45,12 +45,6 @@ for el in ${EL[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
-        if [ $el -eq 6 ] && [ "$arch" == "armhfp" ]; then
-            continue
-        fi
-        if [ $el -eq 6 ] && [ "$arch" == "aarch64" ]; then
-            continue
-        fi
         if [ $el -gt 7 ] && [ "$arch" == "i686" ]; then
             continue
         fi
@@ -174,12 +168,6 @@ for el in ${EL[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
-        if [ $el -eq 6 ] && [ "$arch" == "armhfp" ]; then
-            continue
-        fi
-        if [ $el -eq 6 ] && [ "$arch" == "aarch64" ]; then
-            continue
-        fi
         if [ $el -gt 7 ] && [ "$arch" == "i686" ]; then
             continue
         fi
