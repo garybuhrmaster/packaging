@@ -6,20 +6,24 @@ NOTE:  With the latest FFmpeg in master (targeted to be version 30) the EL7
        version of libvpx is too old.  The local definition of the centos
        repository includes a COPR reference that will support compilation.
        To install the EL7 RPMs, you will (likely) need to add that COPR
-       (or some equivalent) to your system (`yum copr enable gtb/libvpx`)
-       before installation.
+       (or some equivalent) to your system (`yum copr enable gtb/libvpx`),
+       and with the latest master (targeted to be version 32) the EL7
+       version of taglib is too old.  The local definition of the centos
+       repository includes a COPR reference that will support compilation.
+       To install the EL7 RPMs, you will (likely) need to add that COPR
+       (or some equivalent) to your system (`yum copr enable gtb/taglib`).
 
 Examples:
 
-  Build latest fixes/29 for Fedora 28:
+  Build latest fixes/31 for Fedora 33:
 
-    ./BUILD_MYTHTV_RPMS -r /etc/mock/fedora-28-x86_64-rpmfusion_free.cfg fixes/29
+    ./BUILD_MYTHTV_RPMS -r /etc/mock/fedora-33-x86_64-rpmfusion_free.cfg fixes/31
 
-  Build latest fixes/29 for centos 7:
+  Build latest fixes/31 for centos 7:
 
-    ./BUILD_MYTHTV_RPMS -r build_cfgs/centos-7-x86_64-rpmfusion_free.cfg fixes/29
+    ./BUILD_MYTHTV_RPMS -r build_cfgs/epel-7-x86_64-rpmfusion_free.cfg fixes/31
 
-  Build master for Fedora 28:
+  Build master for Fedora 33:
 
-    ./BUILD_MYTHTV_RPMS -r /etc/mock/fedora-28-x86_64-rpmfusion_free.cfg master
+    ./BUILD_MYTHTV_RPMS -r /etc/mock/fedora-33-x86_64-rpmfusion_free.cfg master
 
