@@ -22,6 +22,7 @@
 %bcond_with     llvm
 %bcond_with     python2
 %bcond_with     lto
+%bcond_with     qt6
 
 ################################################################################
 
@@ -104,9 +105,14 @@ BuildRequires:  gcc
 BuildRequires:  devtoolset-9
 %endif
 %endif
+%if %{with qt6}
+BuildRequires:  qt6-qtbase-devel
+BuildRequires:  qt6-qt5compat-devel
+%else
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
 BuildRequires:  qt5-qtwebkit-devel
+%endif
 BuildRequires:  freetype-devel
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  mariadb-connector-c-devel

@@ -22,6 +22,7 @@
 %bcond_with     llvm
 %bcond_with     python2
 %bcond_with     lto
+%bcond_with     qt6
 
 ################################################################################
 
@@ -114,9 +115,14 @@ BuildRequires:  devtoolset-9
 %endif
 %endif
 BuildRequires:  desktop-file-utils
+%if %{with qt6}
+BuildRequires:  qt6-qtbase-devel
+BuildRequires:  qt6-qt5compat-devel
+%else
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
 BuildRequires:  qt5-qtwebkit-devel
+%endif
 BuildRequires:  freetype-devel
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  mariadb-connector-c-devel
@@ -206,7 +212,11 @@ BuildRequires:  libomxil-bellagio-devel
 
 # Wayland (extras) support
 BuildRequires:  wayland-devel
+%if %{with qt6}
+BuildRequires:  qt6-qtbase-private-devel
+%else
 BuildRequires:  qt5-qtbase-private-devel
+%endif
 
 # Vulkan support
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
@@ -352,7 +362,11 @@ Summary:        Libraries providing mythtv support
 
 Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-mythffmpeg-libs  = %{version}-%{release}
+%if %{with qt6}
+Requires:       qt6-qtbase-mysql
+%else
 Requires:       qt5-qtbase-mysql
+%endif
 
 %description libs
 MythTV run-time libraries
@@ -385,7 +399,11 @@ Recommends:     mesa-vdpau-drivers
 Requires:       libaacs
 Requires:       mesa-vdpau-drivers
 %endif
+%if %{with qt6}
+Requires:       qt6-qtwayland
+%else
 Requires:       qt5-qtwayland
+%endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       vulkan-loader
 %endif
@@ -435,7 +453,11 @@ Recommends:     xmltv-grabbers
 Requires:       xmltv
 Requires:       xmltv-grabbers
 %endif
+%if %{with qt6}
+Requires:       qt6-qtwayland
+%else
 Requires:       qt5-qtwayland
+%endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       vulkan-loader
 %endif
@@ -456,7 +478,11 @@ Requires:       mythtv-filesystem       = %{version}-%{release}
 Requires:       mythtv-base             = %{version}-%{release}
 Requires:       mythtv-base-themes      = %{version}-%{release}
 Requires:       mythtv-libs             = %{version}-%{release}
+%if %{with qt6}
+Requires:       qt6-qtwayland
+%else
 Requires:       qt5-qtwayland
+%endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       vulkan-loader
 %endif
@@ -689,6 +715,9 @@ pushd mythtv
 %endif
 
     ./configure                                     \
+%if %{with qt6}
+        --qmake="qmake-qt6"                         \
+%endif
 %if %{with llvm}
         --cc="clang"                                \
         --cxx="clang"                               \
