@@ -697,6 +697,23 @@ pushd mythtv
     %{set_build_flags}
 %endif
 
+%if ((%{with lto}) && (0%{?rhel} < 9))
+    #
+    # Support LTO builds on el
+    #
+%if %{with llvm}
+    CFLAGS="${CFLAGS} -flto" ; export CFLAGS ;
+    CXXFLAGS="${CXXFLAGS} -flto" ; export CXXFLAGS;
+    FFLAGS="${FFLAGS} -flto" ; export FFLAGS ;
+    FCFLAGS="${FCFLAGS} -flto" ; export FCFLAGS ;
+%else
+    CFLAGS="${CFLAGS} -flto=auto -ffat-lto-objects" ; export CFLAGS ;
+    CXXFLAGS="${CXXFLAGS} -flto=auto -ffat-lto-objects" ; export CXXFLAGS;
+    FFLAGS="${FFLAGS} -flto=auto -ffat-lto-objects" ; export FFLAGS ;
+    FCFLAGS="${FCFLAGS} -flto=auto -ffat-lto-objects" ; export FCFLAGS ;
+%endif
+%endif
+
 %if %{without llvm}
     #
     # gcc flag additions (equivalent to the llvm defaults)
