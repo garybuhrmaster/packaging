@@ -40,6 +40,13 @@
 %endif
 
 #
+# Adjust toolchain for llvm
+#
+%if %{with llvm}
+%global toolchain clang
+%endif
+
+#
 # Default to python3, but allow override (needed for fixes/30)
 #
 %global py_prefix python3
@@ -690,28 +697,43 @@ pushd mythtv
     %{set_build_flags}
 %endif
 
+%if %{without llvm}
+    #
+    # gcc flag additions (equivalent to the llvm defaults)
+    #
     CFLAGS="${CFLAGS} -fno-semantic-interposition" ; export CFLAGS ;
     CXXFLAGS="${CXXFLAGS} -fno-semantic-interposition" ; export CXXFLAGS;
-
-%if %{with lto}
-    LDFLAGS="${LDFLAGS} ${CFLAGS}"; export LDFLAGS;
+    FFLAGS="${FFLAGS} -fno-semantic-interposition" ; export FFLAGS ;
+    FCFLAGS="${FCFLAGS} -fno-semantic-interposition" ; export FCFLAGS ;
 %endif
 
 %if %{with llvm}
-%if ((0%{?fedora}) >= 33)
-%else
+    #
+    # llvm flag additions
+    #
+    LDFLAGS="${LDFLAGS} -fuse-ld=lld -Wl,--build-id=sha1" ; export LDFLAGS ;
+%endif
+
+%if %{with lto}
+    #
+    # Insure LDFLAGS have the correct CFLAGS
+    # (the linker defaults to using flags from
+    # the first object, which may, or may not,
+    # include all the flags you want to be
+    # invoked, so we make it explicit.)
+    #
+    LDFLAGS="${LDFLAGS} ${CFLAGS}"; export LDFLAGS;
+%endif
+
+%if (%{with llvm} && (((0%{?fedora}) && ((0%{?fedora}) < 33)) || ((0%{?rhel}) && ((0%{?rhel}) < 9))))
+    #
+    # adjust flags for older llvm (clang) versions
+    #
     CFLAGS="${CFLAGS//-fstack-clash-protection}" ; export CFLAGS ;
     CXXFLAGS="${CXXFLAGS//-fstack-clash-protection}" ; export CXXFLAGS ;
     FFLAGS="${FFLAGS//-fstack-clash-protection}" ; export FFLAGS ;
     FCFLAGS="${FCFLAGS//-fstack-clash-protection}" ; export FCFLAGS ;
     LDFLAGS="${LDFLAGS//-fstack-clash-protection}" ; export LDFLAGS ;
-%endif
-    CFLAGS="${CFLAGS//-fno-semantic-interposition}" ; export CFLAGS ;
-    CXXFLAGS="${CXXFLAGS//-fno-semantic-interposition}" ; export CXXFLAGS ;
-    FFLAGS="${FFLAGS//-fno-semantic-interposition}" ; export FFLAGS ;
-    FCFLAGS="${FCFLAGS//-fno-semantic-interposition}" ; export FCFLAGS ;
-    LDFLAGS="${LDFLAGS//-fno-semantic-interposition}" ; export LDFLAGS ;
-    LDFLAGS="${LDFLAGS} -fuse-ld=lld -Wl,--build-id=sha1" ; export LDFLAGS ;
 %endif
 
     ./configure                                     \
