@@ -15,15 +15,19 @@ NOTE:  With the latest FFmpeg in master (targeted to be version 30) the EL7
 
 Examples:
 
-  Build latest fixes/31 for Fedora 33:
+  Build latest fixes/31 for Fedora 34:
 
-    ./BUILD_MYTHTV_RPMS -r /etc/mock/fedora-33-x86_64-rpmfusion_free.cfg fixes/31
+    ./BUILD_MYTHTV_RPMS --root /etc/mock/fedora-34-x86_64-rpmfusion_free.cfg fixes/31
 
   Build latest fixes/31 for centos 7:
 
-    ./BUILD_MYTHTV_RPMS -r build_cfgs/epel-7-x86_64-rpmfusion_free.cfg fixes/31
+    ./BUILD_MYTHTV_RPMS --root build_cfgs/epel-7-x86_64-rpmfusion_free.cfg fixes/31
 
-  Build master for Fedora 33:
+  Build master for Fedora 34:
 
-    ./BUILD_MYTHTV_RPMS -r /etc/mock/fedora-33-x86_64-rpmfusion_free.cfg master
+    ./BUILD_MYTHTV_RPMS --root /etc/mock/fedora-34-x86_64-rpmfusion_free.cfg master
+
+  Build master for centos 8 stream:
+
+    ./BUILD_MYTHTV_RPMS --root build_cfgs/epel-stream-8-x86_64-rpmfusion_free.cfg master
 
