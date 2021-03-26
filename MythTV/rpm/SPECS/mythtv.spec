@@ -697,9 +697,9 @@ pushd mythtv
     %{set_build_flags}
 %endif
 
-%if ((%{with lto}) && (0%{?rhel} < 9))
+%if (%{with lto} && (((0%{?fedora}) && ((0%{?fedora}) < 33)) || ((0%{?rhel}) && ((0%{?rhel}) < 9))))
     #
-    # Support LTO builds on el
+    # Support LTO builds on el and older Fedora
     #
 %if %{with llvm}
     CFLAGS="${CFLAGS} -flto" ; export CFLAGS ;
