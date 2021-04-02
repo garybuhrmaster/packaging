@@ -225,6 +225,7 @@ BuildRequires:  libomxil-bellagio-devel
 BuildRequires:  wayland-devel
 %if %{with qt6}
 BuildRequires:  qt6-qtbase-private-devel
+BuildRequires:  libxkbcommon-devel
 %else
 BuildRequires:  qt5-qtbase-private-devel
 %endif
