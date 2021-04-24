@@ -764,6 +764,8 @@ pushd mythtv
     ./configure                                     \
 %if %{with qt6}
         --qmake="qmake-qt6"                         \
+%else
+        --qmake="qmake-qt5"                         \
 %endif
 %if %{with llvm}
         --cc="clang"                                \
