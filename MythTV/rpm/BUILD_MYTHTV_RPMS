@@ -4,6 +4,7 @@
 # Support mock config specification
 #
 MOCKOPTS=""
+REPO="https://github.com/MythTV/mythtv.git"
 while :; do
     case $1 in
         -r|--root)       # Takes an option argument; ensure it has been specified.
@@ -42,6 +43,18 @@ while :; do
         --without=*)
             MOCKOPTS="$MOCKOPTS $1"
             ;;
+        --repo)
+            if [ ! -z "$2" ]; then
+                REPO="$2"
+                shift
+            else
+                printf 'ERROR: "--repo" requires a non-empty option argument.\n'
+                exit 1
+            fi
+            ;;
+        --repo=*)
+            REPO="${1#*=}"
+            ;;
         --)              # End of all options.
             shift
             break
@@ -72,7 +85,7 @@ fi
 #
 TMPCLONEDIR=`mktemp -d`
 pushd $TMPCLONEDIR >/dev/null
-git clone https://github.com/MythTV/mythtv.git mythtv
+git clone $REPO mythtv
 pushd mythtv >/dev/null
 git checkout $GITCOMMITISH
 if [ $? -ne 0 ]; then
@@ -96,10 +109,6 @@ fi
 RPMVERSION=${GITDESCRIBE:1}
 RPMVERSION=${RPMVERSION//-/.}
 
-# Cleanup our clones
-rm -rf $TMPCLONEDIR/mythtv
-rmdir $TMPCLONEDIR
-
 
 #
 # Announce to world and dog what we are doing
@@ -121,12 +130,15 @@ sed -i -e "s/^%global commit .*/%global commit $GITCOMMIT/" $TMPSDIR/SPECS/mytht
 sed -i -e "s/^Version: .*/Version:        $RPMVERSION/" $TMPSDIR/SPECS/mythtv-plugins.spec
 sed -i -e "s/^%global commit .*/%global commit $GITCOMMIT/" $TMPSDIR/SPECS/mythtv-plugins.spec
 
-# Use spectool to get source
-spectool --get-files --force --source=0 --directory=$TMPSDIR/SOURCES $TMPSDIR/SPECS/mythtv.spec
-if [ $? -ne 0 ]; then
-    echo "Unable to retrieve source files via spectool"
-    exit 1
-fi
+
+# Use git-archive to create source tarball from our clone
+pushd $TMPCLONEDIR/mythtv > /dev/null
+git archive --output $TMPSDIR/SOURCES/mythtv-$GITCOMMIT.tar.gz --prefix mythtv-$GITCOMMIT/ $GITCOMMIT
+popd >/dev/null
+
+# Cleanup our clone
+rm -rf $TMPCLONEDIR/mythtv
+rmdir $TMPCLONEDIR
 
 
 #
