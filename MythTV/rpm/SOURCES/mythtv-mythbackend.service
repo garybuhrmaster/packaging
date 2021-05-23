@@ -53,6 +53,8 @@ User=mythtv
 
 WorkingDirectory=~
 
+LimitNOFILE=4096
+
 ExecStart=/usr/bin/mythbackend --logpath /var/log/mythtv
 
 # mythbackend may exit early if it cannot contact the database
