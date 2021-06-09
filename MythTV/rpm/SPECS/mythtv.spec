@@ -119,9 +119,9 @@ BuildRequires:  gcc-c++
 BuildRequires:  gcc
 %else
 %if (0%{?rhel} == 7)
-BuildRequires:  devtoolset-9
+BuildRequires:  devtoolset-10
 %else
-BuildRequires:  gcc-toolset-9
+BuildRequires:  gcc-toolset-10
 %endif
 %endif
 %endif
@@ -682,11 +682,11 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %if %{with llvm}
 source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 %else
-source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
+source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
 %endif
 %endif
 %if ((%{without llvm}) && (0%{?rhel} == 8))
-source scl_source enable gcc-toolset-9 >/dev/null 2>/dev/null && true || true
+source scl_source enable gcc-toolset-10 >/dev/null 2>/dev/null && true || true
 %endif
 
 pushd mythtv
@@ -817,8 +817,11 @@ popd
 %if %{with llvm}
 source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 %else
-source scl_source enable devtoolset-9 >/dev/null 2>/dev/null && true || true
+source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
 %endif
+%endif
+%if ((%{without llvm}) && (0%{?rhel} == 8))
+source scl_source enable gcc-toolset-10 >/dev/null 2>/dev/null && true || true
 %endif
 
 pushd mythtv
