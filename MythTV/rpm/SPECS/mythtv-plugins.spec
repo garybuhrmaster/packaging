@@ -188,6 +188,7 @@ BuildRequires:  hdhomerun-devel
 BuildRequires:  libbluray-devel
 %endif
 BuildRequires:  libsamplerate-devel
+BuildRequires:  soundtouch-devel
 BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
 BuildRequires:  minizip-devel

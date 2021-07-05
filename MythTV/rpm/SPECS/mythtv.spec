@@ -176,6 +176,7 @@ BuildRequires:  x264-devel
 BuildRequires:  x265-devel
 BuildRequires:  xvidcore-devel
 BuildRequires:  exiv2-devel
+BuildRequires:  expat-devel
 BuildRequires:  nv-codec-headers
 BuildRequires:  libaom-devel
 BuildRequires:  libdav1d-devel
@@ -187,6 +188,7 @@ BuildRequires:  hdhomerun-devel
 BuildRequires:  libbluray-devel
 %endif
 BuildRequires:  libsamplerate-devel
+BuildRequires:  soundtouch-devel
 BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
 BuildRequires:  minizip-devel
