@@ -192,6 +192,7 @@ BuildRequires:  soundtouch-devel
 BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
 BuildRequires:  minizip-devel
+BuildRequires:  libzip-devel
 BuildRequires:  gnutls-devel
 
 ################################################################################
