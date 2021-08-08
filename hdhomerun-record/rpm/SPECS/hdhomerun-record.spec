@@ -6,29 +6,6 @@
 
 %define		__os_install_post /usr/lib/rpm/brp-compress %{nil}
 
-# Determine if we are attempting a cross build
-%define		cross_build 1
-%if "%{_host_cpu}" == "%{_target_cpu}"
-	%define	cross_build 0
-%else
-	%if "%{_host_cpu}" == "x86_64"
-		%ifarch %{ix86} x86_64
-			%define cross_build 0
-		%endif
-	%else
-		%if "%{_host_cpu}" == "aarch64"
-			%ifarch %{arm} aarch64
-				%define cross_build 0
-			%endif
-		%else
-			%if "%{_host_cpu}" == "ppc64"
-				%ifarch ppc64 ppc
-					%define cross_build 0
-				%endif
-			%endif
-		%endif
-	%endif
-%endif
 
 Name:		hdhomerun-record
 Version:	0.0.%{?HDHRDVR_VERSION}%{!?HDHRDVR_VERSION:0}
@@ -65,17 +42,6 @@ Requires(post):	chkconfig
 Requires(preun):	initscripts
 Requires(preun):	chkconfig
 Requires(postun):	initscripts
-%if 0%{?cross_build}
-%ifarch %{arm} aarch64
-BuildRequires: binutils-aarch64-linux-gnu
-%endif
-%ifarch %{ix86} x86_64
-BuildRequires: binutils-x86_64-linux-gnu
-%endif
-%ifarch ppc64 ppc
-BuildRequires: binutils-powerpc64-linux-gnu
-%endif
-%endif
 %else
 %if 0%{?suse_version}
 BuildRequires:	coreutils
@@ -86,17 +52,6 @@ Requires(pre):	coreutils
 Requires(pre):	systemd
 Requires(pre):	glibc
 %{?systemd_requires}
-%if 0%{?cross_build}
-%ifarch %{arm} aarch64
-BuildRequires: cross-aarch64-binutils
-%endif
-%ifarch %{ix86} x86_64
-BuildRequires: cross-x86_64-binutils
-%endif
-%ifarch ppc64 ppc
-BuildRequires: cross-powerpc64-binutils
-%endif
-%endif
 %else
 %if 0%{?mageia}
 BuildRequires:	coreutils
@@ -116,17 +71,6 @@ Requires(preun):	rpm-helper
 Requires(preun):	systemd
 Requires(postun):	rpm-helper
 Requires(postun):	systemd
-%if 0%{?cross_build}
-%ifarch %{arm} aarch64
-BuildRequires:	binutils-aarch64-linux-gnu
-%endif
-%ifarch %{ix86} x86_64
-BuildRequires:	binutils-x86_64-linux-gnu
-%endif
-%ifarch ppc64 ppc
-BuildRequires:	binutils-powerpc64-linux-gnu
-%endif
-%endif
 %else
 BuildRequires:	coreutils
 BuildRequires:	tar
@@ -143,17 +87,6 @@ Requires(post):	systemd
 Requires(preun):	systemd
 Requires(postun):	systemd
 Requires(postun):	firewalld-filesystem
-%if 0%{?cross_build}
-%ifarch %{arm} aarch64
-BuildRequires: binutils-aarch64-linux-gnu
-%endif
-%ifarch %{ix86} x86_64
-BuildRequires: binutils-x86_64-linux-gnu
-%endif
-%ifarch ppc64 ppc
-BuildRequires: binutils-powerpc64-linux-gnu
-%endif
-%endif
 %endif
 %endif
 %endif
@@ -216,15 +149,6 @@ install -D -m 0644 %{SOURCE71} %{buildroot}%{_datadir}/doc/hdhomerun_record/LICE
 
 %ifarch %{ix86}
 install -D -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
-%if !0%{?cross_build}
-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-%if 0%{?suse_version}
-x86_64-suse-linux-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-x86_64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%endif
-%endif
 %endif
 
 %ifarch x86_64
@@ -233,28 +157,10 @@ install -D -m 0755 hdhomerun_record_x64 %{buildroot}%{_bindir}/hdhomerun_record
 else
 install -D -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
 fi
-%if !0%{?cross_build}
-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-%if 0%{?suse_version}
-x86_64-suse-linux-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-x86_64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%endif
-%endif
 %endif
 
 %ifarch %{arm}
 install -D -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
-%if !0%{?cross_build}
-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-%if 0%{?suse_version}
-aarch64-suse-linux-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-aarch64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%endif
-%endif
 %endif
 
 %ifarch aarch64
@@ -263,28 +169,10 @@ install -D -m 0755 hdhomerun_record_arm64 %{buildroot}%{_bindir}/hdhomerun_recor
 else
 install -D -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
 fi
-%if !0%{?cross_build}
-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-%if 0%{?suse_version}
-aarch64-suse-linux-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-aarch64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%endif
-%endif
 %endif
 
 %ifarch ppc64 ppc
 install -D -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
-%if !0%{?cross_build}
-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-%if 0%{?suse_version}
-powerpc64-suse-linux-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%else
-powerpc64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
-%endif
-%endif
 %endif
 
 
