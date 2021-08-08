@@ -27,6 +27,7 @@ To start the recorder: service hdhomerun_record start
 To stop the recorder: service hdhomerun_record stop
 To automate startup: chkconfig hdhomerun_record on
 
-Also note that installing an upgraded rpm will restart
-the service, so choose an idle time for the upgrade.
-
+Note that upgrading will not restart the service in
+order to not interrupt any ongoing recordings or
+playback, so after an upgrade one will need to restart
+the service at a convenient time.
