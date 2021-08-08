@@ -228,7 +228,7 @@ x86_64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
 %endif
 
 %ifarch x86_64
-if [ -e "hdhomerun_record_x64" ]; then
+if [ -f "hdhomerun_record_x64" ]; then
 install -D -m 0755 hdhomerun_record_x64 %{buildroot}%{_bindir}/hdhomerun_record
 else
 install -D -m 0755 hdhomerun_record_x86 %{buildroot}%{_bindir}/hdhomerun_record
@@ -244,8 +244,25 @@ x86_64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
 %endif
 %endif
 
-%ifarch %{arm} aarch64
+%ifarch %{arm}
 install -D -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
+%if !0%{?cross_build}
+strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
+%else
+%if 0%{?suse_version}
+aarch64-suse-linux-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
+%else
+aarch64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
+%endif
+%endif
+%endif
+
+%ifarch aarch64
+if [ -f "hdhomerun_record_arm64" ]; then
+install -D -m 0755 hdhomerun_record_arm64 %{buildroot}%{_bindir}/hdhomerun_record
+else
+install -D -m 0755 hdhomerun_record_arm %{buildroot}%{_bindir}/hdhomerun_record
+fi
 %if !0%{?cross_build}
 strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_record
 %else
