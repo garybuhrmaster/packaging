@@ -287,8 +287,6 @@ powerpc64-linux-gnu-strip --strip-unneeded %{buildroot}%{_bindir}/hdhomerun_reco
 %endif
 %endif
 
-%__spec_install_post
-
 
 %files
 %defattr(755,root,root,-)
