@@ -772,7 +772,7 @@ pushd mythtv
 %endif
 %if %{with llvm}
         --cc="clang"                                \
-        --cxx="clang"                               \
+        --cxx="clang++"                             \
 %if %{with lto}
         --enable-lto                                \
         --ar="llvm-ar"                              \
