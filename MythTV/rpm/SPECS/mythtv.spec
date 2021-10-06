@@ -143,7 +143,6 @@ BuildRequires:  mariadb-devel
 BuildRequires:  libcec-devel
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
-BuildRequires:  lirc-devel
 BuildRequires:  nasm
 
 # X, and Xv video support
