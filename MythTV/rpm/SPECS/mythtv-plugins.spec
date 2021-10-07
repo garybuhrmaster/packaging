@@ -24,6 +24,9 @@
 %bcond_with     lto
 %bcond_with     qt6
 
+# The following options are enabled by default.  Use --without to disable them
+%bcond_without  rpmfusion
+
 ################################################################################
 
 #
@@ -175,9 +178,11 @@ BuildRequires:  libaom-devel
 BuildRequires:  libdav1d-devel
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  systemd-devel
+%if %{with rpmfusion}
 BuildRequires:  x264-devel
 BuildRequires:  x265-devel
 BuildRequires:  xvidcore-devel
+%endif
 BuildRequires:  nv-codec-headers
 BuildRequires:  xz-devel
 BuildRequires:  SDL2-devel

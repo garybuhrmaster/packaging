@@ -24,6 +24,9 @@
 %bcond_with     lto
 %bcond_with     qt6
 
+# The following options are enabled by default.  Use --without to disable them
+%bcond_without  rpmfusion
+
 ################################################################################
 
 #
@@ -171,9 +174,11 @@ BuildRequires:  libogg-devel
 BuildRequires:  libtheora-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  taglib-devel
+%if %{with rpmfusion}
 BuildRequires:  x264-devel
 BuildRequires:  x265-devel
 BuildRequires:  xvidcore-devel
+%endif
 BuildRequires:  exiv2-devel
 BuildRequires:  expat-devel
 BuildRequires:  nv-codec-headers
@@ -802,9 +807,11 @@ pushd mythtv
 %endif
         --perl-config-opts="INSTALLDIRS=vendor"     \
         --enable-libmp3lame                         \
+%if %{with rpmfusion}
         --enable-libx264                            \
         --enable-libx265                            \
         --enable-libxvid                            \
+%endif
         --enable-libvpx
 
     %{make_build}
