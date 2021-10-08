@@ -135,7 +135,9 @@ BuildRequires:  qt6-qt5compat-devel
 %else
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  qt5-qtwebkit-devel
+%endif
 %endif
 BuildRequires:  freetype-devel
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
@@ -188,7 +190,7 @@ BuildRequires:  libdav1d-devel
 
 # External library support
 BuildRequires:  hdhomerun-devel
-%if (0%{?fedora})
+%if ((0%{?fedora}) || ((0%{?rhel}) > 8))
 BuildRequires:  libbluray-devel
 %endif
 BuildRequires:  libsamplerate-devel
@@ -201,7 +203,9 @@ BuildRequires:  gnutls-devel
 
 # Audio framework support
 BuildRequires:  alsa-lib-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  jack-audio-connection-kit-devel
+%endif
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  avahi-compat-libdns_sd-devel
 
@@ -234,7 +238,9 @@ BuildRequires:  wayland-devel
 BuildRequires:  qt6-qtbase-private-devel
 BuildRequires:  libxkbcommon-devel
 %else
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  qt5-qtbase-private-devel
+%endif
 %endif
 
 # Vulkan support
@@ -649,7 +655,9 @@ Requires:       MySQL-python
 Requires:       python36-mysql
 %endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 Requires:       %{py_prefix}-requests-cache
+%endif
 %endif
 
 %if ("%{py_prefix}" == "python3")

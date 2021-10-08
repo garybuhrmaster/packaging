@@ -118,7 +118,9 @@ BuildRequires:  qt6-qt5compat-devel
 %else
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  qt5-qtwebkit-devel
+%endif
 %endif
 BuildRequires:  freetype-devel
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
@@ -130,8 +132,10 @@ BuildRequires:  perl(XML::Simple)
 BuildRequires:  perl(DateTime::Format::ISO8601)
 BuildRequires:  perl(XML::XPath)
 BuildRequires:  perl(Date::Manip)
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  perl(Image::Size)
 BuildRequires:  perl(SOAP::Lite)
+%endif
 BuildRequires:  perl(JSON)
 BuildRequires:  %{py_prefix}
 BuildRequires:  %{py_prefix}-pycurl
@@ -151,7 +155,9 @@ BuildRequires:  libcdio-paranoia-devel
 BuildRequires:  fftw-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  avahi-compat-libdns_sd-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  jack-audio-connection-kit-devel
+%endif
 BuildRequires:  libass-devel
 BuildRequires:  libcrystalhd-devel
 %if (0%{?fedora})
@@ -189,7 +195,7 @@ BuildRequires:  SDL2-devel
 BuildRequires:  taglib-devel
 BuildRequires:  dcraw
 BuildRequires:  hdhomerun-devel
-%if (0%{?fedora})
+%if ((0%{?fedora}) || ((0%{?rhel}) > 8))
 BuildRequires:  libbluray-devel
 %endif
 BuildRequires:  libsamplerate-devel
@@ -215,8 +221,10 @@ Requires:       perl(XML::Simple)
 Requires:       perl(DateTime::Format::ISO8601)
 Requires:       perl(XML::XPath)
 Requires:       perl(Date::Manip)
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 Requires:       perl(Image::Size)
 Requires:       perl(SOAP::Lite)
+%endif
 Requires:       perl(JSON)
 Requires:       perl(XML::SAX::Base)
 Requires:       %{py_prefix}-pycurl
