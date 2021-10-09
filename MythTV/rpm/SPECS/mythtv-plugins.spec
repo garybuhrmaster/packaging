@@ -205,6 +205,7 @@ BuildRequires:  lzo-devel
 BuildRequires:  minizip-devel
 BuildRequires:  libzip-devel
 BuildRequires:  gnutls-devel
+BuildRequires:  libmpeg2-devel
 
 ################################################################################
 
