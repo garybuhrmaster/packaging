@@ -907,13 +907,10 @@ pushd mythtv
     # docs
     mkdir -p                              %{buildroot}%{_datadir}/doc/%{name}
     install -m 0644 README*               %{buildroot}%{_datadir}/doc/%{name}/
-    install -m 0644 UPGRADING             %{buildroot}%{_datadir}/doc/%{name}/
     install -m 0644 AUTHORS               %{buildroot}%{_datadir}/doc/%{name}/
-    install -m 0644 COPYING               %{buildroot}%{_datadir}/doc/%{name}/
-    install -m 0644 FAQ                   %{buildroot}%{_datadir}/doc/%{name}/
-    install -m 0644 keys.txt              %{buildroot}%{_datadir}/doc/%{name}/
+    install -m 0644 ../LICENSE            %{buildroot}%{_datadir}/doc/%{name}/
+    install -m 0644 keybindings.txt       %{buildroot}%{_datadir}/doc/%{name}/
     install -m 0644 %{SOURCE220}          %{buildroot}%{_datadir}/doc/%{name}/LICENSING
-    cp -r           data                  %{buildroot}%{_datadir}/doc/%{name}/
     cp -r           database              %{buildroot}%{_datadir}/doc/%{name}/
     cp -r           contrib               %{buildroot}%{_datadir}/doc/%{name}/
     # turn off execute bits for any docs (to keep build happy)
