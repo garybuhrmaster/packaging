@@ -907,13 +907,32 @@ pushd mythtv
     # docs
     mkdir -p                              %{buildroot}%{_datadir}/doc/%{name}
     install -m 0644 README*               %{buildroot}%{_datadir}/doc/%{name}/
+    if [ -e "../README.md" ] ; then
+    install -m 0644 ../README.md          %{buildroot}%{_datadir}/doc/%{name}/
+    fi
+    if [ -e "UPGRADING" ] ; then
     install -m 0644 UPGRADING             %{buildroot}%{_datadir}/doc/%{name}/
+    fi
     install -m 0644 AUTHORS               %{buildroot}%{_datadir}/doc/%{name}/
+    if [ -e "COPYING" ] ; then
     install -m 0644 COPYING               %{buildroot}%{_datadir}/doc/%{name}/
+    fi
+    if [ -e "FAQ" ] ; then
     install -m 0644 FAQ                   %{buildroot}%{_datadir}/doc/%{name}/
+    fi
+    if [ -e "keys.txt" ] ; then
     install -m 0644 keys.txt              %{buildroot}%{_datadir}/doc/%{name}/
+    fi
+    if [ -e "keybindings.txt" ] ; then
+    install -m 0644 keybindings.txt       %{buildroot}%{_datadir}/doc/%{name}/
+    fi
+    if [ -e "../LICENSE" ] ; then
+    install -m 0644 ../LICENSE            %{buildroot}%{_datadir}/doc/%{name}/
+    fi
     install -m 0644 %{SOURCE220}          %{buildroot}%{_datadir}/doc/%{name}/LICENSING
+    if [ -e "data" ] ; then
     cp -r           data                  %{buildroot}%{_datadir}/doc/%{name}/
+    fi
     cp -r           database              %{buildroot}%{_datadir}/doc/%{name}/
     cp -r           contrib               %{buildroot}%{_datadir}/doc/%{name}/
     # turn off execute bits for any docs (to keep build happy)
