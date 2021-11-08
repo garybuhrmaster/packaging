@@ -1,0 +1,8 @@
+--- pterm-6.0.4/getkitver.py	2021-09-19 18:57:03.101915301 +0000
++++ pterm-6.0.4/getkitver.py.new	2021-09-19 18:57:11.299028231 +0000
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ import os
+ import sys

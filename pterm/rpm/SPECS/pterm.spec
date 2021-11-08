@@ -1,7 +1,7 @@
 Name:           pterm
 
 Version:        6.0.4
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        PLATO Terminal Emulator
 
 License:        DtCyber
@@ -11,6 +11,7 @@ Source1:        pterm.desktop
 Source2:        pterm.png
 Patch1:         pterm-python-version.patch
 Patch2:         pterm-fix-permissions.patch
+Patch3:         pterm-python3.patch
 
 BuildRequires:  SDL-devel
 BuildRequires:  wxWidgets-devel
@@ -67,6 +68,12 @@ install -m 0644 %{SOURCE2}     %{buildroot}%{_datadir}/pixmaps/pterm.png
 
 
 %changelog
+
+* Mon Nov 08 2021 Gary Buhrmaster <gary.buhrmaster@gmail.com> 6.0.4-3
+- Add patch for python shebang in getkitver.py
+
+* Wed Nov 04 2020 Gary Buhrmaster <gary.buhrmaster@gmail.com> 6.0.4-2
+- Add BR make
 
 * Mon May 06 2019 Gary Buhrmaster <gary.buhrmaster@gmail.com> 6.0.4-1
 - Update to 6.0.4 release
