@@ -149,7 +149,7 @@ TMPSRCRPMDIR=`mktemp -d`
 #
 # Build buildable src.rpms
 #
-mock $MOCKOPTS --no-bootstrap-chroot --isolation simple --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
+mock $MOCKOPTS --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
@@ -161,7 +161,7 @@ if [ ! -f "$SRCBASERPM" ]; then
     exit 1
 fi
 
-mock $MOCKOPTS --no-bootstrap-chroot --isolation simple --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv-plugins.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
+mock $MOCKOPTS --define="dist %{nil}" --spec=$TMPSDIR/SPECS/mythtv-plugins.spec --sources=$TMPSDIR/SOURCES --resultdir=$TMPSRCRPMDIR --buildsrpm
 if [ $? -ne 0 ]; then
     echo "Unable to build source rpm"
     exit 1
@@ -182,7 +182,7 @@ TMPLOCALREPODIR=`mktemp -p /var/tmp -d`
 #
 # Build the mythtv rpms
 #
-mock $MOCKOPTS --no-bootstrap-chroot --isolation simple --chain --localrepo=$TMPLOCALREPODIR $SRCBASERPM $SRCPLUGINSRPM
+mock $MOCKOPTS --chain --localrepo=$TMPLOCALREPODIR $SRCBASERPM $SRCPLUGINSRPM
 if [ $? -ne 0 ]; then
     echo "Unable to build mythtv rpms"
     exit 1
