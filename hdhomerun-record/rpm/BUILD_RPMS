@@ -1,5 +1,7 @@
 #!/bin/bash
 
+MOCKCFGROOT='/etc/mock'
+
 VERSION=$1
 
 if [ "$VERSION" == "" ]; then
@@ -24,13 +26,12 @@ fi
 
 TARGETRPMARCH=("i686" "x86_64" "armhfp" "aarch64")
 
-EL=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^epel-[[:digit:]]\\+-$HOSTARCH.cfg$" | grep -v "^epel-6-" |  sed -n "s/epel-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
+EL=(`find $MOCKCFGROOT -maxdepth 1 -regextype 'grep' -regex "^$MOCKCFGROOT/centos-\(stream-\)\?[[:digit:]]\\+-$HOSTARCH.cfg$" -printf "%f\n" | sed -n "s/centos-\(stream-\)\?\([0-9]\+\)-$HOSTARCH.cfg/\2/p" | sort -n | uniq`)
 ELBASE=${EL[0]}
-FC=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^fedora-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/fedora-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -3`)
-FCBASE=${FC[0]}
-LEAP=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^opensuse-leap-[[:digit:]\\.[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/opensuse-leap-\([0-9]\+\\.[0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
-TUMBLEWEED=(`find /etc/mock/ -maxdepth 1 -type f -printf "%f\n" | grep "^opensuse-tumbleweed-$HOSTARCH.cfg$" | sed -n "s/opensuse-\(tumbleweed\)-$HOSTARCH.cfg/\1/p" | sort -n | tail -1`)
-MAGEIA=(`find /etc/mock -maxdepth 1 -type f -printf "%f\n" | grep "^mageia-[[:digit:]]\\+-$HOSTARCH.cfg$" | sed -n "s/mageia-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n`)
+FC=(`find $MOCKCFGROOT -maxdepth 1 -regextype 'grep' -regex "^$MOCKCFGROOT/fedora-[[:digit:]]\\+-$HOSTARCH.cfg$" -printf "%f\n" | sed -n "s/fedora-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | uniq`)
+LEAP=(`find $MOCKCFGROOT -maxdepth 1 -regextype 'grep' -regex "^$MOCKCFGROOT/opensuse-leap-[[:digit:]\\+\\.[:digit:]]\\+-$HOSTARCH.cfg$" -printf "%f\n" | sed -n "s/opensuse-leap-\([0-9]\+\\.[0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | uniq`)
+TUMBLEWEED=(`find $MOCKCFGROOT -maxdepth 1 -regextype 'grep' -regex "^$MOCKCFGROOT/opensuse-tumbleweed-$HOSTARCH.cfg$" -printf "%f\n" | sed -n "s/opensuse-\(tumbleweed\)-$HOSTARCH.cfg/\1/p" | sort -n | uniq`)
+MAGEIA=(`find $MOCKCFGROOT -maxdepth 1 -regextype 'grep' -regex "^$MOCKCFGROOT/mageia-[[:digit:]]\\+-$HOSTARCH.cfg$" -printf "%f\n" | sed -n "s/mageia-\([0-9]\+\)-$HOSTARCH.cfg/\1/p" | sort -n | uniq`)
 
 # Create resultdir directories
 for el in ${EL[@]}
@@ -38,6 +39,9 @@ do
     for arch in ${TARGETRPMARCH[@]}
     do
         if [ $el -gt 7 ] && [ "$arch" == "i686" ]; then
+            continue
+        fi
+        if [ $el -gt 8 ] && [ "$arch" == "armhfp" ]; then
             continue
         fi
         if [ "$arch" == "i686" ]; then
@@ -89,22 +93,26 @@ for mageia in ${MAGEIA[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
-        if [ $mageia -lt 8 ] && [ "$arch" == "armhfp" ]; then
+        if [ "$arch" == "armhfp" ]; then
             continue
         fi
-        if [ $mageia -lt 8 ] && [ "$arch" == "aarch64" ]; then
+        if [ "$arch" == "aarch64" ]; then
             continue
         fi
         if [ "$arch" == "i686" ]; then
-            arch="i386"
+            arch="i586"
         fi
         mkdir -p RPMS/mageia/$mageia/$arch
     done
 done
 
-# Build src.rpm
+# Build src.rpm using oldest available EL
 SRCDIR=`mktemp -d`
-/usr/bin/mock -r epel-$ELBASE-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$SRCDIR --disable-plugin=ccache
+MOCKCFG="$MOCKCFGROOT/centos-$ELBASE-$HOSTARCH.cfg"
+if [ -e "$MOCKCFGROOT/centos-stream-$ELBASE-$HOSTARCH.cfg" ]; then
+    MOCKCFG="$MOCKCFGROOT/centos-stream-$ELBASE-$HOSTARCH.cfg"
+fi
+/usr/bin/mock --root $MOCKCFG --define "HDHRDVR_VERSION $VERSION" --define "dist %{nil}" --buildsrpm --spec=SPECS/hdhomerun-record.spec --sources=SOURCES --resultdir=$SRCDIR --disable-plugin=ccache
 if [ ! $? -eq 0 ]; then
     echo ""
     echo "***********************************************************"
@@ -126,11 +134,11 @@ for fc in ${FC[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
-        rpmresultarch=$arch
-        rpmtargetarch=$arch
         if [ $fc -gt 30 ] && [ "$arch" == "i686" ]; then
             continue
         fi
+        rpmresultarch=$arch
+        rpmtargetarch=$arch
         if [ "$arch" == "i686" ]; then
             rpmresultarch="i386"
         fi
@@ -138,7 +146,7 @@ do
             rpmtargetarch="armv7hl"
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r fedora-$fc-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .fc$fc" --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
+        /usr/bin/mock --root $MOCKCFGROOT/fedora-$fc-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .fc$fc" --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
@@ -158,9 +166,16 @@ done
 
 for el in ${EL[@]}
 do
+    MOCKCFG="$MOCKCFGROOT/centos-$el-$HOSTARCH.cfg"
+    if [ -e "$MOCKCFGROOT/centos-stream-$el-$HOSTARCH.cfg" ]; then
+        MOCKCFG="$MOCKCFGROOT/centos-stream-$el-$HOSTARCH.cfg"
+    fi
     for arch in ${TARGETRPMARCH[@]}
     do
         if [ $el -gt 7 ] && [ "$arch" == "i686" ]; then
+            continue
+        fi
+        if [ $el -gt 8 ] && [ "$arch" == "armhfp" ]; then
             continue
         fi
         rpmresultarch=$arch
@@ -172,7 +187,7 @@ do
             rpmtargetarch="armv7hl"
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r epel-$el-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .el$el" --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
+        /usr/bin/mock --root $MOCKCFG --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --define "dist .el$el" --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
@@ -203,7 +218,7 @@ do
         rpmresultarch=$arch
         rpmtargetarch=$arch
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r opensuse-leap-$leap-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
+        /usr/bin/mock --root $MOCKCFGROOT/opensuse-leap-$leap-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
@@ -236,7 +251,7 @@ do
             rpmtargetarch="armv7hl"
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r opensuse-tumbleweed-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
+        /usr/bin/mock --root $MOCKCFGROOT/opensuse-tumbleweed-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
@@ -268,10 +283,10 @@ do
         rpmtargetarch=$arch
         if [ "$arch" == "i686" ]; then
             rpmtargetarch="i586"
-            rpmresultarch="i386"
+            rpmresultarch="i586"
         fi
         RESULTDIR=`mktemp -d`
-        /usr/bin/mock -r mageia-$mageia-$HOSTARCH --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
+        /usr/bin/mock --root $MOCKCFGROOT/mageia-$mageia-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
         if [ ! $? -eq 0 ]; then
             echo ""
             echo "***********************************************************"
