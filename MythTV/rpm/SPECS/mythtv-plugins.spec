@@ -39,7 +39,7 @@
 # we are not explicitly handing it via our overrides
 #
 %if %{without lto}
-%define _lto_cflags %{nil}
+%global _lto_cflags %{nil}
 %endif
 
 #
