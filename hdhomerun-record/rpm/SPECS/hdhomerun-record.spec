@@ -2,9 +2,9 @@
 # spec file for package hdhomerun_record
 #
 
-%define		debug_package %{nil}
+%global		debug_package %{nil}
 
-%define		__os_install_post /usr/lib/rpm/brp-compress %{nil}
+%global		__os_install_post /usr/lib/rpm/brp-compress %{nil}
 
 
 Name:		hdhomerun-record
