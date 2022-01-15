@@ -197,7 +197,9 @@ BuildRequires:  libsamplerate-devel
 BuildRequires:  soundtouch-devel
 BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  minizip-devel
+%endif
 BuildRequires:  libzip-devel
 BuildRequires:  gnutls-devel
 BuildRequires:  libmpeg2-devel
@@ -228,7 +230,9 @@ BuildRequires:  libraw1394-devel
 # HW video support
 BuildRequires:  libvdpau-devel
 BuildRequires:  libva-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  libcrystalhd-devel
+%endif
 %if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
@@ -239,9 +243,7 @@ BuildRequires:  wayland-devel
 BuildRequires:  qt6-qtbase-private-devel
 BuildRequires:  libxkbcommon-devel
 %else
-%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  qt5-qtbase-private-devel
-%endif
 %endif
 
 # Vulkan support

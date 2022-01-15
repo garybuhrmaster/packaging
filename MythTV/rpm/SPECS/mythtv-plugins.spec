@@ -159,7 +159,9 @@ BuildRequires:  avahi-compat-libdns_sd-devel
 BuildRequires:  jack-audio-connection-kit-devel
 %endif
 BuildRequires:  libass-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  libcrystalhd-devel
+%endif
 %if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
@@ -202,7 +204,9 @@ BuildRequires:  libsamplerate-devel
 BuildRequires:  soundtouch-devel
 BuildRequires:  libXNVCtrl-devel
 BuildRequires:  lzo-devel
+%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  minizip-devel
+%endif
 BuildRequires:  libzip-devel
 BuildRequires:  gnutls-devel
 BuildRequires:  libmpeg2-devel
