@@ -60,6 +60,13 @@
 %endif
 %endif
 
+#
+# Adjust __python for for el7 bytecompile
+#
+%if (0%{?rhel} == 7)
+%global __python %{py_prefix}
+%endif
+
 ################################################################################
 
 
