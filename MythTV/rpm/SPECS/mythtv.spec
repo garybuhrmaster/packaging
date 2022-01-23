@@ -993,7 +993,7 @@ getent passwd mythtv >/dev/null || \
     useradd -r -g mythtv \
     -d "/var/lib/mythtv" -s /bin/sh \
     -c "mythbackend user" mythtv
-for group in 'video' 'audio' 'cdrom' 'dialout'
+for group in 'video' 'audio' 'cdrom' 'dialout' 'render'
 {
     ent=`getent group $group 2>/dev/null`
     # only proceed if the group exists
