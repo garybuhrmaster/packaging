@@ -214,7 +214,6 @@ BuildRequires:  minizip-devel
 %endif
 BuildRequires:  libzip-devel
 BuildRequires:  gnutls-devel
-BuildRequires:  libmpeg2-devel
 
 ################################################################################
 

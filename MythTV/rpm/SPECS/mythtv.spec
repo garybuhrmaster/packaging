@@ -207,7 +207,6 @@ BuildRequires:  minizip-devel
 %endif
 BuildRequires:  libzip-devel
 BuildRequires:  gnutls-devel
-BuildRequires:  libmpeg2-devel
 
 # Audio framework support
 BuildRequires:  alsa-lib-devel
