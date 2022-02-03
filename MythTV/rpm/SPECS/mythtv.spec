@@ -142,9 +142,7 @@ BuildRequires:  qt6-qt5compat-devel
 %else
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
-%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  qt5-qtwebkit-devel
-%endif
 %endif
 BuildRequires:  freetype-devel
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
