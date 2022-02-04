@@ -60,6 +60,11 @@
 %global __python %{py_prefix}
 %endif
 
+#
+# Mitigation for a FTBFS in F36
+#
+%undefine _package_note_file
+
 ################################################################################
 
 
