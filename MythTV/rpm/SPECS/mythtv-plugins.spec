@@ -92,8 +92,8 @@ License:        GPLv2+ and LGPLv2+ and LGPLv2 and (GPLv2 or QPL) and (GPLv2+ or 
 Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{commit}.tar.gz
 
 
-BuildRequires:  mythtv-devel              = %{version}-%{release}
-BuildRequires:  %{py_prefix}-MythTV       = %{version}-%{release}
+BuildRequires:  mythtv-devel%{?_isa}            = %{version}-%{release}
+BuildRequires:  %{py_prefix}-MythTV             = %{version}-%{release}
 BuildRequires:  git-core
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
@@ -224,7 +224,7 @@ BuildRequires:  gnutls-devel
 
 # Package for all (buildable) MythTV plugins
 
-Requires:       mythtv-frontend         = %{version}-%{release}
+Requires:       mythtv-frontend%{?_isa}         = %{version}-%{release}
 Requires:       wodim
 Requires:       dvd+rw-tools
 Requires:       dvdauthor
