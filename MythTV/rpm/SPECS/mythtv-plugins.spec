@@ -142,10 +142,8 @@ BuildRequires:  perl(XML::Simple)
 BuildRequires:  perl(DateTime::Format::ISO8601)
 BuildRequires:  perl(XML::XPath)
 BuildRequires:  perl(Date::Manip)
-%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  perl(Image::Size)
 BuildRequires:  perl(SOAP::Lite)
-%endif
 BuildRequires:  perl(JSON)
 BuildRequires:  %{py_prefix}
 BuildRequires:  %{py_prefix}-pycurl
