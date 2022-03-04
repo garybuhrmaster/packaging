@@ -1,10 +1,10 @@
 Name:           pterm
 
 Version:        6.0.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        PLATO Terminal Emulator
 
-License:        DtCyber
+License:        DtCyber         # DtCyber is the zlib license
 URL:            https://cyber1.org/
 Source0:        https://cyber1.org/download/linux/pterm-6.0.4.tar.bz2
 Source1:        pterm.desktop
@@ -12,8 +12,13 @@ Source2:        pterm.png
 Patch1:         pterm-python-version.patch
 Patch2:         pterm-fix-permissions.patch
 Patch3:         pterm-python3.patch
+Patch4:         pterm-werror.patch
 
+%if ((0%{?fedora}) || (0%{?rhel} > 8))
+BuildRequires:  sdl12-compat-devel
+%else
 BuildRequires:  SDL-devel
+%endif
 BuildRequires:  wxWidgets-devel
 BuildRequires:  libsndfile-devel
 BuildRequires:  gcc-c++
@@ -40,6 +45,7 @@ mkdir fixup
 ln -s /usr/bin/wx-config-3.0 fixup/wx-config
 export PATH=fixup:$PATH
 %endif
+EXTRACFLAGS="${RPM_OPT_FLAGS}" ; export EXTRACFLAGS
 %make_build
 make mofiles
 # fixup end-of-line encoding on doc file
@@ -68,6 +74,9 @@ install -m 0644 %{SOURCE2}     %{buildroot}%{_datadir}/pixmaps/pterm.png
 
 
 %changelog
+* Thu Mar 03 2020 Gary Buhrmaster <gary.buhrmaster@gmail.com> 6.0.4-4
+- Add patch to remove -Werror and -Wno-format
+- Add EXTRACFLAGS to apply Fedora build options
 
 * Mon Nov 08 2021 Gary Buhrmaster <gary.buhrmaster@gmail.com> 6.0.4-3
 - Add patch for python shebang in getkitver.py

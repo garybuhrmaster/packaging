@@ -1,6 +1,0 @@
-#!/bin/bash -x
-
-rpmbuild $* --define "_topdir `pwd`" -ba SPECS/pterm.spec
-
-rm -rf BUILD
-rm -rf BUILDROOT
