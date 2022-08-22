@@ -302,7 +302,7 @@ BuildRequires:  python36-simplejson
 %endif
 BuildRequires:  %{py_prefix}-future
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
-BuildRequires:  %{py_prefix}-mysql
+BuildRequires:  %{py_prefix}-mysqlclient
 %endif
 %if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python"))
 BuildRequires:  MySQL-python
@@ -659,7 +659,7 @@ Requires:       %{py_prefix}-simplejson
 Requires:       python36-simplejson
 %endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
-Requires:       %{py_prefix}-mysql
+Requires:       %{py_prefix}-mysqlclient
 %endif
 %if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python"))
 Requires:       MySQL-python
@@ -668,9 +668,7 @@ Requires:       MySQL-python
 Requires:       python36-mysql
 %endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
-%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 Requires:       %{py_prefix}-requests-cache
-%endif
 %endif
 
 %if ("%{py_prefix}" == "python3")
