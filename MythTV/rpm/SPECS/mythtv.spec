@@ -159,6 +159,7 @@ BuildRequires:  libcec-devel
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
 BuildRequires:  nasm
+BuildRequires:  systemd-rpm-macros
 
 # X, and Xv video support
 BuildRequires:  libXv-devel
