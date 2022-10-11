@@ -57,6 +57,9 @@ do
         if [ $fc -gt 30 ] && [ "$arch" == "i686" ]; then
             continue
         fi
+        if [ $fc -gt 36 ] && [ "$arch" == "armhfp" ]; then
+            continue
+        fi
         if [ "$arch" == "i686" ]; then
             arch="i386"
         fi
@@ -135,6 +138,9 @@ do
     for arch in ${TARGETRPMARCH[@]}
     do
         if [ $fc -gt 30 ] && [ "$arch" == "i686" ]; then
+            continue
+        fi
+        if [ $fc -gt 36 ] && [ "$arch" == "armhfp" ]; then
             continue
         fi
         rpmresultarch=$arch
