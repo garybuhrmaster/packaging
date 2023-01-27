@@ -315,11 +315,6 @@ BuildRequires:  %{py_prefix}-devel
 BuildRequires:  %{py_prefix}-setuptools
 
 
-# python fixups
-BuildRequires:  /usr/bin/pathfix.py
-
-
-
 ################################################################################
 # Requirements for the mythtv meta package
 
@@ -696,7 +691,11 @@ MythTV python bindings
 %autosetup -p1 -n %{name}-%{commit}
 
 %if ("%{py_prefix}" == "python3")
+%if (0%{?rhel} == 7)
 pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
+%else
+%py3_shebang_fix .
+%endif
 %else
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %endif

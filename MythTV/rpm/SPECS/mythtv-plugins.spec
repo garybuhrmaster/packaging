@@ -155,7 +155,6 @@ BuildRequires:  %{py_prefix}-oauthlib
 %endif
 BuildRequires:  %{py_prefix}-rpm-macros
 BuildRequires:  %{py_prefix}-devel
-BuildRequires:  /usr/bin/pathfix.py
 BuildRequires:  libvorbis-devel
 BuildRequires:  flac-devel
 BuildRequires:  lame-devel
@@ -269,7 +268,11 @@ distributed as separate downloads from mythtv.org.
 %autosetup -p1 -n mythtv-%{commit}
 
 %if ("%{py_prefix}" == "python3")
+%if (0%{?rhel} == 7)
 pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
+%else
+%py3_shebang_fix .
+%endif
 %else
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %endif
