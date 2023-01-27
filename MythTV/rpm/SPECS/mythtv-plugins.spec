@@ -151,7 +151,9 @@ BuildRequires:  %{py_prefix}-lxml
 %if ((0%{?fedora}) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 BuildRequires:  %{py_prefix}-oauth
 %else
+%if ((0%{?rhel}) && ((0%{?rhel}) > 7))
 BuildRequires:  %{py_prefix}-oauthlib
+%endif
 %endif
 BuildRequires:  %{py_prefix}-rpm-macros
 BuildRequires:  %{py_prefix}-devel
@@ -245,7 +247,9 @@ Requires:       %{py_prefix}-lxml
 %if ((0%{?fedora}) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-oauth
 %else
+%if ((0%{?rhel}) && ((0%{?rhel}) > 7))
 BuildRequires:  %{py_prefix}-oauthlib
+%endif
 %endif
 %if ((0%{?fedora}) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-imaging
