@@ -129,15 +129,11 @@ BuildRequires:  lld
 BuildRequires:  llvm-toolset-7.0
 %endif
 %else
-%if ((0%{?fedora}) || (0%{?rhel} > 8))
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
 %else
-%if (0%{?rhel} == 7)
 BuildRequires:  devtoolset-10
-%else
-BuildRequires:  gcc-toolset-10
-%endif
 %endif
 %endif
 BuildRequires:  desktop-file-utils
@@ -711,9 +707,6 @@ source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
 %endif
 %endif
-%if ((%{without llvm}) && (0%{?rhel} == 8))
-source scl_source enable gcc-toolset-10 >/dev/null 2>/dev/null && true || true
-%endif
 
 pushd mythtv
 
@@ -847,9 +840,6 @@ source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 %else
 source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
 %endif
-%endif
-%if ((%{without llvm}) && (0%{?rhel} == 8))
-source scl_source enable gcc-toolset-10 >/dev/null 2>/dev/null && true || true
 %endif
 
 pushd mythtv
