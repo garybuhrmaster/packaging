@@ -220,9 +220,7 @@ BuildRequires:  gnutls-devel
 
 # Audio framework support
 BuildRequires:  alsa-lib-devel
-%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  jack-audio-connection-kit-devel
-%endif
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  avahi-compat-libdns_sd-devel
 

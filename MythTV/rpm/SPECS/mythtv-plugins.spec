@@ -177,9 +177,7 @@ BuildRequires:  libcdio-paranoia-devel
 BuildRequires:  fftw-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  avahi-compat-libdns_sd-devel
-%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  jack-audio-connection-kit-devel
-%endif
 BuildRequires:  libass-devel
 %if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  libcrystalhd-devel
@@ -247,10 +245,8 @@ Requires:       perl(XML::Simple)
 Requires:       perl(DateTime::Format::ISO8601)
 Requires:       perl(XML::XPath)
 Requires:       perl(Date::Manip)
-%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 Requires:       perl(Image::Size)
 Requires:       perl(SOAP::Lite)
-%endif
 Requires:       perl(JSON)
 Requires:       perl(XML::SAX::Base)
 Requires:       %{py_prefix}-pycurl
