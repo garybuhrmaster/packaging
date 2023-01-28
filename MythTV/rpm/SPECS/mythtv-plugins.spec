@@ -20,6 +20,8 @@
 
 # The following options are disabled by default.  Use --with to enable them
 %bcond_with     llvm
+%bcond_with     toolchain_clang
+%bcond_with     toolchain_gcc
 %bcond_with     python2
 %bcond_with     lto
 %bcond_with     qt6
@@ -40,6 +42,19 @@
 #
 %if %{without lto}
 %global _lto_cflags %{nil}
+%endif
+
+#
+# Adjust toolchain for gcc/clang (default to gcc if toolchain not set)
+#
+%if 0%{!?toolchain:1}
+%global toolchain gcc
+%endif
+%if %{with llvm} || %{with toolchain_clang}
+%global toolchain clang
+%endif
+%if %{with toolchain_gcc}
+%global toolchain gcc
 %endif
 
 #
@@ -104,7 +119,7 @@ BuildRequires:  cmake
 %else
 BuildRequires:  cmake3
 %endif
-%if %{with llvm}
+%if ("%{toolchain}" == "clang")
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  llvm
 BuildRequires:  clang
@@ -282,7 +297,7 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %build
 
 %if (0%{?rhel} == 7)
-%if %{with llvm}
+%if ("%{toolchain}" == "clang")
 source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 %else
 source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
@@ -313,7 +328,7 @@ popd
 %install
 
 %if (0%{?rhel} == 7)
-%if %{with llvm}
+%if ("%{toolchain}" == "clang")
 source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
 %else
 source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
