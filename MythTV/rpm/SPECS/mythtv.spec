@@ -775,9 +775,9 @@ pushd mythtv
     LDFLAGS="${LDFLAGS} ${CFLAGS}"; export LDFLAGS;
 %endif
 
-%if (("%{toolchain}" == "clang") && (((0%{?fedora}) && ((0%{?fedora}) < 33)) || ((0%{?rhel}) && ((0%{?rhel}) < 9))))
+%if (("%{toolchain}" == "clang") && (0%{?rhel} == 7))
     #
-    # adjust flags for older llvm (clang) versions
+    # adjust flags for older llvm version in el7
     #
     CFLAGS="${CFLAGS//-fstack-clash-protection}" ; export CFLAGS ;
     CXXFLAGS="${CXXFLAGS//-fstack-clash-protection}" ; export CXXFLAGS ;
