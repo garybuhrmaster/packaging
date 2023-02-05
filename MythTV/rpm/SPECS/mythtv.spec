@@ -600,7 +600,6 @@ MythTV FFMpeg libraries
 Summary:        Perl bindings for MythTV
 BuildArch:      noarch
 
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(IO::Socket::INET6)
 Requires:       perl(Config)
 Requires:       perl(DBD::mysql)
