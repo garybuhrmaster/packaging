@@ -26,16 +26,16 @@ override_dh_gencontrol:
 override_dh_install:
 	wget -N --progress=dot:mega ${SOURCE}
 	dd if=hdhomerun_record_linux_${HDHRDVR_VERSION} bs=4096 skip=1 2>/dev/null | tar -xvz
-	if [ ${DEB_HOST_ARCH} == "i386"  ]; then install -m 0755 hdhomerun_record_x86   debian/hdhomerun-record/usr/bin/hdhomerun_record; fi
-	if [ ${DEB_HOST_ARCH} == "armhf" ]; then install -m 0755 hdhomerun_record_arm   debian/hdhomerun-record/usr/bin/hdhomerun_record; fi
-	if [ ${DEB_HOST_ARCH} == "amd64" ]; then \
+	if [ "${DEB_HOST_ARCH}" == "i386"  ]; then install -m 0755 hdhomerun_record_x86   debian/hdhomerun-record/usr/bin/hdhomerun_record; fi
+	if [ "${DEB_HOST_ARCH}" == "armhf" ]; then install -m 0755 hdhomerun_record_arm   debian/hdhomerun-record/usr/bin/hdhomerun_record; fi
+	if [ "${DEB_HOST_ARCH}" == "amd64" ]; then \
 		if [ -f "hdhomerun_record_x64" ]; then \
 			install -m 0755 hdhomerun_record_x64   debian/hdhomerun-record/usr/bin/hdhomerun_record; \
 		else \
 			install -m 0755 hdhomerun_record_x86   debian/hdhomerun-record/usr/bin/hdhomerun_record; \
 		fi \
 	fi
-	if [ ${DEB_HOST_ARCH} == "arm64" ]; then \
+	if [ "${DEB_HOST_ARCH}" == "arm64" ]; then \
 		if [ -f "hdhomerun_record_arm64" ]; then \
 			install -m 0755 hdhomerun_record_arm64 debian/hdhomerun-record/usr/bin/hdhomerun_record; \
 		else \

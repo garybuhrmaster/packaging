@@ -21,7 +21,7 @@ pushd $BUILDDIR/hdhomerun-record >/dev/null
 
 for TARGET_ARCH in "i386" "amd64" "armhf" "arm64"
 do
-  dpkg-buildpackage -b -d -us -uc --host-arch=$TARGET_ARCH
+  DEB_BUILD_OPTIONS="nocheck" dpkg-buildpackage -b -d -us -uc --host-arch=$TARGET_ARCH
     if [ ! $? -eq 0 ]; then
       echo ""
       echo "***********************************************************"
