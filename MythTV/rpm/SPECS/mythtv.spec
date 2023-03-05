@@ -150,10 +150,16 @@ BuildRequires:  desktop-file-utils
 %if %{with qt6}
 BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qt5compat-devel
+%if ((0%{?fedora} > 36) || (0%{?rhel} > 9))
+BuildRequires:  qt6-qtwebengine-devel
+%endif
 %else
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
 BuildRequires:  qt5-qtwebkit-devel
+%if ((0%{?fedora}) || (0%{?rhel} > 7))
+BuildRequires:  qt5-qtwebengine-devel
+%endif
 %endif
 BuildRequires:  freetype-devel
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
