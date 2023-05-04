@@ -278,7 +278,7 @@ exit 0
 # Nothing to do for service based distro
 %else
 %if 0%{?suse_version}
-%service_del_postun -n hdhomerun_record.service
+%service_del_postun_without_restart hdhomerun_record.service
 test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --reload --quiet || true
 %else
 %if 0%{?mageia}
