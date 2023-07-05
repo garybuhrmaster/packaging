@@ -649,9 +649,6 @@ BuildArch:      noarch
 Requires:       %{py_prefix}-libs
 Requires:       %{py_prefix}-lxml
 Requires:       %{py_prefix}-future
-%if ("%{py_prefix}" != "python3")
-BuildRequires:  %{py_prefix}-urlgrabber
-%endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-requests
 %endif
