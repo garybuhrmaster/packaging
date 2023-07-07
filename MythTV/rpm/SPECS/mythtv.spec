@@ -111,7 +111,7 @@ Source201:      mythtv-99-mythbackend.rules
 Source202:      mythtv-logrotate.conf
 Source203:      mythtv-mythjobqueue.service
 Source204:      mythtv-mythmediaserver.service
-Source210:      mythtv-mythbackend-tmpfiles.conf
+Source210:      mythtv-tmpfiles.conf
 Source220:      mythtv-LICENSING
 Source300:      mythtv-mythfrontend.png
 Source301:      mythtv-mythfrontend.desktop
@@ -563,6 +563,7 @@ Summary:        Common components needed by multiple other MythTV components
 
 Requires(pre):  shadow-utils
 Requires(pre):  grep
+Requires:       systemd
 Requires:       mythtv-filesystem               = %{version}-%{release}
 Requires:       logrotate
 Requires:       google-droid-sans-mono-fonts
@@ -948,9 +949,10 @@ pushd mythtv
     # turn off execute bits for any docs (to keep build happy)
     find                                  %{buildroot}%{_datadir}/doc/%{name}/ \
                                           -type f -executable -exec chmod -x {} \;
-    # tmpfiledir
+    # tmpfilesdir
     mkdir -p                              %{buildroot}%{_tmpfilesdir}
-    install -m 0644 %{SOURCE210}          %{buildroot}%{_tmpfilesdir}/mythbackend.conf
+    install -m 0644 %{SOURCE210}          %{buildroot}%{_tmpfilesdir}/mythtv.conf
+    mkdir -p                              %{buildroot}%{_rundir}/mythtv
 
     # systemd config
     mkdir -p -m 0755                      %{buildroot}%{_unitdir}
@@ -1006,6 +1008,7 @@ for group in 'video' 'audio' 'cdrom' 'dialout' 'render'
         fi
     fi
 }
+
 exit 0
 
 %if (0%{?rhel} == 7)
@@ -1077,6 +1080,8 @@ exit 0
 %{_bindir}/mythmetadatalookup
 %{_bindir}/mythutil
 %{_datadir}/mythtv/mythconverg*.pl
+%{_tmpfilesdir}/mythtv.conf
+%attr(0755, mythtv, mythtv) %dir %{_rundir}/mythtv
 %attr(0755, mythtv, mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(0755, mythtv, mythtv) %dir %{_localstatedir}/lib/mythtv/.mythtv
 %attr(0644, mythtv, mythtv) %config(noreplace) %{_localstatedir}/lib/mythtv/.mythtv/config.xml
@@ -1125,7 +1130,6 @@ exit 0
 %{_datadir}/mythtv/internetcontent
 %{_datadir}/mythtv/html
 %{_datadir}/mythtv/externrecorder
-%{_tmpfilesdir}/*
 %{_datadir}/mythtv/devicemaster.xml
 %{_datadir}/mythtv/deviceslave.xml
 
