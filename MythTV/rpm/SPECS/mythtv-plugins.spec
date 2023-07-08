@@ -140,9 +140,7 @@ BuildRequires:  devtoolset-10
 %if %{with qt6}
 BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qt5compat-devel
-%if ((0%{?fedora} > 36) || (0%{?rhel} > 9))
 BuildRequires:  qt6-qtwebengine-devel
-%endif
 %else
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
