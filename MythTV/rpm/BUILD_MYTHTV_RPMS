@@ -94,7 +94,10 @@ if [ $? -ne 0 ]; then
 fi
 
 GITDESCRIBE=`git describe`
+GITDESCRIBELONG=`git describe --long`
 GITCOMMIT=`git rev-parse HEAD`
+GITCOMMITSHORT=`git rev-parse --short HEAD`
+GITCOMMITDATE=`TZ=UTC git --no-pager log -1 --format='%cs' | cut --characters=1-4,6-7,9-10 | grep -E '^[[:digit:]]{8}$'`
 
 popd >/dev/null
 popd >/dev/null
@@ -109,6 +112,12 @@ fi
 RPMVERSION=${GITDESCRIBE:1}
 RPMVERSION=${RPMVERSION//-/.}
 
+# Determine if we are at a post branch/tag checkout
+# and adjust the describe to use the current
+# recommendations for the package name
+if [ "$GITDESCRIBE" == "$GITDESCRIBELONG" ] ; then
+    RPMVERSION=${RPMVERSION:0:-(${#GITCOMMITSHORT} + 1)}${GITCOMMITDATE}git${GITCOMMITSHORT}
+fi
 
 #
 # Announce to world and dog what we are doing
