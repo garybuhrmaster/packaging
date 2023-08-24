@@ -96,7 +96,7 @@ GITDESCRIBE=`git describe`
 GITDESCRIBELONG=`git describe --long`
 GITCOMMIT=`git rev-parse HEAD`
 GITCOMMITSHORT=`git rev-parse --short HEAD`
-GITCOMMITDATE=`TZ=UTC git --no-pager log -1 --format='%cs' | cut --characters=1-4,6-7,9-10 | grep -E '^[[:digit:]]{8}$'`
+GITCOMMITDATE=`TZ=UTC git --no-pager log -1 --format='%cd' --date=format:"%Y%m%d"`
 
 popd >/dev/null
 popd >/dev/null
