@@ -130,6 +130,8 @@ BuildRequires:  cmake
 %else
 BuildRequires:  cmake3
 %endif
+BuildRequires:  patch
+BuildRequires:  ninja-build
 %if ("%{toolchain}" == "clang")
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  llvm
