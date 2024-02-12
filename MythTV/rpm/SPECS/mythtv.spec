@@ -127,11 +127,11 @@ BuildRequires:  binutils
 BuildRequires:  make
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  cmake
+BuildRequires:  patch
+BuildRequires:  ninja-build
 %else
 BuildRequires:  cmake3
 %endif
-BuildRequires:  patch
-BuildRequires:  ninja-build
 %if ("%{toolchain}" == "clang")
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  llvm
