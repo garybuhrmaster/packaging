@@ -47,6 +47,9 @@ override_dh_install:
 	install -m 0644 debian/hdhomerun_record-doc.LICENSE debian/hdhomerun-record/usr/share/doc/hdhomerun_record/LICENSE
 	install -m 0644 debian/hdhomerun_record-doc.README debian/hdhomerun-record/usr/share/doc/hdhomerun_record/README
 
+override_dh_installtmpfiles:
+	dh_installtmpfiles --name hdhomerun_record
+
 override_dh_installchangelogs:
 override_dh_installdocs:
 
@@ -61,10 +64,3 @@ override_dh_strip_nondeterminism:
 
 override_dh_makeshlibs:
 
-override_dh_systemd_enable:
-	# Do not enable the file by default on purpose.
-	# The user should enable it only after making sure the configuration is
-	# appropriate for his/her computer.
-
-override_dh_systemd_start:
-	dh_systemd_start --no-stop-on-upgrade
