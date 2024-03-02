@@ -324,6 +324,7 @@ BuildRequires:  python36-mysql
 BuildRequires:  %{py_prefix}-devel
 BuildRequires:  %{py_prefix}-setuptools
 BuildRequires:  %{py_prefix}-pip
+BuildRequires:  %{py_prefix}-wheel
 
 
 ################################################################################
