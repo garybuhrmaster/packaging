@@ -129,6 +129,7 @@ BuildRequires:  make
 BuildRequires:  cmake
 BuildRequires:  patch
 BuildRequires:  ninja-build
+BuildRequires:  npm
 %else
 BuildRequires:  cmake3
 %endif
