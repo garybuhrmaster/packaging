@@ -1,17 +1,13 @@
 Name:           apple-superdrive
 Version:        1.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Apple SuperDrive activation udev rule
 License:        BSD
 
 Source0:        90-apple-superdrive.rules
 
 BuildArch:      noarch
-%if (0%{?rhel} == 7)
-BuildRequires:  systemd
-%else
 BuildRequires:  systemd-rpm-macros
-%endif
 Requires:       sg3_utils
 
 %description
@@ -30,6 +26,9 @@ install -m0644 %SOURCE0 %buildroot%{_udevrulesdir}/
 
 
 %changelog
+* Wed Aug 21 2024 Gary Buhrmaster <gary.buhrmaster@gmail.com> - 1.0.0-3
+- EL7 is EOL, remove the workaround used to support it
+
 * Fri Mar 04 2022 Gary Buhrmaster <gary.buhrmaster@gmail.com> - 1.0.0-2
 - Support el7 build
 
