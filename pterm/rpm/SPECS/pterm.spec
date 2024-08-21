@@ -1,7 +1,7 @@
 Name:           pterm
 
 Version:        6.0.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        PLATO Terminal Emulator
 
 License:        DtCyber         # DtCyber is the zlib license
@@ -39,12 +39,6 @@ for use with the cyber1 CYBIS (PLATO) system.
 
 
 %build
-# (ugly) fixup for bug in el packaging
-%if (0%{?rhel} == 7)
-mkdir fixup
-ln -s /usr/bin/wx-config-3.0 fixup/wx-config
-export PATH=fixup:$PATH
-%endif
 EXTRACFLAGS="${RPM_OPT_FLAGS}" ; export EXTRACFLAGS
 %make_build
 make mofiles
@@ -74,6 +68,9 @@ install -m 0644 %{SOURCE2}     %{buildroot}%{_datadir}/pixmaps/pterm.png
 
 
 %changelog
+* Wed Aug 21 2024 Gary Buhrmaster <gary.buhrmaster@gmail.com> - 6.0.4-6
+- EL7 is EOL, remove the ugly workaround used to support it
+
 * Fri Mar 04 2022 Gary Buhrmaster <gary.buhrmaster@gmail.com> - 6.0.4-5
 - Fix changelog date
 - Support Fedora 34 builds
