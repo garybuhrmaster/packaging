@@ -305,7 +305,9 @@ BuildRequires:  %{py_prefix}-simplejson
 %if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
 BuildRequires:  python36-simplejson
 %endif
+%if ((0%{?fedora}) && ((0%{?fedora}) < 41)) || ((0%{?rhel}) && ((0%{?rhel}) < 10))
 BuildRequires:  %{py_prefix}-future
+%endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  %{py_prefix}-mysqlclient
 %endif
@@ -644,7 +646,9 @@ BuildArch:      noarch
 
 Requires:       %{py_prefix}-libs
 Requires:       %{py_prefix}-lxml
+%if ((0%{?fedora}) && ((0%{?fedora}) < 41)) || ((0%{?rhel}) && ((0%{?rhel}) < 10))
 Requires:       %{py_prefix}-future
+%endif
 %if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-requests
 %endif
