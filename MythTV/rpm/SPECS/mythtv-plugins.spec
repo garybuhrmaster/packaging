@@ -63,16 +63,6 @@
 %global py_prefix python3
 %if %{with python2}
 %global py_prefix python2
-%if (0%{?rhel} == 7)
-%global py_prefix python
-%endif
-%endif
-
-#
-# Adjust __python for for el7 bytecompile
-#
-%if (0%{?rhel} == 7)
-%global __python %{py_prefix}
 %endif
 
 ################################################################################
@@ -109,26 +99,14 @@ BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  binutils
 BuildRequires:  make
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  cmake
-%else
-BuildRequires:  cmake3
-%endif
 %if ("%{toolchain}" == "clang")
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  llvm
 BuildRequires:  clang
 BuildRequires:  lld
 %else
-BuildRequires:  llvm-toolset-7.0
-%endif
-%else
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
-%else
-BuildRequires:  devtoolset-10
-%endif
 %endif
 %if %{with qt6}
 BuildRequires:  qt6-qtbase-devel
@@ -138,16 +116,10 @@ BuildRequires:  qt6-qtwebengine-devel
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
 BuildRequires:  qt5-qtwebkit-devel
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  qt5-qtwebengine-devel
 %endif
-%endif
 BuildRequires:  freetype-devel
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  mariadb-connector-c-devel
-%else
-BuildRequires:  mariadb-devel
-%endif
 BuildRequires:  perl(XML::Simple)
 BuildRequires:  perl(DateTime::Format::ISO8601)
 BuildRequires:  perl(XML::XPath)
@@ -158,12 +130,10 @@ BuildRequires:  perl(JSON)
 BuildRequires:  %{py_prefix}
 BuildRequires:  %{py_prefix}-pycurl
 BuildRequires:  %{py_prefix}-lxml
-%if ((0%{?fedora}) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
+%if (0%{?fedora})
 BuildRequires:  %{py_prefix}-oauth
 %endif
-%if ((0%{?fedora}) || ((0%{?rhel}) > 7))
 BuildRequires:  %{py_prefix}-oauthlib
-%endif
 BuildRequires:  %{py_prefix}-rpm-macros
 BuildRequires:  %{py_prefix}-devel
 BuildRequires:  libvorbis-devel
@@ -183,9 +153,7 @@ BuildRequires:  libcrystalhd-devel
 %if (0%{?fedora})
 BuildRequires:  libomxil-bellagio-devel
 %endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  vulkan-headers
-%endif
 BuildRequires:  libavc1394-devel
 BuildRequires:  libiec61883-devel
 BuildRequires:  libraw1394-devel
@@ -249,17 +217,12 @@ Requires:       perl(JSON)
 Requires:       perl(XML::SAX::Base)
 Requires:       %{py_prefix}-pycurl
 Requires:       %{py_prefix}-lxml
-%if ((0%{?fedora}) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
+%if (0%{?fedora})
 Requires:       %{py_prefix}-oauth
 %endif
-%if ((0%{?fedora}) || ((0%{?rhel}) > 7))
 Requires:       %{py_prefix}-oauthlib
-%endif
-%if ((0%{?fedora}) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
+%if (0%{?fedora})
 Requires:       %{py_prefix}-imaging
-%endif
-%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
-Requires:       python36-imaging
 %endif
 Requires:       dcraw
 
@@ -276,11 +239,7 @@ distributed as separate downloads from mythtv.org.
 %autosetup -p1 -n mythtv-%{commit}
 
 %if ("%{py_prefix}" == "python3")
-%if (0%{?rhel} == 7)
-pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
-%else
 %py3_shebang_fix .
-%endif
 %else
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %endif
@@ -288,14 +247,6 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 ################################################################################
 
 %build
-
-%if (0%{?rhel} == 7)
-%if ("%{toolchain}" == "clang")
-source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
-%else
-source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
-%endif
-%endif
 
 pushd mythplugins
 
@@ -319,14 +270,6 @@ popd
 ################################################################################
 
 %install
-
-%if (0%{?rhel} == 7)
-%if ("%{toolchain}" == "clang")
-source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
-%else
-source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
-%endif
-%endif
 
 pushd mythplugins
 
@@ -358,13 +301,6 @@ pushd mythplugins
     %{_fixperms} %{buildroot}
 
 popd
-
-################################################################################
-
-%if (0%{?rhel} == 7)
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
-%endif
 
 ################################################################################
 

@@ -63,16 +63,6 @@
 %global py_prefix python3
 %if %{with python2}
 %global py_prefix python2
-%if (0%{?rhel} == 7)
-%global py_prefix python
-%endif
-%endif
-
-#
-# Adjust __python for for el7 bytecompile
-#
-%if (0%{?rhel} == 7)
-%global __python %{py_prefix}
 %endif
 
 ################################################################################
@@ -118,28 +108,16 @@ BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
 BuildRequires:  binutils
 BuildRequires:  make
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  cmake
 BuildRequires:  patch
 BuildRequires:  ninja-build
-%else
-BuildRequires:  cmake3
-%endif
 %if ("%{toolchain}" == "clang")
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  llvm
 BuildRequires:  clang
 BuildRequires:  lld
 %else
-BuildRequires:  llvm-toolset-7.0
-%endif
-%else
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
-%else
-BuildRequires:  devtoolset-10
-%endif
 %endif
 BuildRequires:  desktop-file-utils
 %if %{with qt6}
@@ -150,16 +128,10 @@ BuildRequires:  qt6-qtwebengine-devel
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtscript-devel
 BuildRequires:  qt5-qtwebkit-devel
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  qt5-qtwebengine-devel
 %endif
-%endif
 BuildRequires:  freetype-devel
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  mariadb-connector-c-devel
-%else
-BuildRequires:  mariadb-devel
-%endif
 BuildRequires:  libcec-devel
 BuildRequires:  libvpx-devel
 BuildRequires:  lm_sensors-devel
@@ -260,9 +232,7 @@ BuildRequires:  qt5-qtbase-private-devel
 %endif
 
 # Vulkan support
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  vulkan-headers
-%endif
 
 # systemd ready and journald logging support
 BuildRequires:  systemd-devel
@@ -292,30 +262,12 @@ BuildRequires:  %{py_prefix}-rpm-macros
 %if ("%{py_prefix}" != "python3")
 BuildRequires:  %{py_prefix}-urlgrabber
 %endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 BuildRequires:  %{py_prefix}-requests
-%endif
-%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
-BuildRequires:  python36-requests
-%endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 BuildRequires:  %{py_prefix}-simplejson
-%endif
-%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
-BuildRequires:  python36-simplejson
-%endif
 %if ((0%{?fedora}) && ((0%{?fedora}) < 41)) || ((0%{?rhel}) && ((0%{?rhel}) < 10))
 BuildRequires:  %{py_prefix}-future
 %endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 BuildRequires:  %{py_prefix}-mysqlclient
-%endif
-%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python"))
-BuildRequires:  MySQL-python
-%endif
-%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
-BuildRequires:  python36-mysql
-%endif
 BuildRequires:  %{py_prefix}-devel
 BuildRequires:  %{py_prefix}-setuptools
 BuildRequires:  %{py_prefix}-pip
@@ -433,21 +385,14 @@ Requires:       mythtv-base-themes%{?_isa}      = %{version}-%{release}
 Requires:       mythtv-libs%{?_isa}             = %{version}-%{release}
 Requires:       %{py_prefix}-MythTV             = %{version}-%{release}
 Requires:       perl-MythTV                     = %{version}-%{release}
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Recommends:     libaacs
 Recommends:     mesa-vdpau-drivers
-%else
-Requires:       libaacs
-Requires:       mesa-vdpau-drivers
-%endif
 %if %{with qt6}
 Requires:       qt6-qtwayland
 %else
 Requires:       qt5-qtwayland
 %endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       vulkan-loader
-%endif
 
 %description frontend
 MythTV frontend, a graphical interface for recording and
@@ -469,11 +414,7 @@ Requires:       systemd
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Recommends:     xmltv-grabbers
-%else
-Requires:       xmltv-grabbers
-%endif
 
 %description backend
 MythTV backend, the server for video capture and content services.
@@ -487,21 +428,14 @@ Requires:       mythtv-filesystem               = %{version}-%{release}
 Requires:       mythtv-base%{?_isa}             = %{version}-%{release}
 Requires:       mythtv-base-themes%{?_isa}      = %{version}-%{release}
 Requires:       mythtv-libs%{?_isa}             = %{version}-%{release}
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Recommends:     xmltv
 Recommends:     xmltv-grabbers
-%else
-Requires:       xmltv
-Requires:       xmltv-grabbers
-%endif
 %if %{with qt6}
 Requires:       qt6-qtwayland
 %else
 Requires:       qt5-qtwayland
 %endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       vulkan-loader
-%endif
 
 %description setup
 MythTV provides a unified graphical interface for recording and viewing
@@ -524,9 +458,7 @@ Requires:       qt6-qtwayland
 %else
 Requires:       qt5-qtwayland
 %endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       vulkan-loader
-%endif
 
 %description mythwelcome
 MythTV provides a unified graphical interface for recording and viewing
@@ -648,30 +580,10 @@ Requires:       %{py_prefix}-lxml
 %if ((0%{?fedora}) && ((0%{?fedora}) < 41)) || ((0%{?rhel}) && ((0%{?rhel}) < 10))
 Requires:       %{py_prefix}-future
 %endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-requests
-%endif
-%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
-Requires:       python36-requests
-%endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7) || ((0%{?rhel} == 7) && ("%{py_prefix}" == "python")))
 Requires:       %{py_prefix}-simplejson
-%endif
-%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
-Requires:       python36-simplejson
-%endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       %{py_prefix}-mysqlclient
-%endif
-%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python"))
-Requires:       MySQL-python
-%endif
-%if ((0%{?rhel} == 7) && ("%{py_prefix}" == "python3"))
-Requires:       python36-mysql
-%endif
-%if ((0%{?fedora}) || (0%{?rhel} > 7))
 Requires:       %{py_prefix}-requests-cache
-%endif
 
 %if ("%{py_prefix}" == "python3")
 Obsoletes:      python2-MythTV                  <= %{version}-%{release}
@@ -697,11 +609,7 @@ MythTV python bindings
 %autosetup -p1 -n %{name}-%{commit}
 
 %if ("%{py_prefix}" == "python3")
-%if (0%{?rhel} == 7)
-pathfix.py -pni "%{__python3} %{py3_shbang_opts}" .
-%else
 %py3_shebang_fix .
-%endif
 %else
 pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 %endif
@@ -710,29 +618,13 @@ pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
 
 %build
 
-%if (0%{?rhel} == 7)
-%if ("%{toolchain}" == "clang")
-source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
-%else
-source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
-%endif
-%endif
-
 pushd mythtv
 
     # Similar to 'percent' configure, but without {_target_platform} and
     # {_exec_prefix} etc... MythTV no longer accepts the parameters that the
     # configure macro passes, so we do this manually.
 
-%if (0%{?rhel} == 7)
-    CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ;
-    CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ;
-    FFLAGS="${FFLAGS:-%optflags -I%_fmoddir}" ; export FFLAGS ;
-    FCFLAGS="${FCFLAGS:-%optflags -I%_fmoddir}" ; export FCFLAGS ;
-    LDFLAGS="${LDFLAGS:-%__global_ldflags}"; export LDFLAGS ;
-%else
     %{set_build_flags}
-%endif
 
 %if (%{with lto} && (((0%{?fedora}) && ((0%{?fedora}) < 33)) || ((0%{?rhel}) && ((0%{?rhel}) < 9))))
     #
@@ -777,17 +669,6 @@ pushd mythtv
     # invoked, so we make it explicit.)
     #
     LDFLAGS="${LDFLAGS} ${CFLAGS}"; export LDFLAGS;
-%endif
-
-%if (("%{toolchain}" == "clang") && (0%{?rhel} == 7))
-    #
-    # adjust flags for older llvm version in el7
-    #
-    CFLAGS="${CFLAGS//-fstack-clash-protection}" ; export CFLAGS ;
-    CXXFLAGS="${CXXFLAGS//-fstack-clash-protection}" ; export CXXFLAGS ;
-    FFLAGS="${FFLAGS//-fstack-clash-protection}" ; export FFLAGS ;
-    FCFLAGS="${FCFLAGS//-fstack-clash-protection}" ; export FCFLAGS ;
-    LDFLAGS="${LDFLAGS//-fstack-clash-protection}" ; export LDFLAGS ;
 %endif
 
     ./configure                                     \
@@ -843,14 +724,6 @@ popd
 ################################################################################
 
 %install
-
-%if (0%{?rhel} == 7)
-%if ("%{toolchain}" == "clang")
-source scl_source enable llvm-toolset-7.0 >/dev/null 2>/dev/null && true || true
-%else
-source scl_source enable devtoolset-10 >/dev/null 2>/dev/null && true || true
-%endif
-%endif
 
 pushd mythtv
 
@@ -1009,14 +882,6 @@ for group in 'video' 'audio' 'cdrom' 'dialout' 'render'
 
 exit 0
 
-%if (0%{?rhel} == 7)
-%post libs -p /sbin/ldconfig
-%endif
-
-%if (0%{?rhel} == 7)
-%post mythffmpeg-libs -p /sbin/ldconfig
-%endif
-
 %post backend
     %systemd_post mythbackend.service
     %systemd_post mythjobqueue.service
@@ -1026,14 +891,6 @@ exit 0
     %systemd_preun mythbackend.service
     %systemd_preun mythjobqueue.service
     %systemd_preun mythmediaserver.service
-
-%if (0%{?rhel} == 7)
-%postun libs -p /sbin/ldconfig
-%endif
-
-%if (0%{?rhel} == 7)
-%postun mythffmpeg-libs -p /sbin/ldconfig
-%endif
 
 %postun backend
     %systemd_postun_with_restart mythbackend.service
