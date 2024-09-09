@@ -2,32 +2,29 @@
 
 Tools to build MythTV rpms
 
-NOTE:  With the latest FFmpeg in master (targeted to be version 30) the EL7
-       version of libvpx is too old.  The local definition of the centos
-       repository includes a COPR reference that will support compilation.
-       To install the EL7 RPMs, you will (likely) need to add that COPR
-       (or some equivalent) to your system (`yum copr enable gtb/libvpx`),
-       and with the latest master (targeted to be version 32) the EL7
-       version of taglib is too old.  The local definition of the centos
-       repository includes a COPR reference that will support compilation.
-       To install the EL7 RPMs, you will (likely) need to add that COPR
-       (or some equivalent) to your system (`yum copr enable gtb/taglib`).
+Notes:
+
+  There are a couple of useful --with and --without options
+
+  --with toolchain_clang    -- use clang/llvm
+  --with qt6                -- build with qt6
+                               will eventually be the default
+  --with lto                -- build with lto
+                               wip to default to distro default
+  --without rpmfusion       -- build without rpmfusion
+                               codec support via ffmpeg
+                               may eventually be the default
 
 Examples:
 
-  Build latest fixes/31 for Fedora 34:
+  Build latest fixes/34 for Fedora 40:
 
-    ./BUILD_MYTHTV_RPMS --root /etc/mock/fedora-34-x86_64-rpmfusion_free.cfg fixes/31
+    ./BUILD_MYTHTV_RPMS --root /etc/mock/fedora+rpmfusion_free-40-x86_64.cfg fixes/34
 
-  Build latest fixes/31 for centos 7:
+  Build lastest master for Fedora 40:
 
-    ./BUILD_MYTHTV_RPMS --root build_cfgs/epel-7-x86_64-rpmfusion_free.cfg fixes/31
+    ./BUILD_MYTHTV_RPMS --root /etc/mock/fedora+rpmfusion_free-40-x86_64.cfg master
 
-  Build master for Fedora 34:
+  Build lastest master for Fedora 40 without rpmfusion:
 
-    ./BUILD_MYTHTV_RPMS --root /etc/mock/fedora-34-x86_64-rpmfusion_free.cfg master
-
-  Build master for centos 8 stream:
-
-    ./BUILD_MYTHTV_RPMS --root build_cfgs/epel-stream-8-x86_64-rpmfusion_free.cfg master
-
+   ./BUILD_MYTHTV_RPMS --root /etc/mock/fedora-40-x86_64.cfg master
