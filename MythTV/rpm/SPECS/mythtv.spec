@@ -184,7 +184,7 @@ BuildRequires:  libbluray-devel
 BuildRequires:  libsamplerate-devel
 BuildRequires:  soundtouch-devel
 %if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 10)))
-# Current MythTV does not use libXNVCtrl as XrandX works
+# Current MythTV does not use libXNVCtrl as xrandr works
 BuildRequires:  libXNVCtrl-devel
 %endif
 BuildRequires:  lzo-devel

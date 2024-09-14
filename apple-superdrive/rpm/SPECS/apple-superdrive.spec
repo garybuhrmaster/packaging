@@ -1,8 +1,8 @@
 Name:           apple-superdrive
 Version:        1.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Apple SuperDrive activation udev rule
-License:        BSD
+License:        BSD-2-Clause
 
 Source0:        90-apple-superdrive.rules
 
@@ -26,6 +26,9 @@ install -m0644 %SOURCE0 %buildroot%{_udevrulesdir}/
 
 
 %changelog
+* Sat Sep 14 2024 Gary Buhrmaster <gary.buhrmaster@gmail.com> - 1.0.0-4
+- Update license to SPDX
+
 * Wed Aug 21 2024 Gary Buhrmaster <gary.buhrmaster@gmail.com> - 1.0.0-3
 - EL7 is EOL, remove the workaround used to support it
 
