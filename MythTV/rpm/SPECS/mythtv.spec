@@ -221,7 +221,7 @@ BuildRequires:  libva-devel
 %if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  libcrystalhd-devel
 %endif
-%if (0%{?fedora})
+%if ((0%{?fedora}) && ((0%{?fedora}) < 41))
 BuildRequires:  libomxil-bellagio-devel
 %endif
 
