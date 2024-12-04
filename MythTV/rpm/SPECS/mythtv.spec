@@ -95,6 +95,7 @@ Source202:      mythtv-logrotate.conf
 Source203:      mythtv-mythjobqueue.service
 Source204:      mythtv-mythmediaserver.service
 Source210:      mythtv-tmpfiles.conf
+Source215:      mythtv-sysusers.conf
 Source220:      mythtv-LICENSING
 Source300:      mythtv-mythfrontend.png
 Source301:      mythtv-mythfrontend.desktop
@@ -492,8 +493,7 @@ system shutdown and wakeup
 %package base
 Summary:        Common components needed by multiple other MythTV components
 
-Requires(pre):  shadow-utils
-Requires(pre):  grep
+Requires(pre):  systemd
 Requires:       systemd
 Requires:       mythtv-filesystem               = %{version}-%{release}
 Requires:       logrotate
@@ -828,6 +828,10 @@ pushd mythtv
     install -m 0644 %{SOURCE210}          %{buildroot}%{_tmpfilesdir}/mythtv.conf
     mkdir -p                              %{buildroot}%{_rundir}/mythtv
 
+    # sysusersdir
+    mkdir -p                              %{buildroot}%{_sysusersdir}
+    install -m 0644 %{SOURCE215}          %{buildroot}%{_sysusersdir}/mythtv.conf
+
     # systemd config
     mkdir -p -m 0755                      %{buildroot}%{_unitdir}
     install -m 0644 %{SOURCE200}          %{buildroot}%{_unitdir}/mythbackend.service
@@ -865,25 +869,7 @@ popd
 
 %pre base
 # Add the "mythtv" user, with membership in the audio and video group
-getent group mythtv >/dev/null || groupadd -r mythtv
-getent passwd mythtv >/dev/null || \
-    useradd -r -g mythtv \
-    -d "/var/lib/mythtv" -s /bin/sh \
-    -c "mythbackend user" mythtv
-for group in 'video' 'audio' 'cdrom' 'dialout' 'render'
-{
-    ent=`getent group $group 2>/dev/null`
-    # only proceed if the group exists
-    if [ $? -eq 0 ]; then
-        cnt=`echo "$ent" | cut -d: -f4 | tr ',' '\n' | grep -c '^mythtv$'`
-        cnt=$(($cnt + 0))
-        if [ $cnt -lt 1 ]; then
-            usermod -a -G $group mythtv
-        fi
-    fi
-}
-
-exit 0
+%sysusers_create_package mythtv %{SOURCE215}
 
 %post backend
     %systemd_post mythbackend.service
@@ -939,6 +925,7 @@ exit 0
 %{_bindir}/mythutil
 %{_datadir}/mythtv/mythconverg*.pl
 %{_tmpfilesdir}/mythtv.conf
+%{_sysusersdir}/mythtv.conf
 %attr(0755, mythtv, mythtv) %dir %{_rundir}/mythtv
 %attr(0755, mythtv, mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(0755, mythtv, mythtv) %dir %{_localstatedir}/lib/mythtv/.mythtv
