@@ -2,7 +2,8 @@ Source: hdhomerun-record
 Maintainer: Gary Buhrmaster <gary.buhrmaster@gmail.com>
 Section: net
 Priority: optional
-Build-Depends: debhelper (>= 10), wget, ca-certificates, dh-systemd (>= 1.5)
+Build-Depends: debhelper (>= 10), ca-certificates
+Rules-Requires-Root: no
 Standards-Version: 3.9.5
 Homepage: https://www.silicondust.com
 

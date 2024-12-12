@@ -3,14 +3,6 @@
 # output every command that modifies files on the build system.
 DH_VERBOSE = 1
 
-# see EXAMPLES in dpkg-buildflags(1) and read /usr/share/dpkg/*
-DPKG_EXPORT_BUILDFLAGS = 1
-include /usr/share/dpkg/default.mk
-include /usr/share/dpkg/architecture.mk
-
-SOURCE = https://download.silicondust.com/hdhomerun/hdhomerun_record_linux_${HDHRDVR_VERSION}
-
-
 %:
 	dh $@ --with-systemd
 
@@ -24,7 +16,6 @@ override_dh_gencontrol:
 	dh_gencontrol -- -v0.0.${HDHRDVR_VERSION}-1
 
 override_dh_install:
-	wget -N --progress=dot:mega ${SOURCE}
 	dd if=hdhomerun_record_linux_${HDHRDVR_VERSION} bs=4096 skip=1 2>/dev/null | tar -xvz
 	if [ "${DEB_HOST_ARCH}" == "i386"  ]; then install -m 0755 hdhomerun_record_x86   debian/hdhomerun-record/usr/bin/hdhomerun_record; fi
 	if [ "${DEB_HOST_ARCH}" == "armhf" ]; then install -m 0755 hdhomerun_record_arm   debian/hdhomerun-record/usr/bin/hdhomerun_record; fi

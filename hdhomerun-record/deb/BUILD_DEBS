@@ -7,6 +7,10 @@ if [ "$HDHRDVR_VERSION" == "" ]; then
     exit 1
 fi
 
+if [ ! -f "SOURCES/hdhomerun_record_linux_$HDHRDVR_VERSION" ]; then
+  /usr/bin/wget -O SOURCES/hdhomerun_record_linux_$HDHRDVR_VERSION https://download.silicondust.com/hdhomerun/hdhomerun_record_linux_${HDHRDVR_VERSION} || rm -f SOURCES/hdhomerun_record_linux_$HDHRDVR_VERSION
+fi
+
 export HDHRDVR_VERSION
 
 BUILDFAILURE=0
@@ -16,6 +20,7 @@ BUILDDIR=`mktemp -d`
 mkdir -p $BUILDDIR/hdhomerun-record
 
 cp -R debian $BUILDDIR/hdhomerun-record
+cp SOURCES/hdhomerun_record_linux_$HDHRDVR_VERSION $BUILDDIR/hdhomerun-record
 
 pushd $BUILDDIR/hdhomerun-record >/dev/null
 
