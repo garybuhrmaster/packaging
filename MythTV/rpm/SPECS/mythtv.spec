@@ -197,7 +197,11 @@ BuildRequires:  gnutls-devel
 
 # Audio framework support
 BuildRequires:  alsa-lib-devel
+%if (0%{?rhel} >= 10)
+BuildRequires:  pipewire-jack-audio-connection-kit-devel
+%else
 BuildRequires:  jack-audio-connection-kit-devel
+%endif
 BuildRequires:  pulseaudio-libs-devel
 BuildRequires:  avahi-compat-libdns_sd-devel
 

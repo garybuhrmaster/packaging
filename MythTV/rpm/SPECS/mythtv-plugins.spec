@@ -145,7 +145,11 @@ BuildRequires:  libcdio-paranoia-devel
 BuildRequires:  fftw-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  avahi-compat-libdns_sd-devel
+%if (0%{?rhel} >= 10)
+BuildRequires:  pipewire-jack-audio-connection-kit-devel
+%else
 BuildRequires:  jack-audio-connection-kit-devel
+%endif
 BuildRequires:  libass-devel
 %if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  libcrystalhd-devel
