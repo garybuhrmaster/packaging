@@ -8,6 +8,8 @@
 
 %global		__os_install_post /usr/lib/rpm/brp-compress %{nil}
 
+%global		_pkgverify_level digest
+
 
 Name:		hdhomerun-record
 Version:	0.0.%{?HDHRDVR_VERSION}%{!?HDHRDVR_VERSION:0}

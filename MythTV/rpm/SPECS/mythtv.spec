@@ -36,6 +36,8 @@
 #
 %global _hardened_build 1
 
+%global _pkgverify_level digest
+
 #
 # At least for now, we need to opt-out of LTO flags if
 # we are not explicitly handing it via our overrides
