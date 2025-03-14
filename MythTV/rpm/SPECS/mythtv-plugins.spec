@@ -31,11 +31,6 @@
 
 ################################################################################
 
-#
-# _hardended_build is the default for recent releases.
-#
-%global _hardened_build 1
-
 %global _pkgverify_level digest
 
 #
