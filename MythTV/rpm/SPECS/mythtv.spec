@@ -509,6 +509,8 @@ Requires:       perl(LWP::Simple)
 Requires:       perl(SOAP::Lite)
 Requires:       perl(XML::Simple)
 Requires:       perl(XML::XPath)
+Provides:       user(mythtv)
+Provides:       group(mythtv)
 
 %description base
 MythTV provides a unified graphical interface for recording and viewing
@@ -872,6 +874,9 @@ popd
 # Add the "mythtv" user, with membership in the audio and video group
 %sysusers_create_package mythtv %{SOURCE215}
 
+# Insure tmpfiles are properly created
+%tmpfiles_create_package mythtv %{SOURCE210}
+
 %post backend
     %systemd_post mythbackend.service
     %systemd_post mythjobqueue.service
@@ -927,7 +932,6 @@ popd
 %{_datadir}/mythtv/mythconverg*.pl
 %{_tmpfilesdir}/mythtv.conf
 %{_sysusersdir}/mythtv.conf
-%attr(0755, mythtv, mythtv) %dir %{_rundir}/mythtv
 %attr(0755, mythtv, mythtv) %dir %{_localstatedir}/lib/mythtv
 %attr(0755, mythtv, mythtv) %dir %{_localstatedir}/lib/mythtv/.mythtv
 %attr(0644, mythtv, mythtv) %config(noreplace) %{_localstatedir}/lib/mythtv/.mythtv/config.xml
