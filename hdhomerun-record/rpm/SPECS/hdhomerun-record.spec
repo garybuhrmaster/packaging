@@ -23,30 +23,13 @@ URL:		https://www.silicondust.com/
 Source0:	https://download.silicondust.com/hdhomerun/hdhomerun_record_linux%{?HDHRDVR_VERSION:_%{HDHRDVR_VERSION}}
 Source51:	hdhomerun_record-tmpfiles.conf
 Source52:	hdhomerun_record.service
-Source53:	hdhomerun_record.init
 Source54:	hdhomerun.conf
 Source55:	hdhomerun_record.xml
-Source56:	hdhomerun_record.sysconfig
 Source60:	hdhomerun_record.8
 Source61:	hdhomerun.conf.5
 Source70:	hdhomerun_record-doc.README
 Source71:	hdhomerun_record-doc.LICENSE
-Source72:	hdhomerun_record-doc.README.init
 
-%if 0%{?rhel} == 6
-BuildRequires:	coreutils
-BuildRequires:	tar
-Requires(pre):	initscripts
-Requires(pre):	chkconfig
-Requires(pre):	shadow-utils
-Requires(pre):	coreutils
-Requires(pre):	glibc-common
-Requires(post):	initscripts
-Requires(post):	chkconfig
-Requires(preun):	initscripts
-Requires(preun):	chkconfig
-Requires(postun):	initscripts
-%else
 %if 0%{?suse_version}
 BuildRequires:	coreutils
 BuildRequires:	tar
@@ -93,7 +76,6 @@ Requires(postun):	systemd
 Requires(postun):	firewalld-filesystem
 %endif
 %endif
-%endif
 Requires(post):	util-linux
 Requires(post):	coreutils
 Requires(post):	grep
@@ -117,26 +99,13 @@ echo "Nothing to build"
 
 %install
 
-%if 0%{?rhel} == 6
-# No automated tmpfiles - in init script
-%else
 install -D -m 0644 %{SOURCE51} %{buildroot}%{_tmpfilesdir}/hdhomerun_record.conf
-%endif
 
-%if 0%{?rhel} == 6
-install -D -m 0644 %{SOURCE53} %{buildroot}%{_initddir}/hdhomerun_record
-install -D -m 0644 %{SOURCE56} %{buildroot}%{_sysconfdir}/sysconfig/hdhomerun_record
-%else
 install -D -m 0644 %{SOURCE52} %{buildroot}%{_unitdir}/hdhomerun_record.service
-%endif
 
 install -D -m 0644 %{SOURCE54} %{buildroot}%{_sysconfdir}/hdhomerun.conf
 
-%if 0%{?rhel} == 6
-# No firewalld in rhel6
-%else
 install -D -m 0644 %{SOURCE55} %{buildroot}%{_prefix}/lib/firewalld/services/hdhomerun_record.xml
-%endif
 
 mkdir -p %{buildroot}%{_localstatedir}/run/hdhomerun
 
@@ -144,11 +113,7 @@ install -D -m 0644 %{SOURCE60} %{buildroot}%{_mandir}/man8/hdhomerun_record.8
 
 install -D -m 0644 %{SOURCE61} %{buildroot}%{_mandir}/man5/hdhomerun.conf.5
 
-%if 0%{?rhel} == 6
-install -D -m 0644 %{SOURCE72} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
-%else
 install -D -m 0644 %{SOURCE70} %{buildroot}%{_datadir}/doc/hdhomerun_record/README
-%endif
 install -D -m 0644 %{SOURCE71} %{buildroot}%{_datadir}/doc/hdhomerun_record/LICENSE
 
 %ifarch %{ix86}
@@ -186,30 +151,16 @@ install -D -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 
 %defattr(644,root,root,755)
 %config(noreplace) %{_sysconfdir}/hdhomerun.conf
-%if 0%{?rhel} == 6
-# No automated tmpfiles
-%else
 %{_tmpfilesdir}/*
-%endif
 %{_mandir}/man8/*
 %{_mandir}/man5/*
 %{_datadir}/doc/*
 
-%if 0%{?rhel} == 6
-%defattr(755,root,root,-)
-%config(noreplace) %{_initddir}/*
-%config(noreplace) %{_sysconfdir}/sysconfig/*
-%else
 %defattr(644,root,root,-)
 %{_unitdir}/*
-%endif
 
-%if 0%{?rhel} == 6
-# No firewalld in rhel 6
-%else
 %defattr(644,root,root,-)
 %{_prefix}/lib/firewalld/services/hdhomerun_record.xml
-%endif
 
 %defattr(755,hdhomerun,hdhomerun,755)
 %dir %{_localstatedir}/run/hdhomerun/
@@ -217,18 +168,12 @@ install -D -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 
 %pre
 getent group hdhomerun >/dev/null || groupadd -r hdhomerun
-%if 0%{?rhel} == 6
-getent passwd hdhomerun >/dev/null || \
-    useradd -r -g hdhomerun -d "/var/run/hdhomerun" -s /sbin/nologin \
-    -c "HDHomeRun DVR server" hdhomerun
-%else
 getent passwd hdhomerun >/dev/null || \
     useradd -r -g hdhomerun -d "/run/hdhomerun" -s /sbin/nologin \
     -c "HDHomeRun DVR server" hdhomerun
 if [ "`getent passwd hdhomerun | cut -d: -f6`" = "/var/run/hdhomerun" ]; then
     usermod -d "/run/hdhomerun" hdhomerun >/dev/null 2>/dev/null || true
 fi
-%endif
 %if 0%{?suse_version}
 %service_add_pre hdhomerun_record.service
 %endif
@@ -236,9 +181,6 @@ exit 0
 
 
 %post
-%if 0%{?rhel} == 6
-/sbin/chkconfig --add hdhomerun_record
-%else
 %if 0%{?suse_version}
 %service_add_post hdhomerun_record.service
 test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --reload --quiet || true
@@ -251,7 +193,6 @@ systemctl --system daemon-reload
 %firewalld_reload
 %endif
 %endif
-%endif
 if [ $1 == 1 ] ; then
   if [ -f /etc/hdhomerun.conf -a -r /etc/hdhomerun.conf -a -w /etc/hdhomerun.conf -a ! -f /etc/hdhomerun.conf.rpmnew ] ; then
     grep -q "^[[:space:]]*StorageID[[:space:]]*=[[:space:]]*" /etc/hdhomerun.conf >/dev/null || \
@@ -262,25 +203,15 @@ exit 0
 
 
 %preun
-%if 0%{?rhel} == 6
-if [ $1 == 0 ] ; then
-  /sbin/service hdhomerun_record stop >/dev/null 2>&1
-  /sbin/chkconfig --del hdhomerun_record
-fi
-%else
 %if 0%{?suse_version}
 %service_del_preun hdhomerun_record.service
 %else
 %systemd_preun hdhomerun_record.service
 %endif
-%endif
 exit 0
 
 
 %postun
-%if 0%{?rhel} == 6
-# Nothing to do for service based distro
-%else
 %if 0%{?suse_version}
 %service_del_postun_without_restart hdhomerun_record.service
 test -f /usr/bin/firewall-cmd && /usr/bin/firewall-cmd --reload --quiet || true
@@ -291,7 +222,6 @@ systemctl --system daemon-reload
 %else
 %systemd_postun hdhomerun_record.service
 %firewalld_reload
-%endif
 %endif
 %endif
 exit 0
