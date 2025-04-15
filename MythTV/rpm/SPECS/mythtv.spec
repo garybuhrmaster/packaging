@@ -501,6 +501,7 @@ Requires:       logrotate
 Requires:       google-droid-sans-mono-fonts
 Requires:       google-droid-sans-fonts
 Requires:       google-droid-serif-fonts
+Requires:       gnu-free-sans-fonts
 Requires:       perl(Date::Manip)
 Requires:       perl(DateTime::Format::ISO8601)
 Requires:       perl(Image::Size)
