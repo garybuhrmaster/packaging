@@ -21,6 +21,7 @@ License:	Proprietary
 URL:		https://www.silicondust.com/
 
 Source0:	https://download.silicondust.com/hdhomerun/hdhomerun_record_linux%{?HDHRDVR_VERSION:_%{HDHRDVR_VERSION}}
+Source50:	hdhomerun_record-sysusers.conf
 Source51:	hdhomerun_record-tmpfiles.conf
 Source52:	hdhomerun_record.service
 Source54:	hdhomerun.conf
@@ -34,7 +35,6 @@ Source71:	hdhomerun_record-doc.LICENSE
 BuildRequires:	coreutils
 BuildRequires:	tar
 BuildRequires:	systemd-rpm-macros
-Requires(pre):	shadow
 Requires(pre):	coreutils
 Requires(pre):	systemd
 Requires(pre):	glibc
@@ -48,7 +48,6 @@ BuildRequires:	systemd
 Requires:	systemd
 Requires:	firewalld-filesystem
 Requires(pre):	rpm-helper
-Requires(pre):	shadow-utils
 Requires(pre):	coreutils
 Requires(pre):	glibc
 Requires(pre):	systemd
@@ -65,7 +64,6 @@ BuildRequires:	systemd
 BuildRequires:	firewalld-filesystem
 Requires:	systemd
 Requires:	firewalld-filesystem
-Requires(pre):	shadow-utils
 Requires(pre):	coreutils
 Requires(pre):	glibc-common
 Requires(pre):	systemd
@@ -79,6 +77,11 @@ Requires(postun):	firewalld-filesystem
 Requires(post):	util-linux
 Requires(post):	coreutils
 Requires(post):	grep
+#
+# User/Group provides
+#
+Provides:	user(hdhomerun)
+Provides:	group(hdhomerun)
 
 
 %description
@@ -98,6 +101,8 @@ echo "Nothing to build"
 
 
 %install
+
+install -D -m 0644 %{SOURCE50} %{buildroot}%{_sysusersdir}/hdhomerun_record.conf
 
 install -D -m 0644 %{SOURCE51} %{buildroot}%{_tmpfilesdir}/hdhomerun_record.conf
 
@@ -151,6 +156,7 @@ install -D -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 
 %defattr(644,root,root,755)
 %config(noreplace) %{_sysconfdir}/hdhomerun.conf
+%{_sysusersdir}/*
 %{_tmpfilesdir}/*
 %{_mandir}/man8/*
 %{_mandir}/man5/*
@@ -167,13 +173,8 @@ install -D -m 0755 hdhomerun_record_ppc %{buildroot}%{_bindir}/hdhomerun_record
 
 
 %pre
-getent group hdhomerun >/dev/null || groupadd -r hdhomerun
-getent passwd hdhomerun >/dev/null || \
-    useradd -r -g hdhomerun -d "/run/hdhomerun" -s /sbin/nologin \
-    -c "HDHomeRun DVR server" hdhomerun
-if [ "`getent passwd hdhomerun | cut -d: -f6`" = "/var/run/hdhomerun" ]; then
-    usermod -d "/run/hdhomerun" hdhomerun >/dev/null 2>/dev/null || true
-fi
+# Add the "hdhomerun" user
+%sysusers_create_package hdhomerun %{SOURCE50}
 %if 0%{?suse_version}
 %service_add_pre hdhomerun_record.service
 %endif
