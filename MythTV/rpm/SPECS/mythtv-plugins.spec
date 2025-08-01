@@ -148,7 +148,7 @@ BuildRequires:  pipewire-jack-audio-connection-kit-devel
 BuildRequires:  jack-audio-connection-kit-devel
 %endif
 BuildRequires:  libass-devel
-%if ((0%{?fedora}) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
+%if ((0%{?fedora} && (0%{?fedora} < 43)) || ((0%{?rhel}) && ((0%{?rhel}) < 9)))
 BuildRequires:  libcrystalhd-devel
 %endif
 %if ((0%{?fedora}) && ((0%{?fedora}) < 41))
