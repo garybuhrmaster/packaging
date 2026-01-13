@@ -96,14 +96,23 @@ for mageia in ${MAGEIA[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
-        if [ "$arch" == "armhfp" ]; then
-            continue
-        fi
-        if [ "$arch" == "aarch64" ]; then
-            continue
+        if [ $mageia -lt 10 ]; then
+            if [ "$arch" == "armhfp" ]; then
+                continue
+            fi
+            if [ "$arch" == "aarch64" ]; then
+                continue
+            fi
         fi
         if [ "$arch" == "i686" ]; then
-            arch="i586"
+            if [ $mageia -gt 9 ]; then
+                arch="i686"
+	    else
+                arch="i586"
+            fi
+        fi
+        if [ "$arch" == "armhfp" ]; then
+            arch="armv7hl"
         fi
         mkdir -p RPMS/mageia/$mageia/$arch
     done
@@ -279,17 +288,28 @@ for mageia in ${MAGEIA[@]}
 do
     for arch in ${TARGETRPMARCH[@]}
     do
-        if [ "$arch" == "aarch64" ]; then
-            continue
-        fi
-        if [ "$arch" == "armhfp" ]; then
-            continue
+        if [ $mageia -lt 10 ]; then
+            if [ "$arch" == "armhfp" ]; then
+                continue
+            fi
+            if [ "$arch" == "aarch64" ]; then
+                continue
+            fi
         fi
         rpmresultarch=$arch
         rpmtargetarch=$arch
         if [ "$arch" == "i686" ]; then
-            rpmtargetarch="i586"
-            rpmresultarch="i586"
+            if [ $mageia -gt 9 ]; then
+                rpmtargetarch="i686"
+                rpmresultarch="i686"
+            else
+                rpmtargetarch="i586"
+                rpmresultarch="i586"
+            fi
+        fi
+        if [ "$arch" == "armhfp" ]; then
+            rpmresultarch="armv7hl"
+            rpmtargetarch="armv7hl"
         fi
         RESULTDIR=`mktemp -d`
         /usr/bin/mock --root $MOCKCFGROOT/mageia-$mageia-$HOSTARCH.cfg --define "HDHRDVR_VERSION $VERSION" --target=$rpmtargetarch --resultdir=$RESULTDIR --disable-plugin=ccache $SRCRPM
