@@ -22,7 +22,6 @@
 %bcond_with     llvm
 %bcond_with     toolchain_clang
 %bcond_with     toolchain_gcc
-%bcond_with     python2
 %bcond_with     lto
 %bcond_with     qt6
 
@@ -52,14 +51,6 @@
 %endif
 %if %{with toolchain_gcc}
 %global toolchain gcc
-%endif
-
-#
-# Default to python3, but allow override (needed for fixes/30)
-#
-%global py_prefix python3
-%if %{with python2}
-%global py_prefix python2
 %endif
 
 ################################################################################
@@ -260,23 +251,21 @@ BuildRequires:  perl(IO::Socket::INET6)
 BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(XML::Simple)
 
-BuildRequires:  %{py_prefix}
-BuildRequires:  %{py_prefix}-pycurl
-BuildRequires:  %{py_prefix}-lxml
-BuildRequires:  %{py_prefix}-rpm-macros
-%if ("%{py_prefix}" != "python3")
-BuildRequires:  %{py_prefix}-urlgrabber
-%endif
-BuildRequires:  %{py_prefix}-requests
-BuildRequires:  %{py_prefix}-simplejson
+BuildRequires:  python3
+BuildRequires:  python3-pycurl
+BuildRequires:  python3-lxml
+BuildRequires:  python3-rpm-macros
+BuildRequires:  python3-urlgrabber
+BuildRequires:  python3-requests
+BuildRequires:  python3-simplejson
 %if ((0%{?fedora}) && ((0%{?fedora}) < 41)) || ((0%{?rhel}) && ((0%{?rhel}) < 10))
-BuildRequires:  %{py_prefix}-future
+BuildRequires:  python3-future
 %endif
-BuildRequires:  %{py_prefix}-mysqlclient
-BuildRequires:  %{py_prefix}-devel
-BuildRequires:  %{py_prefix}-setuptools
-BuildRequires:  %{py_prefix}-pip
-BuildRequires:  %{py_prefix}-wheel
+BuildRequires:  python3-mysqlclient
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-pip
+BuildRequires:  python3-wheel
 
 
 ################################################################################
@@ -293,7 +282,7 @@ Requires:       mythtv-mythwelcome%{?_isa}      = %{version}-%{release}
 Requires:       mythtv-mythshutdown%{?_isa}     = %{version}-%{release}
 Requires:       perl-MythTV                     = %{version}-%{release}
 Requires:       php-MythTV                      = %{version}-%{release}
-Requires:       %{py_prefix}-MythTV             = %{version}-%{release}
+Requires:       python3-MythTV                  = %{version}-%{release}
 Requires:       mythtv-mythffmpeg%{?_isa}       = %{version}-%{release}
 Requires:       mariadb
 Requires:       mariadb-server
@@ -388,7 +377,7 @@ Requires:       mythtv-filesystem               = %{version}-%{release}
 Requires:       mythtv-base%{?_isa}             = %{version}-%{release}
 Requires:       mythtv-base-themes%{?_isa}      = %{version}-%{release}
 Requires:       mythtv-libs%{?_isa}             = %{version}-%{release}
-Requires:       %{py_prefix}-MythTV             = %{version}-%{release}
+Requires:       python3-MythTV                  = %{version}-%{release}
 Requires:       perl-MythTV                     = %{version}-%{release}
 Recommends:     libaacs
 Recommends:     mesa-vdpau-drivers
@@ -413,7 +402,7 @@ Requires:       mythtv-base%{?_isa}             = %{version}-%{release}
 Requires:       mythtv-base-themes%{?_isa}      = %{version}-%{release}
 Requires:       mythtv-libs%{?_isa}             = %{version}-%{release}
 Requires:       mythtv-mythffmpeg%{?_isa}       = %{version}-%{release}
-Requires:       %{py_prefix}-MythTV             = %{version}-%{release}
+Requires:       python3-MythTV                  = %{version}-%{release}
 Requires:       perl-MythTV                     = %{version}-%{release}
 Requires:       systemd
 Requires(post): systemd
@@ -574,39 +563,23 @@ MythTV PHP bindings
 
 ################################################################################
 
-%if ("%{py_prefix}" == "python3")
 %package -n python3-MythTV
-%else
-%package -n python2-MythTV
-%endif
 Summary:        Python bindings for MythTV
 BuildArch:      noarch
 
-Requires:       %{py_prefix}-libs
-Requires:       %{py_prefix}-lxml
+Requires:       python3-libs
+Requires:       python3-lxml
 %if ((0%{?fedora}) && ((0%{?fedora}) < 41)) || ((0%{?rhel}) && ((0%{?rhel}) < 10))
-Requires:       %{py_prefix}-future
+Requires:       python3-future
 %endif
-Requires:       %{py_prefix}-requests
-Requires:       %{py_prefix}-simplejson
-Requires:       %{py_prefix}-mysqlclient
-Requires:       %{py_prefix}-requests-cache
+Requires:       python3-requests
+Requires:       python3-simplejson
+Requires:       python3-mysqlclient
+Requires:       python3-requests-cache
 
-%if ("%{py_prefix}" == "python3")
-Obsoletes:      python2-MythTV                  <= %{version}-%{release}
-%endif
-
-%if ("%{py_prefix}" == "python3")
 %{?python_provide:%python_provide python3-MythTV}
-%else
-%{?python_provide:%python_provide python2-MythTV}
-%endif
 
-%if ("%{py_prefix}" == "python3")
 %description -n python3-MythTV
-%else
-%description -n python2-MythTV
-%endif
 MythTV python bindings
 
 ################################################################################
@@ -615,11 +588,7 @@ MythTV python bindings
 
 %autosetup -p1 -n %{name}-%{commit}
 
-%if ("%{py_prefix}" == "python3")
 %py3_shebang_fix .
-%else
-pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
-%endif
 
 ################################################################################
 
@@ -710,11 +679,7 @@ pushd mythtv
         --bindir=%{_bindir}                         \
         --libdir-name=%{_lib}                       \
         --compile-type=profile                      \
-%if ("%{py_prefix}" == "python3")
         --python=%{__python3}                       \
-%else
-        --python=%{__python2}                       \
-%endif
         --perl-config-opts="INSTALLDIRS=vendor"     \
         --enable-libmp3lame                         \
 %if %{with rpmfusion}
@@ -763,11 +728,7 @@ pushd mythtv
     if [ ! -e "%{buildroot}%{_bindir}/mythpython" ] ; then
     touch                                 %{buildroot}%{_bindir}/mythpython
     fi
-    %if ("%{py_prefix}" == "python3")
     mkdir -p                              %{buildroot}%{python3_sitelib}/MythTV
-    %else
-    mkdir -p                              %{buildroot}%{python2_sitelib}/MythTV
-    %endif
     mkdir -p                              %{buildroot}%{perl_vendorlib}/MythTV
     if [ ! -e "%{buildroot}%{perl_vendorlib}/MythTV.pm" ] ; then
     touch                                 %{buildroot}%{perl_vendorlib}/MythTV.pm
@@ -1051,19 +1012,11 @@ popd
 %{_datadir}/mythtv/bindings/php
 
 
-%if ("%{py_prefix}" == "python3")
 %files -n python3-MythTV
-%else
-%files -n python2-MythTV
-%endif
 %defattr(0644, root, root, 0755)
 %attr(0755, root, root) %{_bindir}/mythpython
 %attr(0755, root, root) %{_bindir}/mythwikiscripts
-%if ("%{py_prefix}" == "python3")
 %{python3_sitelib}/*
-%else
-%{python2_sitelib}/*
-%endif
 
 
 ################################################################################

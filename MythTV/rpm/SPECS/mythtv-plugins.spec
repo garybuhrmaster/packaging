@@ -22,7 +22,6 @@
 %bcond_with     llvm
 %bcond_with     toolchain_clang
 %bcond_with     toolchain_gcc
-%bcond_with     python2
 %bcond_with     lto
 %bcond_with     qt6
 
@@ -54,14 +53,6 @@
 %global toolchain gcc
 %endif
 
-#
-# Default to python3, but allow override (needed for fixes/30)
-#
-%global py_prefix python3
-%if %{with python2}
-%global py_prefix python2
-%endif
-
 ################################################################################
 
 
@@ -90,7 +81,7 @@ Source0:        https://github.com/MythTV/mythtv/archive/%{commit}/mythtv-%{comm
 
 
 BuildRequires:  mythtv-devel%{?_isa}            = %{version}-%{release}
-BuildRequires:  %{py_prefix}-MythTV             = %{version}-%{release}
+BuildRequires:  python3-MythTV                  = %{version}-%{release}
 BuildRequires:  git-core
 BuildRequires:  perl-interpreter
 BuildRequires:  perl-generators
@@ -124,15 +115,15 @@ BuildRequires:  perl(Date::Manip)
 BuildRequires:  perl(Image::Size)
 BuildRequires:  perl(SOAP::Lite)
 BuildRequires:  perl(JSON)
-BuildRequires:  %{py_prefix}
-BuildRequires:  %{py_prefix}-pycurl
-BuildRequires:  %{py_prefix}-lxml
+BuildRequires:  python3
+BuildRequires:  python3-pycurl
+BuildRequires:  python3-lxml
 %if (0%{?fedora})
-BuildRequires:  %{py_prefix}-oauth
+BuildRequires:  python3-oauth
 %endif
-BuildRequires:  %{py_prefix}-oauthlib
-BuildRequires:  %{py_prefix}-rpm-macros
-BuildRequires:  %{py_prefix}-devel
+BuildRequires:  python3-oauthlib
+BuildRequires:  python3-rpm-macros
+BuildRequires:  python3-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  flac-devel
 BuildRequires:  lame-devel
@@ -219,14 +210,14 @@ Requires:       perl(Image::Size)
 Requires:       perl(SOAP::Lite)
 Requires:       perl(JSON)
 Requires:       perl(XML::SAX::Base)
-Requires:       %{py_prefix}-pycurl
-Requires:       %{py_prefix}-lxml
+Requires:       python3-pycurl
+Requires:       python3-lxml
 %if (0%{?fedora})
-Requires:       %{py_prefix}-oauth
+Requires:       python3-oauth
 %endif
-Requires:       %{py_prefix}-oauthlib
+Requires:       python3-oauthlib
 %if (0%{?fedora})
-Requires:       %{py_prefix}-imaging
+Requires:       python3-imaging
 %endif
 Requires:       dcraw
 
@@ -242,11 +233,7 @@ distributed as separate downloads from mythtv.org.
 
 %autosetup -p1 -n mythtv-%{commit}
 
-%if ("%{py_prefix}" == "python3")
 %py3_shebang_fix .
-%else
-pathfix.py -pni "%{__python2} %{py2_shbang_opts}" .
-%endif
 
 ################################################################################
 
@@ -261,11 +248,7 @@ pushd mythplugins
 
     ./configure \
         --prefix=%{_prefix}                         \
-%if ("%{py_prefix}" == "python3")
         --python=%{__python3}
-%else
-        --python=%{__python2}
-%endif
 
     %{make_build}
 
