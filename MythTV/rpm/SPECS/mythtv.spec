@@ -706,20 +706,9 @@ pushd mythtv
     mkdir -p                              %{buildroot}%{_sysconfdir}/logrotate.d
     install -m 0644 %{SOURCE202}          %{buildroot}%{_sysconfdir}/logrotate.d/mythtv
 
-    # Remove mythffserver (removed with v30 commit d24aa851 for FFmpeg 4.0 merge,
-    # and deprecated in earlier FFmpeg variants, so do not package it in any case)
-    rm -f                                 %{buildroot}%{_bindir}/mythffserver
-
     # Remove mythhdhomerun_config (removed with v30 commit 4b577277 and the upstream
     # hdhomerun_config binary is available as part of all current distros packages)
     rm -f                                 %{buildroot}%{_bindir}/mythhdhomerun_config
-
-    # Add in a dummy mythexternrecorder if not built for an older mythtv
-    # (mythexternrecorder added in v30 commit 826d57e3, and backported to
-    # later fixes/29)
-    if [ ! -e "%{buildroot}%{_bindir}/mythexternrecorder" ] ; then
-    touch                                 %{buildroot}%{_bindir}/mythexternrecorder
-    fi
 
     # Insure various files/directories exist for optional feature builds
     if [ ! -e "%{buildroot}%{_bindir}/mythwikiscripts" ] ; then
@@ -741,10 +730,6 @@ pushd mythtv
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/hardwareprofile
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/metadata
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/internetcontent
-
-    # Add in dummy filters directory if not installed as future merge
-    # (from render branch) will be deleting filters directory
-    mkdir -p                              %{buildroot}%{_libdir}/mythtv/filters
 
     # Add in dummy externrecorder if not installed
     mkdir -p                              %{buildroot}%{_datadir}/%{name}/externrecorder
@@ -916,7 +901,6 @@ popd
 %exclude %{_libdir}/libmythswresample.*
 %exclude %{_libdir}/libmythswscale.*
 %exclude %{_libdir}/libmythavutil.*
-%{_libdir}/mythtv/filters
 %defattr(0644, root, root, 0755)
 %{_datadir}/mythtv/MXML_scpd.xml
 %{_datadir}/mythtv/CDS_scpd.xml
