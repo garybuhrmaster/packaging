@@ -699,6 +699,11 @@ popd
 
 pushd mythtv
 
+    # Create list of FFmpeg libraries by installing FFmpeg first
+    # (this handles FFmpeg removing some libraries)
+    make install                          -C external/FFmpeg DESTDIR=%{buildroot}
+    find                                  %{buildroot}%{_libdir} -type f -print | sed 's|^%{buildroot}||' > %{_builddir}/mythffmpeg-libs.filelist
+
     make install                          INSTALL_ROOT=%{buildroot}
 
     # log and rotate configuration
@@ -972,16 +977,8 @@ popd
 %attr(0755, root, root) %{_bindir}/mythffprobe
 
 
-%files mythffmpeg-libs
+%files mythffmpeg-libs -f %{_builddir}/mythffmpeg-libs.filelist
 %defattr(0755, root, root, 0755)
-%{_libdir}/libmythavdevice.so.*
-%{_libdir}/libmythavfilter.so.*
-%{_libdir}/libmythavformat.so.*
-%{_libdir}/libmythavcodec.so.*
-%{_libdir}/libmythpostproc.so.*
-%{_libdir}/libmythswresample.so.*
-%{_libdir}/libmythswscale.so.*
-%{_libdir}/libmythavutil.so.*
 
 
 %files -n perl-MythTV
