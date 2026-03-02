@@ -284,8 +284,7 @@ Requires:       perl-MythTV                     = %{version}-%{release}
 Requires:       php-MythTV                      = %{version}-%{release}
 Requires:       python3-MythTV                  = %{version}-%{release}
 Requires:       mythtv-mythffmpeg%{?_isa}       = %{version}-%{release}
-Requires:       mariadb
-Requires:       mariadb-server
+Recommends:     ((mariadb and mariadb-server) or (mysql and mysql-server))
 
 ################################################################################
 
