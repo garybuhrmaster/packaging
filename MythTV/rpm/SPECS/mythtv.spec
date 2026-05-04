@@ -734,6 +734,7 @@ pushd mythtv
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/hardwareprofile
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/metadata
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/internetcontent
+    mkdir -p                              %{buildroot}%{_datadir}/mythtv/backend-config
 
     # Add in dummy externrecorder if not installed
     mkdir -p                              %{buildroot}%{_datadir}/%{name}/externrecorder
