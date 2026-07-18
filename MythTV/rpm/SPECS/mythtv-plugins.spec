@@ -294,7 +294,6 @@ popd
 %files
 
 %{_bindir}/*
-%dir %{_libdir}/mythtv/plugins
 %{_libdir}/mythtv/plugins/*
 %{_datadir}/mythtv/themes/default/*
 %{_datadir}/mythtv/themes/default-wide/*

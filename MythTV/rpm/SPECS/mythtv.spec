@@ -735,6 +735,7 @@ pushd mythtv
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/metadata
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/internetcontent
     mkdir -p                              %{buildroot}%{_datadir}/mythtv/backend-config
+    mkdir -p                              %{buildroot}%{_libdir}/mythtv/plugins
 
     # Add in dummy externrecorder if not installed
     mkdir -p                              %{buildroot}%{_datadir}/%{name}/externrecorder
@@ -946,6 +947,7 @@ popd
 
 %files frontend
 %defattr(0755, root, root, 0755)
+%dir %{_libdir}/mythtv/plugins
 %{_bindir}/mythavtest
 %{_bindir}/mythfrontend
 %{_bindir}/mythlcdserver
